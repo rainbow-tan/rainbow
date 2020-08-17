@@ -5,7 +5,7 @@ from Model import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.select_html),
+    path('', views.login_html),
     path('login.html/', views.login_html),
     path('select.html/', views.select_html),
     path('add.html/', views.add_html),
@@ -18,5 +18,7 @@ urlpatterns = [
     path('choose_select.html/', views.choose_select_html),
     path('choose_select/', views.choose_select),
     path('debug/', views.debug),
+    path('login/', views.login),
+
 
 ]
