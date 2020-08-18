@@ -49,8 +49,6 @@ def select_html(request):
 
 
 def add_html(request):
-    print(request.COOKIES.get('is_admin'))
-    print(request.COOKIES.get('is_admin1'))
     data_dict = dict()
     data_dict['field1'] = DB.select_column('Field1Table', 'field1')
     data_dict['field2'] = DB.select_column('Field2Table', 'field1')

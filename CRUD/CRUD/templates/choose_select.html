@@ -46,9 +46,10 @@
 
             })
             $('#set_red').click(function () {
-                $("td").each(function () {
+              $("td").each(function () {
                     if ($(this).text() === '是') {
-                        $(this).parent().css('color', 'red')
+                        $(this).css('color', 'red')
+                        $(this).parent().addClass('danger')
                     }
                 })
             })

@@ -31,7 +31,7 @@ def write_xls(filename, data_list):
     :param data_list: [['47','a','b'],['48','a','b'],['49','a','b']]
     :return: 
     """
-    excel_template = BASE_DIR + '/templates/excel/export_template.xlsx'
+    excel_template = BASE_DIR + '/templates/excel/template.xlsx'
     if os.path.isfile(excel_template):
         path = os.path.dirname(filename)
         if path != '' and not os.path.exists(path):
@@ -100,6 +100,4 @@ def read_xls(filename):
     return all_data
 
 
-if __name__ == '__main__':
-    change_auto_id([['1', '3', '4'], ['a', 'b', 'c'], ['', '', 'f']])
-    print(read_xls('to_lead_template.xls'))
+

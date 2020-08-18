@@ -75,7 +75,7 @@ DATABASES = {
     # 'default':
     #     {
     #         'ENGINE': 'django.db.backends.mysql',  # 数据库引擎
-    #         'NAME': 'mysatabase',  # 数据库名称
+    #         'NAME': 'mydatabase',  # 数据库名称
     #         'HOST': 'localhost',  # 数据库地址，本机 ip 地址 127.0.0.1
     #         'PORT': 3306,  # 端口
     #         'USER': 'admin',  # 数据库用户名

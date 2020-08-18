@@ -69,8 +69,8 @@ def select_filter_and(table_name, field_count, auto_id, *args):
 
     return all_data_list
 
-
 def select_filter_or(table_name, field_count, auto_id, *args):
+
     q = Q()
     q.connector = 'OR'
     if auto_id != '':
@@ -89,11 +89,8 @@ def select_filter_or(table_name, field_count, auto_id, *args):
         all_data_list.append(one_data)
 
     return all_data_list
-
-
-# 业务
-def select_filter(table_name, field_count, field1, field2, field3, field16, field17, field21,
-                  field22, field23, field24, field25, field26, field27):
+#业务
+def select_filter(table_name, field_count, field1,field2,field3,field16,field17,field21,field22,field23,field24,field25,field26,field27):
     q1 = Q()
     q1.connector = 'OR'
     if field21 != '':
@@ -124,9 +121,9 @@ def select_filter(table_name, field_count, field1, field2, field3, field16, fiel
     if field27 != '':
         q2.children.append(('field27', field27))
 
-    q = Q()
-    q.add(q1, 'AND')
-    q.add(q2, 'AND')
+    q=Q()
+    q.add(q1,'AND')
+    q.add(q2,'AND')
 
     all_data_list = []
     all_data = table[table_name].objects.filter(q)
@@ -138,6 +135,7 @@ def select_filter(table_name, field_count, field1, field2, field3, field16, fiel
         all_data_list.append(one_data)
 
     return all_data_list
+
 
 
 def select_column(table_name, column_name):

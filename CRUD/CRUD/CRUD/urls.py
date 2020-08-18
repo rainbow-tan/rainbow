@@ -19,4 +19,6 @@ urlpatterns = [
     path('choose_select/', views.choose_select),
     path('debug/', views.debug),
     path('login/', views.login),
+
+
 ]
