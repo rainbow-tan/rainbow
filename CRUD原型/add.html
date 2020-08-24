@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <script src="/static/js/jquery-1.11.3.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <!-- <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script> -->
+    <title>添加数据</title>
+    <style>
+    </style>
+    <script>
+        $(function () {
+
+            $('#add').click(function () {
+                $('#field21_btn').click()
+                $('#field22_btn').click()
+                var field1 = $.trim($('#field1').val())
+                var field2 = $.trim($('#field2').val())
+                var field3 = $.trim($('#field3').val())
+                var field4 = $.trim($('#field4').val())
+                var field5 = $.trim($('#field5').val())
+                var field6 = $.trim($('#field6').val())
+                var field7 = $.trim($('#field7').val())
+                var field8 = $.trim($('#field8').val())
+                var field9 = $.trim($('#field9').val())
+                var field10 = $.trim($('#field10').val())
+                var field11 = $.trim($('#field11').val())
+                var field12 = $.trim($('#field12').val())
+                var field13 = $.trim($('#field13').val())
+                var field14 = $.trim($('#field14').val())
+                var field15 = $.trim($('#field15').val())
+                var field16 = $.trim($('#field16').val())
+                var field17 = $.trim($('#field17').val())
+                var field18 = $.trim($('#field18').val())
+                var field19 = $.trim($('#field19').val())
+                var field20 = $.trim($('#field20').val())
+                var field21 = $.trim($('#field21').val())
+                var field22 = $.trim($('#field22').val())
+                var field23 = $.trim($('#field23').val())
+                var field24 = $.trim($('#field24').val())
+                var field25 = $.trim($('#field25').val())
+                var field26 = $.trim($('#field26').val())
+                var field27 = $.trim($('#field27').val())
+                var field28 = $.trim($('#field28').val())
+                var field29 = $.trim($('#field29').val())
+
+                if (field1 == '' || field2 == '' || field3 == '' || field4 == '' || field5 == '' ||
+                    field6 == '' || field7 == '' ||
+                    field23 == '' || field24 == '' || field25 == '' || field26 == '' || field24 == '' ||
+                    field28 == '' || field29 == '') {
+                    $('#alert_span').text('请完善*标数据')
+                } else {
+                    $('#alert_span').text('')
+                    $.post('/add/', {
+                        field1: field1,
+                        field2: field2,
+                        field3: field3,
+                        field4: field4,
+                        field5: field5,
+                        field6: field6,
+                        field7: field7,
+                        field8: field8,
+                        field9: field9,
+                        field10: field10,
+                        field11: field11,
+                        field12: field12,
+                        field13: field13,
+                        field14: field14,
+                        field15: field15,
+                        field16: field16,
+                        field17: field17,
+                        field18: field18,
+                        field19: field19,
+                        field20: field20,
+                        field21: field21,
+                        field22: field22,
+                        field23: field23,
+                        field24: field24,
+                        field25: field25,
+                        field26: field26,
+                        field27: field27,
+                        field28: field28,
+                        field29: field29
+                    }, function () {
+                        $(window).attr('location','/select.html/')
+                    })
+                }
+            })
+
+            // 本线实测值与标准值之差
+            $('#field19_btn').click(function () {
+                $('#field16_btn').click()
+                var field7 = $.trim($('#field7').val())
+                var field16 = $.trim($('#field16').val())
+                if (field7 === '大于3米' || field7 === '大于3M' || field7 === '>3米' || field7 === '>3M' ||
+                    field7 === '大于三米' || field7 === '大于三M' || field7 === '>三M' || field7 === '大于三M') {
+                    $('#field19').val('正数')
+                } else {
+                    if (field7 != '' && field16 != '') {
+                        $('#field19').val(field7 - field16)
+                    }
+                }
+            })
+
+            // 邻线实测值与标准值之差
+            $('#field20_btn').click(function () {
+                $('#field17_btn').click()
+                var field8 = $.trim($('#field8').val())
+                var field17 = $.trim($('#field17').val())
+                if (field8 === '大于3米' || field8 === '大于3M' || field8 === '>3米' || field8 === '>3M' ||
+                    field8 === '大于三米' || field8 === '大于三M' || field8 === '>三M' || field8 === '大于三M') {
+                    $('#field20').val('正数')
+                } else {
+                    if (field8 != '' && field17 != '') {
+                        $('#field20').val(field8 - field17)
+                    }
+                }
+            })
+
+            //本线数据是否超限
+            $('#field21_btn').click(function () {
+                $('#field19_btn').click()
+                var field19 = $.trim($('#field19').val())
+                if (field19 === '正数') {
+                    $('#field21').val('否')
+                } else {
+                    if (field19 != '') {
+
+                        if (field19 >= 0) {
+                            $('#field21').val('否')
+                        } else {
+                            $('#field21').val('是')
+                        }
+                    }
+                }
+            })
+
+            //邻线数据是否超限
+            $('#field22_btn').click(function () {
+
+                $('#field20_btn').click()
+                var field20 = $.trim($('#field20').val())
+                if (field20 === '正数') {
+                    $('#field22').val('否')
+                } else {
+                    if (field20 != '') {
+                        if (field20 >= 0) {
+                            $('#field22').val('否')
+                        } else {
+                            $('#field22').val('是')
+                        }
+                    }
+                }
+            })
+
+            // 计算本线
+            $('#field16_btn').click(function () {
+                var field6 = $.trim($('#field6').val())
+                var field25 = $.trim($('#field25').val())
+                if (field6 != '' && field25 != '') {
+                    if (field25 === '高铁标准') {
+                        if (7250 < field6 && field6 <= 100000) {
+                            $('#field16').val('')
+                        }
+                        if (7000 < field6 && field6 <= 7250) {
+                            $('#field16').val('800')
+                        }
+                        if (6750 < field6 && field6 <= 7000) {
+                            $('#field16').val('950')
+                        }
+                        if (6500 < field6 && field6 <= 6750) {
+                            $('#field16').val('1100')
+                        }
+                        if (6250 < field6 && field6 <= 6500) {
+                            $('#field16').val('1250')
+                        }
+                        if (6000 < field6 && field6 <= 6250) {
+                            $('#field16').val('1400')
+                        }
+                        if (5750 < field6 && field6 <= 6000) {
+                            $('#field16').val('1550')
+                        }
+                        if (5500 < field6 && field6 <= 5750) {
+                            $('#field16').val('1700')
+                        }
+                        if (5250 < field6 && field6 <= 5500) {
+                            $('#field16').val('1824')
+                        }
+                        if (5000 < field6 && field6 <= 5250) {
+                            $('#field16').val('1947')
+                        }
+                        if (4750 < field6 && field6 <= 5000) {
+                            $('#field16').val('2070')
+                        }
+                        if (4500 < field6 && field6 <= 4750) {
+                            $('#field16').val('2194')
+                        }
+                        if (4250 < field6 && field6 <= 4500) {
+                            $('#field16').val('2317')
+                        }
+                        if (1000 <= field6 && field6 <= 4250) {
+                            $('#field16').val('2440')
+                        }
+                        if (750 <= field6 && field6 < 1000) {
+                            $('#field16').val('2289')
+                        }
+                        if (500 <= field6 && field6 < 750) {
+                            $('#field16').val('2137')
+                        }
+                        if (250 <= field6 && field6 < 500) {
+                            alert(field6 && field6)
+                            $('#field16').val('1986')
+                        }
+                        if (25 <= field6 && field6 < 250) {
+                            $('#field16').val('1834')
+                        }
+                        if (0 <= field6 && field6 < 25) {
+                            $('#field16').val('')
+                        }
+                    }
+                    if (field25 === '普铁标准') {
+
+                        if (6550 < field6 && field6 <= 10000) {
+                            $('#field16').val('')
+                        }
+                        if (6200 < field6 && field6 <= 6550) {
+                            $('#field16').val('1220')
+                        }
+                        if (5500 < field6 && field6 <= 6200) {
+                            $('#field16').val('1700')
+                        }
+                        if (5250 < field6 && field6 <= 5500) {
+                            $('#field16').val('1700')
+                        }
+                        if (5000 < field6 && field6 <= 5250) {
+                            $('#field16').val('1700')
+                        }
+                        if (4750 < field6 && field6 <= 5000) {
+                            $('#field16').val('1850')
+                        }
+                        if (4500 < field6 && field6 <= 4750) {
+                            $('#field16').val('2000')
+                        }
+                        if (4250 < field6 && field6 <= 4500) {
+                            $('#field16').val('2074')
+                        }
+                        if (4000 < field6 && field6 <= 4250) {
+                            $('#field16').val('2147')
+                        }
+                        if (3750 < field6 && field6 <= 4000) {
+                            $('#field16').val('2220')
+                        }
+                        if (3500 < field6 && field6 <= 3750) {
+                            $('#field16').val('2294')
+                        }
+                        if (3250 < field6 && field6 <= 3500) {
+                            $('#field16').val('2367')
+                        }
+                        if (1100 <= field6 && field6 <= 3250) {
+                            $('#field16').val('2440')
+                        }
+                        if (350 <= field6 && field6 < 1100) {
+                            $('#field16').val('1875')
+                        }
+                        if (200 <= field6 && field6 < 350) {
+                            $('#field16').val('1725')
+                        }
+                        if (25 <= field6 && field6 < 200) {
+                            $('#field16').val('1500')
+                        }
+                        if (0 <= field6 && field6 < 25) {
+                            $('#field16').val('')
+                        }
+
+                    }
+                } else {
+                    // alert('请输入本线高度，并且选择参考标准来自动计算本线')
+                }
+            })
+
+            //计算邻线
+            $('#field17_btn').click(function () {
+
+                var field9 = $.trim($('#field9').val())
+                var field25 = $.trim($('#field25').val())
+                // alert(field9)
+                // alert(field25)
+                if (field9 != '' && field25 != '') {
+                    if (field25 === '高铁标准') {
+                        if (7250 < field9 && field9 <= 100000) {
+                            $('#field17').val('')
+                        }
+                        if (7000 < field9 && field9 <= 7250) {
+                            $('#field17').val('800')
+                        }
+                        if (6750 < field9 && field9 <= 7000) {
+                            $('#field17').val('950')
+                        }
+                        if (6500 < field9 && field9 <= 6750) {
+                            $('#field17').val('1100')
+                        }
+                        if (6250 < field9 && field9 <= 6500) {
+                            $('#field17').val('1250')
+                        }
+                        if (6000 < field9 && field9 <= 6250) {
+                            $('#field17').val('1400')
+                        }
+                        if (5750 < field9 && field9 <= 6000) {
+                            $('#field17').val('1550')
+                        }
+                        if (5500 < field9 && field9 <= 5750) {
+                            $('#field17').val('1700')
+                        }
+                        if (5250 < field9 && field9 <= 5500) {
+                            $('#field17').val('1824')
+                        }
+                        if (5000 < field9 && field9 <= 5250) {
+                            $('#field17').val('1947')
+                        }
+                        if (4750 < field9 && field9 <= 5000) {
+                            $('#field17').val('2070')
+                        }
+                        if (4500 < field9 && field9 <= 4750) {
+                            $('#field17').val('2194')
+                        }
+                        if (4250 < field9 && field9 <= 4500) {
+                            $('#field17').val('2317')
+                        }
+                        if (1000 <= field9 && field9 <= 4250) {
+                            $('#field17').val('2440')
+                        }
+                        if (750 <= field9 && field9 < 1000) {
+                            $('#field17').val('2289')
+                        }
+                        if (500 <= field9 && field9 < 750) {
+                            $('#field17').val('2137')
+                        }
+                        if (250 <= field9 && field9 < 500) {
+                            alert(field9 && field9)
+                            $('#field17').val('1986')
+                        }
+                        if (25 <= field9 && field9 < 250) {
+                            $('#field17').val('1834')
+                        }
+                        if (0 <= field9 && field9 < 25) {
+                            $('#field17').val('')
+                        }
+                    }
+                    if (field25 === '普铁标准') {
+
+                        if (6550 < field9 && field9 <= 10000) {
+                            $('#field17').val('')
+                        }
+                        if (6200 < field9 && field9 <= 6550) {
+                            $('#field17').val('1220')
+                        }
+                        if (5500 < field9 && field9 <= 6200) {
+                            $('#field17').val('1700')
+                        }
+                        if (5250 < field9 && field9 <= 5500) {
+                            $('#field17').val('1700')
+                        }
+                        if (5000 < field9 && field9 <= 5250) {
+                            $('#field17').val('1700')
+                        }
+                        if (4750 < field9 && field9 <= 5000) {
+                            $('#field17').val('1850')
+                        }
+                        if (4500 < field9 && field9 <= 4750) {
+                            $('#field17').val('2000')
+                        }
+                        if (4250 < field9 && field9 <= 4500) {
+                            $('#field17').val('2074')
+                        }
+                        if (4000 < field9 && field9 <= 4250) {
+                            $('#field17').val('2147')
+                        }
+                        if (3750 < field9 && field9 <= 4000) {
+                            $('#field17').val('2220')
+                        }
+                        if (3500 < field9 && field9 <= 3750) {
+                            $('#field17').val('2294')
+                        }
+                        if (3250 < field9 && field9 <= 3500) {
+                            $('#field17').val('2367')
+                        }
+                        if (1100 <= field9 && field9 <= 3250) {
+                            $('#field17').val('2440')
+                        }
+                        if (350 <= field9 && field9 < 1100) {
+                            $('#field17').val('1875')
+                        }
+                        if (200 <= field9 && field9 < 350) {
+                            $('#field17').val('1725')
+                        }
+                        if (25 <= field9 && field9 < 200) {
+                            $('#field17').val('1500')
+                        }
+                        if (0 <= field9 && field9 < 25) {
+                            $('#field17').val('###')
+                        }
+                    }
+                } else {
+                    // alert('请输入邻线高度，并且选择参考标准来自动计算邻线')
+                }
+            })
+
+        })
+    </script>
+</head>
+
+
+<body>
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <h3 class="text-center">
+                    添加信号设备建筑接近限界信息
+                </h3>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-6 column">
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="/login.html/">登录</a>
+                    </li>
+                    <li>
+                        <a href="/select.html/">数据</a>
+                    </li>
+                    <li class="active">
+                        Data
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6 column">
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-default" id="add">添加</button>
+                        <button type="button" class="btn btn-default" id="field16_btn">本线</button>
+                        <button type="button" class="btn btn-default" id="field17_btn">邻线</button>
+                        <button type="button" class="btn btn-default" id="field19_btn">距离本线</button>
+                        <button type="button" class="btn btn-default" id="field20_btn">距离邻线</button>
+                        <button type="button" class="btn btn-default" id="field21_btn">本线超限</button>
+                        <button type="button" class="btn btn-default" id="field22_btn">邻线超限</button>
+                        <span id="alert_span" style="color: red;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-6 column">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">线别<span style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="field1" id="field1">
+                                <option></option>
+                                {% for i in field1 %}
+                                <option>{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">综合车间<span style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="field2" id="field2">
+                                <option></option>
+                                {% for i in field2 %}
+                                <option>{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">车站及区间名称<span style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="field3" id="field3">
+                                <option></option>
+                                {% for i in field3 %}
+                                <option>{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field4" class="col-sm-3 control-label">设备名称<span
+                                style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="field4" id="field4" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field5" class="col-sm-3 control-label">公里标<span style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="field5" id="field5" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field6" class="col-sm-3 control-label">本线高度<span
+                                style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="field6" id="field6" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field7" class="col-sm-3 control-label">距本线中心线距离<span
+                                style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="field7" id="field7" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field8" class="col-sm-3 control-label">距邻线中心线距离</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="field8" id="field8" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field9" class="col-sm-3 control-label">邻线高度</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="field9" id="field9" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field10" class="col-sm-3 control-label">曲线半径</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="field10" id="field10" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field11" class="col-sm-3 control-label">外轨超高</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="field11" id="field11" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field12" class="col-sm-3 control-label">本线曲线内侧</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="field12" id="field12" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field13" class="col-sm-3 control-label">本线曲线外侧</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="field13" id="field13" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field14" class="col-sm-3 control-label">邻线曲线内侧</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="field14" id="field14" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field15" class="col-sm-3 control-label">邻线曲线外侧</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="field15" id="field15" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6 column">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="field16" class="col-sm-4 control-label">本线</label>
+                        <div class="col-sm-8">
+                            <input type="text" readonly="readonly" class="form-control" name="field16" id="field16" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field17" class="col-sm-4 control-label">邻线</label>
+                        <div class="col-sm-8">
+                            <input type="text" readonly="readonly" class="form-control" name="field17" id="field17" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field18" class="col-sm-4 control-label">备注</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="field18" id="field18" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <label for="field19" class="col-sm-4 control-label">本线实测值与标准值之差</label>
+                        <div class="col-sm-8">
+                            <input type="text" readonly="readonly" class="form-control" name="field19" id="field19" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field20" class="col-sm-4 control-label">邻线实测值与标准值之差</label>
+                        <div class="col-sm-8">
+                            <input type="text" readonly="readonly" class="form-control" name="field20" id="field20" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field21" class="col-sm-4 control-label">本线数据是否超限</label>
+                        <div class="col-sm-8">
+                            <input type="text" readonly="readonly" class="form-control" name="field21" id="field21" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field22" class="col-sm-4 control-label">邻线数据是否超限</label>
+                        <div class="col-sm-8">
+                            <input type="text" readonly="readonly" class="form-control" name="field22" id="field22" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">行别<span style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="field23" id="field23">
+                                <option></option>
+                                {% for i in field23 %}
+                                <option>{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">站内或区间<span style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="field24" id="field24">
+                                <option></option>
+                                {% for i in field24 %}
+                                <option>{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">参考标准<span style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="field25" id="field25">
+                                <option></option>
+                                {% for i in field25 %}
+                                <option>{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">有无防撞墙<span style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="field26" id="field26">
+                                <option></option>
+                                {% for i in field26 %}
+                                <option>{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">建筑设备类型<span style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="field27" id="field27">
+                                <option></option>
+                                {% for i in field27 %}
+                                <option>{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field28" class="col-sm-4 control-label">核对日期<span
+                                style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="date" class="form-control" name="field28" id="field28" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="field29" class="col-sm-4 control-label">核对人<span
+                                style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="field29" id="field29" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
