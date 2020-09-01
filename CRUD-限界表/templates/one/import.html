@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/static/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="/static/jquery/jquery-1.11.1-min.js"></script>
+    <script type="text/javascript" src="/static/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+    <title></title>
+    <style>
+        table {
+            font-size: 10px;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<script>
+    $(function () {
+
+        $('#set_red').click(function () {
+            $("td").each(function () {
+                if ($(this).text() === '是') {
+                    $(this).css('color', 'red')
+                }
+            })
+        })
+        $('#set_red').click()
+
+        $('#seeFileBtn').click(function () {
+            $('#file_for_see').click()
+            $("#file_for_see").change(function () {
+                $("#see_file_form").submit();
+            })
+        })
+
+        $('#importBtn').click(function () {
+            $('#file_for_import').click()
+            $("#file_for_import").change(function () {
+                $("#import_file_form").submit();
+            })
+        })
+
+
+    })
+</script>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 column">
+                <h3 class="text-center">
+                    导入数据文件
+                </h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 column">
+                <div>
+                    <ul class="breadcrumb">
+                        <li>
+                            <a href="/index.html/">首页</a>
+                        </li>
+                        <li>
+                            <a href="/select.html/">限界统表</a>
+                        </li>
+                        <li>
+                            <a href="#">待开发</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-default" id="set_red" style="display: none;">设置颜色</button>
+                </div>
+            </div>
+            <div class="col-md-6 column">
+                <div class="text-left ">
+                    <form id="see_file_form" class="form-inline hidden" role="form" action="/check_file/" method="post"
+                        enctype="multipart/form-data">
+                        <div class="form-group">
+                            <input type="file" id="file_for_see" name="file" />
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-default">查看</button>
+                        </div>
+                    </form>
+                    <form id="import_file_form" class="form-inline hidden" role="form" action="/import_data/"
+                        method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <input type="file" id="file_for_import" name="file" />
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-default">导入</button>
+                        </div>
+                    </form>
+                    <div class="btn-group">
+                        <button id="seeFileBtn" type="button" class="btn btn-info">查看</button>
+                        <button id="importBtn" type="button" class="btn btn-primary">导入</button>
+                        <button  type="button" class="btn btn-warning">状态：{{success}}</button>
+                    </div>
+                    <div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-12 column">
+                <div>
+                    <table class="table table-bordered table-hover table-condensed">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="checkboxs" value="all"></th>
+                                <th>顺号</th>
+                                <th>线别</th>
+                                <th>综合车间</th>
+                                <th>区间名称</th>
+                                <th>设备名称</th>
+                                <th>公里标</th>
+                                <th>本线高度</th>
+                                <th>距本线</th>
+                                <th>距邻线</th>
+                                <th>邻线高度</th>
+                                <th style="display: none;">曲线半径</th>
+                                <th style="display: none;">外轨超高</th>
+                                <th style="display: none;">本线曲线内侧</th>
+                                <th style="display: none;">本线曲线外侧</th>
+                                <th style="display: none;">邻线曲线内侧</th>
+                                <th style="display: none;">邻线曲线外侧</th>
+                                <th>本线</th>
+                                <th>邻线</th>
+                                <th>备注</th>
+                                <th>本线差</th>
+                                <th>邻线差</th>
+                                <th>本线超限</th>
+                                <th>邻线超限</th>
+                                <th>行别</th>
+                                <th>站内区间</th>
+                                <th>参考标准</th>
+                                <th>防撞墙</th>
+                                <th>设备类型</th>
+                                <th>核对日期</th>
+                                <th>核对人</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody">
+                            {% for i in data %}
+                            <tr>
+                                <td><input type="checkbox" value="{{i.0}}"></td>
+                                <td>{{forloop.counter}}</td>
+                                {% for j in i %}
+                                {% if forloop.first %}
+                                {% else %}
+                                <td>{{j}}</td>
+                                {% endif %}
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

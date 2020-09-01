@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+
+    <link href="/static/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="/static/jquery/jquery-1.11.1-min.js"></script>
+    <script type="text/javascript" src="/static/jquery/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/static/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+
+
+    <style>
+        table {
+            font-size: 10px;
+            white-space: nowrap;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+
+            // 自定义函数
+            $.func = {
+
+                //第几页url
+                currentPageHref: function (current_page) {
+                    $(window).attr('location', '/select.html/?select_field1=' + $('#select_field1')
+                        .val() + '&select_field2=' + $('#select_field2').val() + '&select_field3=' +
+                        $('#select_field3').val() + '&over_limit=' + $('#over_limit').val() +
+                        '&select_field23=' + $('#select_field23').val() + '&select_field24=' + $(
+                            '#select_field24').val() + '&select_field25=' + $('#select_field25')
+                                .val() + '&select_field26=' + $('#select_field26').val() +
+                        '&select_field27=' + $('#select_field27').val() + '&select_field16=' + $(
+                            '#select_field16').val() + '&select_field17=' + $('#select_field17')
+                                .val() + '&pagesize=' + $.trim($('#pagesize').text()) + '&current_page=' +
+                        current_page)
+                },
+
+                // 每页显示多少条记录url
+                pagesizeHref: function (pagesize) {
+                    $(window).attr('location', '/select.html/?select_field1=' + $('#select_field1')
+                        .val() + '&select_field2=' + $('#select_field2').val() + '&select_field3=' +
+                        $('#select_field3').val() + '&over_limit=' + $('#over_limit').val() +
+                        '&select_field23=' + $('#select_field23').val() + '&select_field24=' + $(
+                            '#select_field24').val() + '&select_field25=' + $('#select_field25')
+                                .val() + '&select_field26=' + $('#select_field26').val() +
+                        '&select_field27=' + $('#select_field27').val() + '&select_field16=' + $(
+                            '#select_field16').val() + '&select_field17=' + $('#select_field17')
+                                .val() + '&pagesize=' + pagesize)
+
+                },
+
+                //检查添加表单
+                check_add_form: function () {
+                    $('#add_calculate').click()
+                    var add_field1 = $.trim($('#add_field1').val())
+                    var add_field2 = $.trim($('#add_field2').val())
+                    var add_field3 = $.trim($('#add_field3').val())
+                    var add_field4 = $.trim($('#add_field4').val())
+                    // var add_field5 = $.trim($('#add_field5').val())
+                    var add_field6 = $.trim($('#add_field6').val())
+                    var add_field7 = $.trim($('#add_field7').val())
+                    var add_field23 = $.trim($('#add_field23').val())
+                    var add_field24 = $.trim($('#add_field24').val())
+                    var add_field25 = $.trim($('#add_field25').val())
+                    var add_field26 = $.trim($('#add_field26').val())
+                    var add_field27 = $.trim($('#add_field27').val())
+                    var add_field28 = $.trim($('#add_field28').val())
+                    var add_field29 = $.trim($('#add_field29').val())
+                    if (add_field1 == '' || add_field2 == '' || add_field3 == '' || add_field4 == '' ||
+                         add_field6 == '' || add_field7 == '' || add_field23 == '' ||
+                        add_field24 == '' || add_field25 == '' || add_field26 == '' || add_field27 ==
+                        '' || add_field28 == '' || add_field29 == '') {
+                        alert('请完善*标数据')
+                        return false
+                    } else {
+                        return true
+                    }
+                },
+
+                //检查修改表单
+                check_update_form: function () {
+                    $('#update_calculate').click()
+                    var update_field1 = $.trim($('#update_field1').val())
+                    var update_field2 = $.trim($('#update_field2').val())
+                    var update_field3 = $.trim($('#update_field3').val())
+                    var update_field4 = $.trim($('#update_field4').val())
+                    // var update_field5 = $.trim($('#update_field5').val())
+                    var update_field6 = $.trim($('#update_field6').val())
+                    var update_field7 = $.trim($('#update_field7').val())
+                    var update_field23 = $.trim($('#update_field23').val())
+                    var update_field24 = $.trim($('#update_field24').val())
+                    var update_field25 = $.trim($('#update_field25').val())
+                    var update_field26 = $.trim($('#update_field26').val())
+                    var update_field27 = $.trim($('#update_field27').val())
+                    var update_field28 = $.trim($('#update_field28').val())
+                    var update_field29 = $.trim($('#update_field29').val())
+                    if (update_field1 == '' || update_field2 == '' || update_field3 == '' ||
+                        update_field4 == ''  || update_field6 == '' ||
+                        update_field7 == '' || update_field23 == '' || update_field24 == '' ||
+                        update_field25 == '' || update_field26 == '' || update_field27 == '' ||
+                        update_field28 == '' || update_field29 == '') {
+                        alert('请完善*标数据')
+                        return false
+                    } else {
+                        return true
+                    }
+                }
+
+            }
+
+            //删除
+            $('#delete').click(function () {
+                var checked_boxs = $("#tbody :checked")
+                var delete_ids = ''
+                if (checked_boxs.length < 1) {
+                    alert('至少选择一条数据')
+                } else {
+                    checked_boxs.each(function () {
+                        delete_ids += $(this).val() + '_'
+                    })
+                    $.get('/delete/', {
+                        delete_ids: delete_ids
+                    }, function (data, status) {
+                        $(window).attr('location', '/select.html/')
+                    })
+                }
+            })
+
+            //设置颜色
+            $('#set_red').click(function () {
+                $("td").each(function () {
+                    if ($(this).text() === '是') {
+                        $(this).css('color', 'red')
+                    }
+                })
+            })
+            $('#set_red').click()
+
+            //设置权限
+            $('#see_authority').click(function () {
+                if ($.cookie('is_admin') === 'True') {
+                    $('#delete').attr('disabled', false);
+                }
+            })
+            $('#see_authority').click()
+
+            //全选全不选
+            $('#checkboxs').click(function () {
+                if (this.checked === true) {
+                    $("#tbody :checkbox").prop("checked", true);
+                } else {
+                    $("#tbody :checkbox").prop("checked", false);
+                }
+            })
+
+            //清空查询选择
+            $('#clear_select').click(function () {
+                $('select').val('')
+                $('input').val('')
+            })
+
+            //计算添加
+            $('#add_calculate').click(function () {
+                //计算本线
+                var add_field6 = $.trim($('#add_field6').val())
+                var add_field25 = $.trim($('#add_field25').val())
+                if (add_field6 != '' && add_field25 != '') {
+                    if (add_field25 === '高铁标准') {
+                        if (7250 < add_field6 && add_field6 <= 100000) {
+                            $('#add_field16').val('')
+                        }
+                        if (7000 < add_field6 && add_field6 <= 7250) {
+                            $('#add_field16').val('800')
+                        }
+                        if (6750 < add_field6 && add_field6 <= 7000) {
+                            $('#add_field16').val('950')
+                        }
+                        if (6500 < add_field6 && add_field6 <= 6750) {
+                            $('#add_field16').val('1100')
+                        }
+                        if (6250 < add_field6 && add_field6 <= 6500) {
+                            $('#add_field16').val('1250')
+                        }
+                        if (6000 < add_field6 && add_field6 <= 6250) {
+                            $('#add_field16').val('1400')
+                        }
+                        if (5750 < add_field6 && add_field6 <= 6000) {
+                            $('#add_field16').val('1550')
+                        }
+                        if (5500 < add_field6 && add_field6 <= 5750) {
+                            $('#add_field16').val('1700')
+                        }
+                        if (5250 < add_field6 && add_field6 <= 5500) {
+                            $('#add_field16').val('1824')
+                        }
+                        if (5000 < add_field6 && add_field6 <= 5250) {
+                            $('#add_field16').val('1947')
+                        }
+                        if (4750 < add_field6 && add_field6 <= 5000) {
+                            $('#add_field16').val('2070')
+                        }
+                        if (4500 < add_field6 && add_field6 <= 4750) {
+                            $('#add_field16').val('2194')
+                        }
+                        if (4250 < add_field6 && add_field6 <= 4500) {
+                            $('#add_field16').val('2317')
+                        }
+                        if (1000 <= add_field6 && add_field6 <= 4250) {
+                            $('#add_field16').val('2440')
+                        }
+                        if (750 <= add_field6 && add_field6 < 1000) {
+                            $('#add_field16').val('2289')
+                        }
+                        if (500 <= add_field6 && add_field6 < 750) {
+                            $('#add_field16').val('2137')
+                        }
+                        if (250 <= add_field6 && add_field6 < 500) {
+                            $('#add_field16').val('1986')
+                        }
+                        if (25 <= add_field6 && add_field6 < 250) {
+                            $('#add_field16').val('1834')
+                        }
+                        if (0 <= add_field6 && add_field6 < 25) {
+                            $('#add_field16').val('')
+                        }
+                    }
+                    if (add_field25 === '普铁标准') {
+
+                        if (6550 < add_field6 && add_field6 <= 10000) {
+                            $('#add_field16').val('')
+                        }
+                        if (6200 < add_field6 && add_field6 <= 6550) {
+                            $('#add_field16').val('1220')
+                        }
+                        if (5500 < add_field6 && add_field6 <= 6200) {
+                            $('#add_field16').val('1700')
+                        }
+                        if (5250 < add_field6 && add_field6 <= 5500) {
+                            $('#add_field16').val('1700')
+                        }
+                        if (5000 < add_field6 && add_field6 <= 5250) {
+                            $('#add_field16').val('1700')
+                        }
+                        if (4750 < add_field6 && add_field6 <= 5000) {
+                            $('#add_field16').val('1850')
+                        }
+                        if (4500 < add_field6 && add_field6 <= 4750) {
+                            $('#add_field16').val('2000')
+                        }
+                        if (4250 < add_field6 && add_field6 <= 4500) {
+                            $('#add_field16').val('2074')
+                        }
+                        if (4000 < add_field6 && add_field6 <= 4250) {
+                            $('#add_field16').val('2147')
+                        }
+                        if (3750 < add_field6 && add_field6 <= 4000) {
+                            $('#add_field16').val('2220')
+                        }
+                        if (3500 < add_field6 && add_field6 <= 3750) {
+                            $('#add_field16').val('2294')
+                        }
+                        if (3250 < add_field6 && add_field6 <= 3500) {
+                            $('#add_field16').val('2367')
+                        }
+                        if (1100 <= add_field6 && add_field6 <= 3250) {
+                            $('#add_field16').val('2440')
+                        }
+                        if (350 <= add_field6 && add_field6 < 1100) {
+                            $('#add_field16').val('1875')
+                        }
+                        if (200 <= add_field6 && add_field6 < 350) {
+                            $('#add_field16').val('1725')
+                        }
+                        if (25 <= add_field6 && add_field6 < 200) {
+                            $('#add_field16').val('1500')
+                        }
+                        if (0 <= add_field6 && add_field6 < 25) {
+                            $('#add_field16').val('')
+                        }
+
+                    }
+                } else {
+                    // alert('请输入本线高度，并且选择参考标准来自动计算本线')
+                }
+
+                //计算邻线
+                var add_field9 = $.trim($('#add_field9').val())
+                var add_field25 = $.trim($('#add_field25').val())
+                if (add_field9 != '' && add_field25 != '') {
+                    if (add_field25 === '高铁标准') {
+                        if (7250 < add_field9 && add_field9 <= 100000) {
+                            $('#add_field17').val('')
+                        }
+                        if (7000 < add_field9 && add_field9 <= 7250) {
+                            $('#add_field17').val('800')
+                        }
+                        if (6750 < add_field9 && add_field9 <= 7000) {
+                            $('#add_field17').val('950')
+                        }
+                        if (6500 < add_field9 && add_field9 <= 6750) {
+                            $('#add_field17').val('1100')
+                        }
+                        if (6250 < add_field9 && add_field9 <= 6500) {
+                            $('#add_field17').val('1250')
+                        }
+                        if (6000 < add_field9 && add_field9 <= 6250) {
+                            $('#add_field17').val('1400')
+                        }
+                        if (5750 < add_field9 && add_field9 <= 6000) {
+                            $('#add_field17').val('1550')
+                        }
+                        if (5500 < add_field9 && add_field9 <= 5750) {
+                            $('#add_field17').val('1700')
+                        }
+                        if (5250 < add_field9 && add_field9 <= 5500) {
+                            $('#add_field17').val('1824')
+                        }
+                        if (5000 < add_field9 && add_field9 <= 5250) {
+                            $('#add_field17').val('1947')
+                        }
+                        if (4750 < add_field9 && add_field9 <= 5000) {
+                            $('#add_field17').val('2070')
+                        }
+                        if (4500 < add_field9 && add_field9 <= 4750) {
+                            $('#add_field17').val('2194')
+                        }
+                        if (4250 < add_field9 && add_field9 <= 4500) {
+                            $('#add_field17').val('2317')
+                        }
+                        if (1000 <= add_field9 && add_field9 <= 4250) {
+                            $('#add_field17').val('2440')
+                        }
+                        if (750 <= add_field9 && add_field9 < 1000) {
+                            $('#add_field17').val('2289')
+                        }
+                        if (500 <= add_field9 && add_field9 < 750) {
+                            $('#add_field17').val('2137')
+                        }
+                        if (250 <= add_field9 && add_field9 < 500) {
+                            $('#add_field17').val('1986')
+                        }
+                        if (25 <= add_field9 && add_field9 < 250) {
+                            $('#add_field17').val('1834')
+                        }
+                        if (0 <= add_field9 && add_field9 < 25) {
+                            $('#add_field17').val('')
+                        }
+                    }
+                    if (add_field25 === '普铁标准') {
+
+                        if (6550 < add_field9 && add_field9 <= 10000) {
+                            $('#add_field17').val('')
+                        }
+                        if (6200 < add_field9 && add_field9 <= 6550) {
+                            $('#add_field17').val('1220')
+                        }
+                        if (5500 < add_field9 && add_field9 <= 6200) {
+                            $('#add_field17').val('1700')
+                        }
+                        if (5250 < add_field9 && add_field9 <= 5500) {
+                            $('#add_field17').val('1700')
+                        }
+                        if (5000 < add_field9 && add_field9 <= 5250) {
+                            $('#add_field17').val('1700')
+                        }
+                        if (4750 < add_field9 && add_field9 <= 5000) {
+                            $('#add_field17').val('1850')
+                        }
+                        if (4500 < add_field9 && add_field9 <= 4750) {
+                            $('#add_field17').val('2000')
+                        }
+                        if (4250 < add_field9 && add_field9 <= 4500) {
+                            $('#add_field17').val('2074')
+                        }
+                        if (4000 < add_field9 && add_field9 <= 4250) {
+                            $('#add_field17').val('2147')
+                        }
+                        if (3750 < add_field9 && add_field9 <= 4000) {
+                            $('#add_field17').val('2220')
+                        }
+                        if (3500 < add_field9 && add_field9 <= 3750) {
+                            $('#add_field17').val('2294')
+                        }
+                        if (3250 < add_field9 && add_field9 <= 3500) {
+                            $('#add_field17').val('2367')
+                        }
+                        if (1100 <= add_field9 && add_field9 <= 3250) {
+                            $('#add_field17').val('2440')
+                        }
+                        if (350 <= add_field9 && add_field9 < 1100) {
+                            $('#add_field17').val('1875')
+                        }
+                        if (200 <= add_field9 && add_field9 < 350) {
+                            $('#add_field17').val('1725')
+                        }
+                        if (25 <= add_field9 && add_field9 < 200) {
+                            $('#add_field17').val('1500')
+                        }
+                        if (0 <= add_field9 && add_field9 < 25) {
+                            $('#add_field17').val('###')
+                        }
+                    }
+                } else {
+                    // alert('请输入邻线高度，并且选择参考标准来自动计算邻线')
+                }
+
+                // 本线实测值与标准值之差
+                var add_field7 = $.trim($('#add_field7').val())
+                var add_field16 = $.trim($('#add_field16').val())
+                if (add_field7 === '大于3M' || add_field7 === '大于3m' || add_field7 === '大于3米' || add_field7 === '大于三M' || add_field7 === '大于三m' || add_field7 === '大于三米' || add_field7 === '>3M' || add_field7 === '>3m' || add_field7 === '>3米' || add_field7 === '>三M' || add_field7 === '>三m' || add_field7 === '>三米' || add_field7 === '大于6M' || add_field7 === '大于6m' || add_field7 === '大于6米' || add_field7 === '大于六M' || add_field7 === '大于六m' || add_field7 === '大于六米' || add_field7 === '>6M' || add_field7 === '>6m' || add_field7 === '>6米' || add_field7 === '>六M' || add_field7 === '>六m' || add_field7 === '>六米') {
+                    $('#add_field19').val('正数')
+                } else {
+                    if (add_field7 != '' && add_field16 != '') {
+                        $('#add_field19').val(add_field7 - add_field16)
+                    }
+                }
+
+                // 邻线实测值与标准值之差
+                var add_field8 = $.trim($('#add_field8').val())
+                var add_field17 = $.trim($('#add_field17').val())
+                if (add_field8 === '大于3M' || add_field8 === '大于3m' || add_field8 === '大于3米' || add_field8 === '大于三M' || add_field8 === '大于三m' || add_field8 === '大于三米' || add_field8 === '>3M' || add_field8 === '>3m' || add_field8 === '>3米' || add_field8 === '>三M' || add_field8 === '>三m' || add_field8 === '>三米' || add_field8 === '大于6M' || add_field8 === '大于6m' || add_field8 === '大于6米' || add_field8 === '大于六M' || add_field8 === '大于六m' || add_field8 === '大于六米' || add_field8 === '>6M' || add_field8 === '>6m' || add_field8 === '>6米' || add_field8 === '>六M' || add_field8 === '>六m' || add_field8 === '>六米') {
+                    $('#add_field20').val('正数')
+                } else {
+                    if (add_field8 != '' && add_field17 != '') {
+                        $('#add_field20').val(add_field8 - add_field17)
+                    }
+                }
+
+                //本线数据是否超限
+                var add_field19 = $.trim($('#add_field19').val())
+                if (add_field19 === '正数') {
+                    $('#add_field21').val('否')
+                } else {
+                    if (add_field19 != '') {
+
+                        if (add_field19 >= 0) {
+                            $('#add_field21').val('否')
+                        } else {
+                            $('#add_field21').val('是')
+                        }
+                    }
+                }
+
+                //邻线数据是否超限
+                var add_field20 = $.trim($('#add_field20').val())
+                if (add_field20 === '正数') {
+                    $('#add_field22').val('否')
+                } else {
+                    if (add_field20 != '') {
+                        if (add_field20 >= 0) {
+                            $('#add_field22').val('否')
+                        } else {
+                            $('#add_field22').val('是')
+                        }
+                    }
+                }
+
+                //默认防撞墙为无
+                var add_field26 = $.trim($('#add_field26').val())
+                if (add_field26 === '') {
+                    $('#add_field26').val('无防撞墙')
+                }
+
+                //默认建筑设备名称为其他
+                var add_field27 = $.trim($('#add_field27').val())
+                if (add_field27 === '') {
+                    $('#add_field27').val('其它')
+                }
+
+
+            })
+
+            //计算修改
+            $('#update_calculate').click(function () {
+                //计算本线
+                var update_field6 = $.trim($('#update_field6').val())
+                var update_field25 = $.trim($('#update_field25').val())
+                if (update_field6 != '' && update_field25 != '') {
+                    if (update_field25 === '高铁标准') {
+                        if (7250 < update_field6 && update_field6 <= 100000) {
+                            $('#update_field16').val('')
+                        }
+                        if (7000 < update_field6 && update_field6 <= 7250) {
+                            $('#update_field16').val('800')
+                        }
+                        if (6750 < update_field6 && update_field6 <= 7000) {
+                            $('#update_field16').val('950')
+                        }
+                        if (6500 < update_field6 && update_field6 <= 6750) {
+                            $('#update_field16').val('1100')
+                        }
+                        if (6250 < update_field6 && update_field6 <= 6500) {
+                            $('#update_field16').val('1250')
+                        }
+                        if (6000 < update_field6 && update_field6 <= 6250) {
+                            $('#update_field16').val('1400')
+                        }
+                        if (5750 < update_field6 && update_field6 <= 6000) {
+                            $('#update_field16').val('1550')
+                        }
+                        if (5500 < update_field6 && update_field6 <= 5750) {
+                            $('#update_field16').val('1700')
+                        }
+                        if (5250 < update_field6 && update_field6 <= 5500) {
+                            $('#update_field16').val('1824')
+                        }
+                        if (5000 < update_field6 && update_field6 <= 5250) {
+                            $('#update_field16').val('1947')
+                        }
+                        if (4750 < update_field6 && update_field6 <= 5000) {
+                            $('#update_field16').val('2070')
+                        }
+                        if (4500 < update_field6 && update_field6 <= 4750) {
+                            $('#update_field16').val('2194')
+                        }
+                        if (4250 < update_field6 && update_field6 <= 4500) {
+                            $('#update_field16').val('2317')
+                        }
+                        if (1000 <= update_field6 && update_field6 <= 4250) {
+                            $('#update_field16').val('2440')
+                        }
+                        if (750 <= update_field6 && update_field6 < 1000) {
+                            $('#update_field16').val('2289')
+                        }
+                        if (500 <= update_field6 && update_field6 < 750) {
+                            $('#update_field16').val('2137')
+                        }
+                        if (250 <= update_field6 && update_field6 < 500) {
+                            $('#update_field16').val('1986')
+                        }
+                        if (25 <= update_field6 && update_field6 < 250) {
+                            $('#update_field16').val('1834')
+                        }
+                        if (0 <= update_field6 && update_field6 < 25) {
+                            $('#update_field16').val('')
+                        }
+                    }
+                    if (update_field25 === '普铁标准') {
+
+                        if (6550 < update_field6 && update_field6 <= 10000) {
+                            $('#update_field16').val('')
+                        }
+                        if (6200 < update_field6 && update_field6 <= 6550) {
+                            $('#update_field16').val('1220')
+                        }
+                        if (5500 < update_field6 && update_field6 <= 6200) {
+                            $('#update_field16').val('1700')
+                        }
+                        if (5250 < update_field6 && update_field6 <= 5500) {
+                            $('#update_field16').val('1700')
+                        }
+                        if (5000 < update_field6 && update_field6 <= 5250) {
+                            $('#update_field16').val('1700')
+                        }
+                        if (4750 < update_field6 && update_field6 <= 5000) {
+                            $('#update_field16').val('1850')
+                        }
+                        if (4500 < update_field6 && update_field6 <= 4750) {
+                            $('#update_field16').val('2000')
+                        }
+                        if (4250 < update_field6 && update_field6 <= 4500) {
+                            $('#update_field16').val('2074')
+                        }
+                        if (4000 < update_field6 && update_field6 <= 4250) {
+                            $('#update_field16').val('2147')
+                        }
+                        if (3750 < update_field6 && update_field6 <= 4000) {
+                            $('#update_field16').val('2220')
+                        }
+                        if (3500 < update_field6 && update_field6 <= 3750) {
+                            $('#update_field16').val('2294')
+                        }
+                        if (3250 < update_field6 && update_field6 <= 3500) {
+                            $('#update_field16').val('2367')
+                        }
+                        if (1100 <= update_field6 && update_field6 <= 3250) {
+                            $('#update_field16').val('2440')
+                        }
+                        if (350 <= update_field6 && update_field6 < 1100) {
+                            $('#update_field16').val('1875')
+                        }
+                        if (200 <= update_field6 && update_field6 < 350) {
+                            $('#update_field16').val('1725')
+                        }
+                        if (25 <= update_field6 && update_field6 < 200) {
+                            $('#update_field16').val('1500')
+                        }
+                        if (0 <= update_field6 && update_field6 < 25) {
+                            $('#update_field16').val('')
+                        }
+
+                    }
+                } else {
+                    // alert('请输入本线高度，并且选择参考标准来自动计算本线')
+                }
+
+                //计算邻线
+                var update_field9 = $.trim($('#update_field9').val())
+                var update_field25 = $.trim($('#update_field25').val())
+                if (update_field9 != '' && update_field25 != '') {
+                    if (update_field25 === '高铁标准') {
+                        if (7250 < update_field9 && update_field9 <= 100000) {
+                            $('#update_field17').val('')
+                        }
+                        if (7000 < update_field9 && update_field9 <= 7250) {
+                            $('#update_field17').val('800')
+                        }
+                        if (6750 < update_field9 && update_field9 <= 7000) {
+                            $('#update_field17').val('950')
+                        }
+                        if (6500 < update_field9 && update_field9 <= 6750) {
+                            $('#update_field17').val('1100')
+                        }
+                        if (6250 < update_field9 && update_field9 <= 6500) {
+                            $('#update_field17').val('1250')
+                        }
+                        if (6000 < update_field9 && update_field9 <= 6250) {
+                            $('#update_field17').val('1400')
+                        }
+                        if (5750 < update_field9 && update_field9 <= 6000) {
+                            $('#update_field17').val('1550')
+                        }
+                        if (5500 < update_field9 && update_field9 <= 5750) {
+                            $('#update_field17').val('1700')
+                        }
+                        if (5250 < update_field9 && update_field9 <= 5500) {
+                            $('#update_field17').val('1824')
+                        }
+                        if (5000 < update_field9 && update_field9 <= 5250) {
+                            $('#update_field17').val('1947')
+                        }
+                        if (4750 < update_field9 && update_field9 <= 5000) {
+                            $('#update_field17').val('2070')
+                        }
+                        if (4500 < update_field9 && update_field9 <= 4750) {
+                            $('#update_field17').val('2194')
+                        }
+                        if (4250 < update_field9 && update_field9 <= 4500) {
+                            $('#update_field17').val('2317')
+                        }
+                        if (1000 <= update_field9 && update_field9 <= 4250) {
+                            $('#update_field17').val('2440')
+                        }
+                        if (750 <= update_field9 && update_field9 < 1000) {
+                            $('#update_field17').val('2289')
+                        }
+                        if (500 <= update_field9 && update_field9 < 750) {
+                            $('#update_field17').val('2137')
+                        }
+                        if (250 <= update_field9 && update_field9 < 500) {
+                            $('#update_field17').val('1986')
+                        }
+                        if (25 <= update_field9 && update_field9 < 250) {
+                            $('#update_field17').val('1834')
+                        }
+                        if (0 <= update_field9 && update_field9 < 25) {
+                            $('#update_field17').val('')
+                        }
+                    }
+                    if (update_field25 === '普铁标准') {
+
+                        if (6550 < update_field9 && update_field9 <= 10000) {
+                            $('#update_field17').val('')
+                        }
+                        if (6200 < update_field9 && update_field9 <= 6550) {
+                            $('#update_field17').val('1220')
+                        }
+                        if (5500 < update_field9 && update_field9 <= 6200) {
+                            $('#update_field17').val('1700')
+                        }
+                        if (5250 < update_field9 && update_field9 <= 5500) {
+                            $('#update_field17').val('1700')
+                        }
+                        if (5000 < update_field9 && update_field9 <= 5250) {
+                            $('#update_field17').val('1700')
+                        }
+                        if (4750 < update_field9 && update_field9 <= 5000) {
+                            $('#update_field17').val('1850')
+                        }
+                        if (4500 < update_field9 && update_field9 <= 4750) {
+                            $('#update_field17').val('2000')
+                        }
+                        if (4250 < update_field9 && update_field9 <= 4500) {
+                            $('#update_field17').val('2074')
+                        }
+                        if (4000 < update_field9 && update_field9 <= 4250) {
+                            $('#update_field17').val('2147')
+                        }
+                        if (3750 < update_field9 && update_field9 <= 4000) {
+                            $('#update_field17').val('2220')
+                        }
+                        if (3500 < update_field9 && update_field9 <= 3750) {
+                            $('#update_field17').val('2294')
+                        }
+                        if (3250 < update_field9 && update_field9 <= 3500) {
+                            $('#update_field17').val('2367')
+                        }
+                        if (1100 <= update_field9 && update_field9 <= 3250) {
+                            $('#update_field17').val('2440')
+                        }
+                        if (350 <= update_field9 && update_field9 < 1100) {
+                            $('#update_field17').val('1875')
+                        }
+                        if (200 <= update_field9 && update_field9 < 350) {
+                            $('#update_field17').val('1725')
+                        }
+                        if (25 <= update_field9 && update_field9 < 200) {
+                            $('#update_field17').val('1500')
+                        }
+                        if (0 <= update_field9 && update_field9 < 25) {
+                            $('#update_field17').val('###')
+                        }
+                    }
+                } else {
+                    // alert('请输入邻线高度，并且选择参考标准来自动计算邻线')
+                }
+
+                // 本线实测值与标准值之差
+                var update_field7 = $.trim($('#update_field7').val())
+                var update_field16 = $.trim($('#update_field16').val())
+                if (update_field7 === '大于3M' || update_field7 === '大于3m' || update_field7 === '大于3米' || update_field7 === '大于三M' || update_field7 === '大于三m' || update_field7 === '大于三米' || update_field7 === '>3M' || update_field7 === '>3m' || update_field7 === '>3米' || update_field7 === '>三M' || update_field7 === '>三m' || update_field7 === '>三米' || update_field7 === '大于6M' || update_field7 === '大于6m' || update_field7 === '大于6米' || update_field7 === '大于六M' || update_field7 === '大于六m' || update_field7 === '大于六米' || update_field7 === '>6M' || update_field7 === '>6m' || update_field7 === '>6米' || update_field7 === '>六M' || update_field7 === '>六m' || update_field7 === '>六米') {
+                    $('#update_field19').val('正数')
+                } else {
+                    if (update_field7 != '' && update_field16 != '') {
+                        $('#update_field19').val(update_field7 - update_field16)
+                    }
+                }
+
+                // 邻线实测值与标准值之差
+                var update_field8 = $.trim($('#update_field8').val())
+                var update_field17 = $.trim($('#update_field17').val())
+                if (update_field8 === '大于3M' || update_field8 === '大于3m' || update_field8 === '大于3米' || update_field8 === '大于三M' || update_field8 === '大于三m' || update_field8 === '大于三米' || update_field8 === '>3M' || update_field8 === '>3m' || update_field8 === '>3米' || update_field8 === '>三M' || update_field8 === '>三m' || update_field8 === '>三米' || update_field8 === '大于6M' || update_field8 === '大于6m' || update_field8 === '大于6米' || update_field8 === '大于六M' || update_field8 === '大于六m' || update_field8 === '大于六米' || update_field8 === '>6M' || update_field8 === '>6m' || update_field8 === '>6米' || update_field8 === '>六M' || update_field8 === '>六m' || update_field8 === '>六米') {
+                    $('#update_field20').val('正数')
+                } else {
+                    if (update_field8 != '' && update_field17 != '') {
+                        $('#update_field20').val(update_field8 - update_field17)
+                    }
+                }
+
+                //本线数据是否超限
+                var update_field19 = $.trim($('#update_field19').val())
+                if (update_field19 === '正数') {
+                    $('#update_field21').val('否')
+                } else {
+                    if (update_field19 != '') {
+
+                        if (update_field19 >= 0) {
+                            $('#update_field21').val('否')
+                        } else {
+                            $('#update_field21').val('是')
+                        }
+                    }
+                }
+
+                //邻线数据是否超限
+                var update_field20 = $.trim($('#update_field20').val())
+                if (update_field20 === '正数') {
+                    $('#update_field22').val('否')
+                } else {
+                    if (update_field20 != '') {
+                        if (update_field20 >= 0) {
+                            $('#update_field22').val('否')
+                        } else {
+                            $('#update_field22').val('是')
+                        }
+                    }
+                }
+
+
+                //默认防撞墙为无
+                var update_field26 = $.trim($('#update_field26').val())
+                if (update_field26 === '') {
+                    $('#update_field26').val('无防撞墙')
+                }
+
+                //默认建筑设备名称为其他
+                var update_field27 = $.trim($('#update_field27').val())
+                if (update_field27 === '') {
+                    $('#update_field27').val('其它')
+                }
+
+            })
+
+            //修改按钮
+            $('#updateModalBtn').click(function () {
+                var checked_boxs = $("#tbody :checked")
+                var update_id = ''
+                if (checked_boxs.length != 1) {
+                    alert('请选择一条数据')
+                } else {
+                    checked_boxs.each(function () {
+                        update_id += $(this).val()
+                    })
+                    $.get('/select_for_update/', {
+                        update_id: update_id,
+                    }, function (data, status) {
+                        $('#update_id').val(data['src_update_field0'])
+                        $('#update_field1').val(data['src_update_field1'])
+                        $('#update_field2').val(data['src_update_field2'])
+                        $('#update_field3').val(data['src_update_field3'])
+                        $('#update_field4').val(data['src_update_field4'])
+                        $('#update_field5').val(data['src_update_field5'])
+                        $('#update_field6').val(data['src_update_field6'])
+                        $('#update_field7').val(data['src_update_field7'])
+                        $('#update_field8').val(data['src_update_field8'])
+                        $('#update_field9').val(data['src_update_field9'])
+                        $('#update_field10').val(data['src_update_field10'])
+                        $('#update_field11').val(data['src_update_field11'])
+                        $('#update_field12').val(data['src_update_field12'])
+                        $('#update_field13').val(data['src_update_field13'])
+                        $('#update_field14').val(data['src_update_field14'])
+                        $('#update_field15').val(data['src_update_field15'])
+                        $('#update_field16').val(data['src_update_field16'])
+                        $('#update_field17').val(data['src_update_field17'])
+                        $('#update_field18').val(data['src_update_field18'])
+                        $('#update_field19').val(data['src_update_field19'])
+                        $('#update_field20').val(data['src_update_field20'])
+                        $('#update_field21').val(data['src_update_field21'])
+                        $('#update_field22').val(data['src_update_field22'])
+                        $('#update_field23').val(data['src_update_field23'])
+                        $('#update_field24').val(data['src_update_field24'])
+                        $('#update_field25').val(data['src_update_field25'])
+                        $('#update_field26').val(data['src_update_field26'])
+                        $('#update_field27').val(data['src_update_field27'])
+                        $('#update_field28').val(data['src_update_field28'])
+                        $('#update_field29').val(data['src_update_field29'])
+                        $('#updateModal').modal('show')
+                    })
+                }
+            })
+
+
+        });
+    </script>
+
+
+</head>
+
+<body>
+
+
+
+    <!-- 创建模态窗口 -->
+    <div class="modal fade" id="addModal" role="dialog">
+        <div class="modal-dialog" role="document" style="width: 90%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">添加信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form" id="addForm" action="/add/" method="POST"
+                        onsubmit="return $.func.check_add_form()">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">线别<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <select class="form-control" name="add_field1" id="add_field1">
+                                    <option></option>
+                                    {% for i in field1 %}
+                                    <option>{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <label for="create-company" class="col-sm-2 control-label">本线</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" readonly="readonly" class="form-control" name="add_field16"
+                                    id="add_field16" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">综合车间<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <select class="form-control" name="add_field2" id="add_field2">
+                                    <option></option>
+                                    {% for i in field2 %}
+                                    <option>{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <label for="create-company" class="col-sm-2 control-label">邻线</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" readonly="readonly" class="form-control" name="add_field17"
+                                    id="add_field17" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">车站及区间名称<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <select class="form-control" name="add_field3" id="add_field3">
+                                    <option></option>
+                                    {% for i in field3 %}
+                                    <option>{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <label for="create-company" class="col-sm-2 control-label">备注</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="add_field18" id="add_field18" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">设备名称<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="add_field4" id="add_field4">
+                            </div>
+                            <label for="create-company" class="col-sm-2 control-label">本线之差</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" readonly="readonly" class="form-control" name="add_field19"
+                                    id="add_field19" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">公里标</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="add_field5" id="add_field5" />
+                            </div>
+                            <label for="create-company" class="col-sm-2 control-label">邻线之差</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" readonly="readonly" class="form-control" name="add_field20"
+                                    id="add_field20" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">本线高度<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="add_field6" id="add_field6" />
+                            </div>
+                            <label for="create-company" class="col-sm-2 control-label">本线数据是否超限</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" readonly="readonly" class="form-control" name="add_field21"
+                                    id="add_field21" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">距本线中心线距离<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="add_field7" id="add_field7" />
+                            </div>
+                            <label for="create-company" class="col-sm-2 control-label">邻线数据是否超限</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" readonly="readonly" class="form-control" name="add_field22"
+                                    id="add_field22" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">距邻线中心线距离</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="add_field8" id="add_field8" />
+                            </div>
+                            <label class="col-sm-2 control-label">行别<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <select class="form-control" name="add_field23" id="add_field23">
+                                    <option></option>
+                                    {% for i in field23 %}
+                                    <option>{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">邻线高度</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="add_field9" id="add_field9" />
+                            </div>
+                            <label class="col-sm-2 control-label">站内或区间<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <select class="form-control" name="add_field24" id="add_field24">
+                                    <option></option>
+                                    {% for i in field24 %}
+                                    <option>{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">曲线半径</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="add_field10" id="add_field10" />
+                            </div>
+                            <label class="col-sm-2 control-label">参考标准<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <select class="form-control" name="add_field25" id="add_field25">
+                                    <option></option>
+                                    {% for i in field25 %}
+                                    <option>{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">外轨超高</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="add_field11" id="add_field11" />
+                            </div>
+                            <label class="col-sm-2 control-label">有无防撞墙</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <select class="form-control" name="add_field26" id="add_field26">
+                                    <option></option>
+                                    {% for i in field26 %}
+                                    <option>{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">本线曲线内侧</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="add_field12" id="add_field12" />
+                            </div>
+                            <label class="col-sm-2 control-label">建筑设备类型</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <select class="form-control" name="add_field27" id="add_field27">
+                                    <option></option>
+                                    {% for i in field27 %}
+                                    <option>{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">本线曲线外侧</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="add_field13" id="add_field13" />
+                            </div>
+                            <label for="create-company" class="col-sm-2 control-label">核对日期<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="date" class="form-control" name="add_field28" id="add_field28" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">邻线曲线内侧</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="add_field14" id="add_field14" />
+                            </div>
+                            <label for="create-company" class="col-sm-2 control-label">核对人<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="add_field29" id="add_field29" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">邻线曲线外侧</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="add_field15" id="add_field15" />
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" id="add_calculate">计算
+                    </button>
+                    <button type="submit" form="addForm" class="btn btn-success">添加
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 修改模态窗口 -->
+    <div class="modal fade" id="updateModal" role="dialog">
+        <div class="modal-dialog" role="document" style="width: 90%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">修改信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form" id="updateForm" action="/update/" method="POST"
+                        onsubmit="return $.func.check_update_form()">
+                        <div class="form-group hidden">
+                            <label for="create-company" class="col-sm-2 control-label">顺号</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="update_id" id="update_id" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">线别<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <select class="form-control" name="update_field1" id="update_field1">
+                                    <option></option>
+                                    {% for i in field1 %}
+                                    <option>{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <label for="create-company" class="col-sm-2 control-label">本线</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" readonly="readonly" class="form-control" name="update_field16"
+                                    id="update_field16" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">综合车间<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <select class="form-control" name="update_field2" id="update_field2">
+                                    <option></option>
+                                    {% for i in field2 %}
+                                    <option>{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <label for="create-company" class="col-sm-2 control-label">邻线</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" readonly="readonly" class="form-control" name="update_field17"
+                                    id="update_field17" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">车站及区间名称<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <select class="form-control" name="update_field3" id="update_field3">
+                                    <option></option>
+                                    {% for i in field3 %}
+                                    <option>{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <label for="create-company" class="col-sm-2 control-label">备注</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="update_field18" id="update_field18" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">设备名称<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="update_field4" id="update_field4">
+                            </div>
+                            <label for="create-company" class="col-sm-2 control-label">本线之差</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" readonly="readonly" class="form-control" name="update_field19"
+                                    id="update_field19" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">公里标</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="update_field5" id="update_field5" />
+                            </div>
+                            <label for="create-company" class="col-sm-2 control-label">邻线之差</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" readonly="readonly" class="form-control" name="update_field20"
+                                    id="update_field20" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">本线高度<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="update_field6" id="update_field6" />
+                            </div>
+                            <label for="create-company" class="col-sm-2 control-label">本线数据是否超限</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" readonly="readonly" class="form-control" name="update_field21"
+                                    id="update_field21" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">距本线中心线距离<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="update_field7" id="update_field7" />
+                            </div>
+                            <label for="create-company" class="col-sm-2 control-label">邻线数据是否超限</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" readonly="readonly" class="form-control" name="update_field22"
+                                    id="update_field22" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">距邻线中心线距离</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="update_field8" id="update_field8" />
+                            </div>
+                            <label class="col-sm-2 control-label">行别<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <select class="form-control" name="update_field23" id="update_field23">
+                                    <option></option>
+                                    {% for i in field23 %}
+                                    <option>{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">邻线高度</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="update_field9" id="update_field9" />
+                            </div>
+                            <label class="col-sm-2 control-label">站内或区间<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <select class="form-control" name="update_field24" id="update_field24">
+                                    <option></option>
+                                    {% for i in field24 %}
+                                    <option>{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">曲线半径</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="update_field10" id="update_field10" />
+                            </div>
+                            <label class="col-sm-2 control-label">参考标准<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <select class="form-control" name="update_field25" id="update_field25">
+                                    <option></option>
+                                    {% for i in field25 %}
+                                    <option>{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">外轨超高</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="update_field11" id="update_field11" />
+                            </div>
+                            <label class="col-sm-2 control-label">有无防撞墙</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <select class="form-control" name="update_field26" id="update_field26">
+                                    <option></option>
+                                    {% for i in field26 %}
+                                    <option>{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">本线曲线内侧</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="update_field12" id="update_field12" />
+                            </div>
+                            <label class="col-sm-2 control-label">建筑设备类型</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <select class="form-control" name="update_field27" id="update_field27">
+                                    <option></option>
+                                    {% for i in field27 %}
+                                    <option>{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">本线曲线外侧</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="update_field13" id="update_field13" />
+                            </div>
+                            <label for="create-company" class="col-sm-2 control-label">核对日期<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="date" class="form-control" name="update_field28" id="update_field28" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">邻线曲线内侧</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="update_field14" id="update_field14" />
+                            </div>
+                            <label for="create-company" class="col-sm-2 control-label">核对人<span
+                                    style="font-size: 15px; color: red;">*</span></label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="update_field29" id="update_field29" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="create-company" class="col-sm-2 control-label">邻线曲线外侧</label>
+                            <div class="col-sm-10" style="width: 300px;">
+                                <input type="text" class="form-control" name="update_field15" id="update_field15" />
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" id="update_calculate">计算
+                    </button>
+                    <button type="submit" form="updateForm" class="btn btn-success">修改
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div>
+        <div style="position: relative; left: 10px; top: -10px;">
+            <div class="page-header">
+                <h3>信号设备建筑限界统计表</h3>
+            </div>
+        </div>
+    </div>
+
+    <div style="position: relative; top: -20px; left: 0px; width: 100%; height: 100%;">
+
+        <div style="width: 100%; position: absolute;top: 5px; left: 10px;">
+            <!-- 按条件筛选 -->
+            <div id="select_div" class="btn-toolbar" role="toolbar" style="height: 80px;">
+                <form class="form-inline" role="form" method="get" style="position: relative;top: 8%; left: 5px;">
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">线别</div>
+                            <select class="form-control" name="select_field1" id="select_field1">
+                                {% if current_field1 %}
+                                <option>{{current_field1}}</option>
+                                {% endif %}
+                                <option></option>
+                                {% for i in field1 %}
+                                <option>{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">综合车间</div>
+                            <select class="form-control" name="select_field2" id="select_field2">
+                                {% if current_field2 %}
+                                <option>{{current_field2}}</option>
+                                {% endif %}
+                                <option></option>
+                                {% for i in field2 %}
+                                <option>{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">区间名称</div>
+                            <select class="form-control" name="select_field3" id="select_field3">
+                                {% if current_field3 %}
+                                <option>{{current_field3}}</option>
+                                {% endif %}
+                                <option></option>
+                                {% for i in field3 %}
+                                <option>{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">行别</div>
+                            <select class="form-control" name="select_field23" id="select_field23">
+                                {% if current_field23 %}
+                                <option>{{current_field23}}</option>
+                                {% endif %}
+                                <option></option>
+                                {% for i in field23 %}
+                                <option>{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">站内区间</div>
+                            <select class="form-control" name="select_field24" id="select_field24">
+                                {% if current_field24 %}
+                                <option>{{current_field24}}</option>
+                                {% endif %}
+                                <option></option>
+                                {% for i in field24 %}
+                                <option>{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">参考标准</div>
+                            <select class="form-control" name="select_field25" id="select_field25">
+                                {% if current_field25 %}
+                                <option>{{current_field25}}</option>
+                                {% endif %}
+                                <option></option>
+                                {% for i in field25 %}
+                                <option>{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">防撞墙</div>
+                            <select class="form-control" name="select_field26" id="select_field26">
+                                {% if current_field26 %}
+                                <option>{{current_field26}}</option>
+                                {% endif %}
+                                <option></option>
+                                {% for i in field26 %}
+                                <option>{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">设备类型</div>
+                            <select class="form-control" name="select_field27" id="select_field27">
+                                {% if current_field27 %}
+                                <option>{{current_field27}}</option>
+                                {% endif %}
+                                <option></option>
+                                {% for i in field27 %}
+                                <option>{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" style="width: 120px;">
+                        <div class="input-group">
+                            <div class="input-group-addon">本线</div>
+                            <input class="form-control" type="text" name="select_field16" id="select_field16"
+                                value="{{current_field16}}">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="width: 120px;">
+                        <div class="input-group">
+                            <div class="input-group-addon">邻线</div>
+                            <input class="form-control" type="text" name="select_field17" id="select_field17"
+                                value="{{current_field17}}">
+                        </div>
+                    </div>
+                    <div class="form-group" style="width: 120px;display: none;">
+                        <div class="input-group">
+                            <div class="input-group-addon">Size</div>
+                            <input class="form-control" type="text" name="pagesize"
+                                value="{% if pagesize %}{{pagesize}}{% else %}10{% endif %}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">数据超限</div>
+                            <select class="form-control" name="over_limit" id="over_limit">
+                                {% if over_limit %}
+                                <option>{{over_limit}}</option>
+                                {% endif %}
+                                <option></option>
+                                <option>是</option>
+                                <option>否</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="btn-group">
+                            <button id="clear_select" type="button" class="btn btn-info">清空</button>
+                            <button type="submit" class="btn btn-primary">查询</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- 表格显示数据 -->
+            <div class="btn-toolbar" role="toolbar"
+                style="background-color: #F7F7F7; height: 50px; position: relative;top: 10px;">
+                <div class="btn-group" style="position: relative; top: 18%;">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal"><span
+                            class="glyphicon glyphicon-plus"></span> 添加
+                    </button>
+                    <button type="button" class="btn btn-default" id="updateModalBtn"><span
+                            class="glyphicon glyphicon-pencil"></span> 修改
+                    </button>
+                    <button type="button" disabled="disabled" class="btn btn-danger" id="delete"><span
+                            class="glyphicon glyphicon-minus"></span> 删除
+                    </button>
+                </div>
+                <div class="btn-group" style="position: relative; top: 18%;">
+                    <button type="button" class="btn btn-default" onclick="window.location='/import.html/'"><span
+                            class="glyphicon glyphicon-import"></span> 导入
+                    </button>
+                    <button type="button" onclick="window.open('{{file}}')" class="btn btn-default"><span
+                            class="glyphicon glyphicon-export"></span> 导出
+                    </button>
+                </div>
+
+
+                <div class="btn-group" style="position: relative; top: 18%;">
+                    <button type="button" class="btn btn-info" onclick="window.open('/select.html','_blank');"><span
+                            class="glyphicon glyphicon-gift"></span> 详情
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="window.location='/index.html/'"><span
+                            class="glyphicon glyphicon-home"></span> 首页
+                    </button>
+                    <button type="button" id="set_red" class="btn btn-info hidden"><span
+                            class="glyphicon glyphicon-gift"></span> 设置颜色
+                    </button>
+                    <button type="button" id="see_authority" class="btn btn-info hidden"><span
+                            class="glyphicon glyphicon-gift"></span> 设置权限
+                    </button>
+
+                </div>
+            </div>
+            <div style="position: relative;top: 20px;">
+                <table class="table table-hover table-condensed">
+                    <thead>
+                        <tr style="color: #B3B3B3;">
+                            <th><input type="checkbox" id="checkboxs" value="all"></th>
+                            <th>顺号</th>
+                            <th>线别</th>
+                            <th>综合车间</th>
+                            <th>区间名称</th>
+                            <th>设备名称</th>
+                            <th>公里标</th>
+                            <th>本线高度</th>
+                            <th>距本线</th>
+                            <th>距邻线</th>
+                            <th>临线高度</th>
+                            <th style="display: none;">曲线半径</th>
+                            <th style="display: none;">外轨超高</th>
+                            <th style="display: none;">本线曲线内侧</th>
+                            <th style="display: none;">本线曲线外侧</th>
+                            <th style="display: none;">邻线曲线内侧</th>
+                            <th style="display: none;">邻线曲线外侧</th>
+                            <th>本线</th>
+                            <th>邻线</th>
+                            <th>备注</th>
+                            <th>本线差</th>
+                            <th>邻线差</th>
+                            <th>本线超限</th>
+                            <th>邻线超限</th>
+                            <th>行别</th>
+                            <th>站内区间</th>
+                            <th>参考标准</th>
+                            <th>防撞墙</th>
+                            <th>设备类型</th>
+                            <th>核对日期</th>
+                            <th>核对人</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        {% for i in data %}
+                        <tr>
+                            <td><input type="checkbox" value="{{i.0}}"></td>
+                            <td>{{forloop.counter}}</td>
+                            {% for j in i %}
+                            {% if forloop.first %}
+                            {% else %}
+                            <td>{{j}}</td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div style="height: 50px; position: relative;top: 30px;">
+                <div>
+                    <button type="button" class="btn btn-default" style="cursor: default;">共<b>{{count}}</b>条记录</button>
+                </div>
+                <div class="btn-group" style="position: relative;top: -34px; left: 110px;">
+                    <button type="button" class="btn btn-default" style="cursor: default;">显示</button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                            id="pagesize">
+                            {{pagesize}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" id="pagesizechoose">
+                            <!-- <li><a href="javascript:$.func.pagesizeHref(1)">1</a></li>
+                            <li><a href="javascript:$.func.pagesizeHref(2)">2</a></li>
+                            <li><a href="javascript:$.func.pagesizeHref(3)">3</a></li> -->
+                            <!-- <li><a href="javascript:$.func.pagesizeHref(10)">10</a></li> -->
+                            <li><a href="javascript:$.func.pagesizeHref(20)">20</a></li>
+                            <li><a href="javascript:$.func.pagesizeHref(30)">30</a></li>
+                            <li><a href="javascript:$.func.pagesizeHref(40)">40</a></li>
+                            <li><a href="javascript:$.func.pagesizeHref(50)">50</a></li>
+                            <li><a href="javascript:$.func.pagesizeHref(100)">100</a></li>
+                        </ul>
+                    </div>
+                    <button type="button" class="btn btn-default" style="cursor: default;">条/页</button>
+                </div>
+                <div class="btn-group" style="position: relative;top: -34px; left: 110px;">
+                    <button type="button" class="btn btn-default" style="cursor: default;">当前</button>
+                    <button type="button" class="btn btn-default" style="cursor: default;">{{current_page}}</button>
+                    <button type="button" class="btn btn-default" style="cursor: default;">页</button>
+                </div>
+                <div style="position: relative;top: -88px; left: 432px;width: 700px;">
+                    <nav>
+                        <ul class="pagination">
+                            <li><a href="javascript:$.func.currentPageHref(1)">首页</a></li>
+                            <li>
+                                <a href="javascript:$.func.currentPageHref({{previous_page}})">上一页</a>
+                            </li>
+
+                            <li {% if current_page == "1" %}class="active" {% endif %}><a
+                                    href="javascript:$.func.currentPageHref(1)">1</a></li>
+                            <li {% if current_page == "2" %}class="active" {% endif %}><a
+                                    href="javascript:$.func.currentPageHref(2)">2</a></li>
+                            <li {% if current_page == "3" %}class="active" {% endif %}><a
+                                    href="javascript:$.func.currentPageHref(3)">3</a></li>
+                            <li {% if current_page == "4" %}class="active" {% endif %}><a
+                                    href="javascript:$.func.currentPageHref(4)">4</a></li>
+                            <li {% if current_page == "5" %}class="active" {% endif %}><a
+                                    href="javascript:$.func.currentPageHref(5)">5</a></li>
+                            <li {% if current_page == "6" %}class="active" {% endif %}><a
+                                    href="javascript:$.func.currentPageHref(6)">6</a></li>
+                            <li {% if current_page == "7" %}class="active" {% endif %}><a
+                                    href="javascript:$.func.currentPageHref(7)">7</a></li>
+                            <li {% if current_page == "8" %}class="active" {% endif %}><a
+                                    href="javascript:$.func.currentPageHref(8)">8</a></li>
+                            <li {% if current_page == "9" %}class="active" {% endif %}><a
+                                    href="javascript:$.func.currentPageHref(9)">9</a></li>
+                            <li {% if current_page == "10" %}class="active" {% endif %}><a
+                                    href="javascript:$.func.currentPageHref(10)">10</a></li>
+                            <li><a href="javascript:$.func.currentPageHref({{next_page}})">下一页</a>
+                            </li>
+                            <li><a href="javascript:$.func.currentPageHref({{last_page}})">末页</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导入模态窗口 -->
+    <div class="modal fade" id="importClueModal" role="dialog">
+        <div class="modal-dialog" role="document" style="width: 85%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">导入信息</h4>
+                </div>
+                <div class="modal-body" style="height: 350px;">
+                    <div style="position: absolute ;top: 20px; left: 50px;">
+                        请选择要上传的文件：<small style="color: gray;">[仅支持.xls或.xlsx格式]</small>
+                        <form role="form" id="uploadForm" action="/import_data/" method="POST"
+                            enctype="multipart/form-data">
+                            <div class="form-group">
+                                <input type="file" name="file">
+                            </div>
+                        </form>
+
+                    </div>
+
+                    <div style="position: absolute; width: 400px; height: 320px; left: 45% ; top: 10px;">
+                        <h3>重要提示</h3>
+                        <ul>
+                            <li>给定文件需要符合导入格式。</li>
+                            <li>请确认您的文件大小不超过5MB。</li>
+                            <li>核对日期必须设置为日期类型，参考导入模板设置</li>
+                            <li>默认情况下，字符编码是UTF-8 (统一码)，请确保您导入的文件使用的是正确的字符编码方式。</li>
+                            <li>建议您在导入真实数据之前进行查看文件数据功能验证。</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">关闭
+                    </button>
+                    <button type="submit" form="uploadForm" class="btn btn-success">导入
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
