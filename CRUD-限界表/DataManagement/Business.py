@@ -148,6 +148,15 @@ def calculation_line(data_list):
             # 默认设备类型
             if data[27] == '':
                 data[27] = '其它'
+
+            # float转为int
+            try:
+                data[6] = int(data[6])
+                data[7] = int(data[7])
+                data[8] = int(data[8])
+                data[9] = int(data[9])
+            except Exception as e:
+                pass
         else:
             print('数据长度不足{}:{}'.format(need_len, data))
     return data_list
