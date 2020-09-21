@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>Document</title>
+    <style>
+        .table {
+            margin-bottom: -1px;
+            table-layout: fixed;
+        }
+    </style>
+    <script>
+        $(function () {
+            $('#select').click(function () {
+                $.get('/smart_oi_idle_time', function (data, success) {
+                    $('#smart_oi_body').html('')
+                    var show = ''
+                    for (var index in data) {
+                        var one_data = ''
+                        one_data += '<tr>'
+                        for (var data_index in data[index]) {
+                            one_data += '<td>' + data[index][data_index] + '</td>'
+                        }
+                        one_data += '</tr>'
+                        show += one_data
+                    }
+                    $('#smart_oi_body').html(show)
+                    $('#set_scroll').click()
+                })
+            })
+
+            $('#refresh').click(function () {
+                $('#select').click()
+            })
+            $('#refresh').click()
+
+            $('#set_scroll').click(function () {
+                // alert($('#tbody_div').css('overflow-y'))
+                $("#tbody_div").scrollTop(10);//控制滚动条下移10px
+                if ($("#tbody_div").scrollTop() > 0) {
+                    // alert("有滚动条");
+                    $('#thead_div').css('overflow-y', 'scroll')
+                } else {
+                    // alert("没有滚动条");
+                    $('#thead_div').css('overflow-y', 'hidden')
+                }
+                $("#tbody_div").scrollTop(0);//滚动条返回顶部
+            })
+            $('#set_scroll').click()
+
+        })
+    </script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <h3 class="text-center text-info">
+                    TItle-TItle
+                </h3>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-6 column">
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="#">Home</a>
+                    </li>
+                    <li>
+                        <a href="#">Library</a>
+                    </li>
+                    <li class="active">
+                        Data
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6 column">
+                <div class="text-left">
+                    <div class="btn-group">
+                        <button id="select" type="button" class="btn btn-default">select</button>
+                        <button id="refresh" type="button" class="btn btn-default">refresh</button>
+                        <button id="set_scroll" type="button" class="btn btn-default"
+                            style="display: none;">set_scroll</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="panel panel-default">
+                    <div id="thead_div">
+                        <table class="table table-bordered">
+                            <thead>
+                                <th>Field1</th>
+                                <th>Field2</th>
+                                <th>Field3</th>
+                                <th>Field4</th>
+                                <th>Field5</th>
+                                <th>Field6</th>
+                                <th>Field7</th>
+                                <th>Field8</th>
+                            </thead>
+                        </table>
+                    </div>
+                    <div id="tbody_div" style="height:700px;overflow-y:auto">
+                        <table class="table table-bordered">
+                            <tbody id='smart_oi_body'>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                                <tr>
+                                    <td>Field1</td>
+                                    <td>Field2</td>
+                                    <td>Field3</td>
+                                    <td>Field4</td>
+                                    <td>Field5</td>
+                                    <td>Field6</td>
+                                    <td>Field7</td>
+                                    <td>Field8</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

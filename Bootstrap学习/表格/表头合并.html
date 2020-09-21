@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>标题</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet">
+
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+    <style>
+
+        th,td {
+            text-align: center;
+            vertical-align: middle !important;
+        }
+    </style>
+</head>
+</head>
+
+<body>
+    <table data-toggle="table" class="table-striped table-bordered table-hover ">
+        <thead>
+            <tr>
+                <th data-colspan="2">合并两列</th>
+                <th data-colspan="1" style="border-bottom-style: hidden;">姓名</th>
+                <th data-colspan="1">班级</th>
+                <th style="text-align: center; float: none;display: inline-block;vertical-align: middle;"
+                    data-rowspan="2" data-colspan="3">合并三列2行</th>
+            </tr>
+            <tr>
+                <th><input type="checkbox" id="checkboxs" value="all"></th>
+                <th>学号</th>
+                <th>高数</th>
+                <th>计算机导论</th>
+            </tr>
+            <tr>
+                <th><input type="checkbox" id="checkboxs" value="all"></th>
+                <th>学号</th>
+                <th style="border-top-style: hidden;">姓名</th>
+                <th>班级</th>
+                <th>高数</th>
+                <th>大物</th>
+                <th>计算机导论</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="checkbox" name="" id="" value=""></td>
+                <td>1001</td>
+                <td>李白</td>
+                <td>2015级4班</td>
+                <td>80</td>
+                <td>86</td>
+                <td>90</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="" id="" value=""></td>
+                <td>1001</td>
+                <td>李白</td>
+                <td>2015级4班</td>
+                <td>80</td>
+                <td>86</td>
+                <td>90</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="" id="" value=""></td>
+                <td>1001</td>
+                <td>李白</td>
+                <td>2015级4班</td>
+                <td>80</td>
+                <td>86</td>
+                <td>90</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+
+</html>
