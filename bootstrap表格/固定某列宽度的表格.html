@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+        th,
+        td {
+            text-align: center;
+        }
+
+        .table {
+            margin-bottom: 0px;
+            table-layout: fixed;
+        }
+
+        table tr td:nth-child(1) {
+            width: 500px;
+            background-color: pink;
+        }
+
+        table tr td:nth-child(6) {
+            width: 100px;
+            background-color: aqua;
+        }
+    </style>
+
+    <script>
+        $(function () {
+            $.set_scroll = function () {
+                $("#table_body_div").scrollTop(10);//控制滚动条下移10px
+                if ($("#table_body_div").scrollTop() > 0) {
+                    // alert("有滚动条");
+                    $('#table_head_div').css('overflow-y', 'scroll')
+                } else {
+                    // alert("没有滚动条");
+                    $('#table_head_div').css('overflow-y', 'hidden')
+                }
+                $("#table_body_div").scrollTop(0);//滚动条返回顶部
+            }
+            $.set_scroll()
+        })
+    </script>
+</head>
+
+<body>
+    <p class="text-info">实现表头固定的思路是:两个div控制两个table,一个table只有头，一个table只有身体</p>
+    <p class="text-danger">通过设置.table的margin-botton为0px,取消外边框间距</p>
+    <p class="text-success">通过设置.table的table-layout为fixed,实现对齐表头和身体</p>
+    <p class="text-info">设置控制身体的div高度为200px,且滚动条为自适应，即数据高度超出200px则出现滚动条,为了解决出现滚动条时对不齐的情况,添加js来控制表头div也同步出现滚动条</p>
+    <p style="color: red;">设置某列宽度,通过table tr td:nth-child(n)设置</p>
+    <div id="table_head_div">
+        <table role="table" class="table table-bordered">
+            <tr>
+                <th style="width: 500px;">姓名</th>
+                <th>性别</th>
+                <th>出生日期</th>
+                <th>班级</th>
+                <th>高数</th>
+                <th style="width: 100px;">大物</th>
+                <th>英语</th>
+            </tr>
+        </table>
+    </div>
+
+    <div id="table_body_div" style="height: 200px;overflow-y: auto;">
+        <table role="table" class="table table-bordered">
+            <tr>
+                <td>张三</td>
+                <td>男</td>
+                <td>1996-09-01</td>
+                <td>2015级3班</td>
+                <td>90</td>
+                <td>80</td>
+                <td>88</td>
+            </tr>
+            <tr>
+                <td>李四</td>
+                <td>男</td>
+                <td>1996-09-01</td>
+                <td>2015级3班</td>
+                <td>90</td>
+                <td>80</td>
+                <td>88</td>
+            </tr>
+            <tr>
+                <td>王五</td>
+                <td>男</td>
+                <td>1996-09-01</td>
+                <td>2015级3班</td>
+                <td>90</td>
+                <td>80</td>
+                <td>88</td>
+            </tr>
+            <tr>
+                <td>赵六</td>
+                <td>男</td>
+                <td>1996-09-01</td>
+                <td>2015级3班</td>
+                <td>90</td>
+                <td>80</td>
+                <td>88</td>
+            </tr>
+            <tr>
+                <td>白白</td>
+                <td>男</td>
+                <td>1996-09-01</td>
+                <td>2015级3班</td>
+                <td>90</td>
+                <td>80</td>
+                <td>88</td>
+            </tr>
+            <tr>
+                <td>张三</td>
+                <td>男</td>
+                <td>1996-09-01</td>
+                <td>2015级3班</td>
+                <td>90</td>
+                <td>80</td>
+                <td>88</td>
+            </tr>
+            <tr>
+                <td>李四</td>
+                <td>男</td>
+                <td>1996-09-01</td>
+                <td>2015级3班</td>
+                <td>90</td>
+                <td>80</td>
+                <td>88</td>
+            </tr>
+            <tr>
+                <td>王五</td>
+                <td>男</td>
+                <td>1996-09-01</td>
+                <td>2015级3班</td>
+                <td>90</td>
+                <td>80</td>
+                <td>88</td>
+            </tr>
+            <tr>
+                <td>赵六</td>
+                <td>男</td>
+                <td>1996-09-01</td>
+                <td>2015级3班</td>
+                <td>90</td>
+                <td>80</td>
+                <td>88</td>
+            </tr>
+            <tr>
+                <td>白白</td>
+                <td>男</td>
+                <td>1996-09-01</td>
+                <td>2015级3班</td>
+                <td>90</td>
+                <td>80</td>
+                <td>88</td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>
