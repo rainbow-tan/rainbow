@@ -1,0 +1,2 @@
+python FeiJiDaZhan.py
+pause
