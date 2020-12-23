@@ -34,6 +34,7 @@ def delete_choose():
     flag = messagebox.askyesno('提示信息', '确认删除选中数据?')
     if flag:
         for item in selection:
+            print('选中的数据显示:{}'.format(table.item(item,'values')))
             table.delete(item)
 
 
