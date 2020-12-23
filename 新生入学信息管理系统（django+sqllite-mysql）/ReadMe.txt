@@ -1,0 +1,2 @@
+新生入学信息管理系统
+基于django和sqllite（mysql）

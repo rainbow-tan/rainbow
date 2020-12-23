@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- <link rel="stylesheet" href="bootstrap_3.3.0/css/bootstrap.min.css">
+    <script src="jquery/jquery-2.0.0-.min.js"></script>
+    <script src="bootstrap_3.3.0/js/bootstrap.min.js"></script> -->
+
+    <link rel="stylesheet" href="/static/bootstrap_3.3.0/css/bootstrap.min.css">
+    <script src="/static/jquery/jquery-2.0.0-.min.js"></script>
+    <script src="/static/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+    <style>
+        table {
+            text-align: center;
+        }
+
+        table tr td:nth-child(1) {
+            width: 20px;
+            text-align: center;
+        }
+    </style>
+    <script>
+        $(function () {
+            // 全选全不选
+            $("#select_all").click(function () {
+                if (this.checked) {
+                    $("#tbody :checkbox").prop("checked", true);
+                } else {
+                    $("#tbody :checkbox").prop("checked", false);
+                }
+            });
+
+            // 刷新
+            $('#refresh').click(function () {
+                window.location.href = '/select.html/'
+            })
+
+            // 添加
+            $('#add').click(function () {
+                window.location.href = '/add.html/'
+            })
+
+            // 修改
+            $('#update').click(function () {
+                var choose = $('input[name="select_one"]:checked')
+                var len = choose.length
+                if (len != 1) {
+                    alert('请选择一条记录!')
+                } else {
+                    number = $(choose[0]).val()
+                    window.location.href = '/update.html/?number=' + number
+                }
+            })
+
+            // 删除
+            $('#delete_btn').click(function () {
+                var choose = $('input[name="select_one"]:checked')
+                var len = choose.length
+                if (len == 0) {
+                    alert('请选择一条或多条数据!')
+                } else {
+                    ids = ''
+                    $(choose).each(function () {
+                        ids += $(this).val() + ','
+                    })
+                    if (confirm('确认删除所选数据?')) {
+                        window.location.href = '/delete/?ids=' + ids
+                    }
+                }
+            })
+
+            // 清空
+            $('#clear').click(function () {
+                $('#select_from input').each(function () {
+                    $(this).val("")
+                })
+                $('#select_from select').each(function () {
+                    $(this).val("")
+                })
+
+            })
+
+        })
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <h3 class="text-center">
+                    新生入学信息管理系统
+                </h3>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form class="form-inline" role="form" id="select_from">
+                            <div class="form-group">
+                                <label>学号<span class="label label-danger"
+                                        id="xuehao_span"></span></label>
+                                <input type="input" class="form-control" id="number" name="number" 
+                                    value="{{select_number}}" />
+                            </div>
+                            <div class="form-group">
+                                <label>姓名</label>
+                                <input type="input" class="form-control" id="name" name="name"
+                                    value="{{select_name}}" />
+                            </div>
+                            <div class="form-group">
+                                <label>性别</label>
+                                <select class="form-control" id="sex" name="sex">
+                                    {% if select_sex %}
+                                    <option>{{select_sex}}</option>
+                                    {% endif %}
+                                    <option></option>
+                                    {% for name in sex %}
+                                    <option>{{name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>学院</label>
+                                <select class="form-control" id="faculty" name="faculty">
+                                    {% if select_faculty %}
+                                    <option>{{select_faculty}}</option>
+                                    {% endif %}
+                                    <option></option>
+                                    {% for name in faculty %}
+                                    <option>{{name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>班级</label>
+                                <input type="input" class="form-control" id="class_name" name="class_name"
+                                    value="{{select_class_name}}" />
+                            </div>
+                            <div class="form-group">
+                                <label>考区</label>
+                                <select class="form-control" id="exam_area" name="exam_area">
+                                    {% if select_exam_area %}
+                                    <option>{{select_exam_area}}</option>
+                                    {% endif %}
+                                    <option></option>
+                                    {% for name in exam_area %}
+                                    <option>{{name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>入学时间</label>
+                                <input type="date" class="form-control" id="into_date" name="into_date"
+                                    value="{{select_into_date}}" />
+                            </div>
+                            <div class="form-group">
+                                <label>语种</label>
+                                <select class="form-control" id="language" name="language">
+                                    {% if select_language %}
+                                    <option>{{select_language}}</option>
+                                    {% endif %}
+                                    <option></option>
+                                    {% for name in language %}
+                                    <option>{{name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>名族</label>
+                                <select class="form-control" id="nationality" name="nationality">
+                                    {% if select_nationality %}
+                                    <option>{{select_nationality}}</option>
+                                    {% endif %}
+                                    <option></option>
+                                    {% for name in nationality %}
+                                    <option>{{name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="button" id="clear" class="btn btn-primary">清空</button>
+                            <button type="submit" class="btn btn-info">查询</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" id="add">
+                        <span class="glyphicon glyphicon-plus"></span>添加
+                    </button>
+                    <button type="button" id="update" class="btn btn-success">
+                        <span class="glyphicon glyphicon-pencil"></span>修改
+                    </button>
+                    <button type="button" class="btn btn-danger" id="delete_btn">
+                        <span class="glyphicon glyphicon-trash"></span>删除
+                    </button>
+                    <button type="button" class="btn btn-primary" id="refresh">
+                        <span class="glyphicon glyphicon-refresh"></span> 刷新
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                        <tr class="success">
+                            <td><input type="checkbox" name="select_all" id="select_all"></td>
+                            <td>学号</td>
+                            <td>姓名</td>
+                            <td>性别</td>
+                            <td>学院</td>
+                            <td>班级</td>
+                            <td>考区</td>
+                            <td>入学时间</td>
+                            <td>语种</td>
+                            <td>出生年月</td>
+                            <td>名族</td>
+                            <td>分数</td>
+                            <td>邮箱</td>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        {% for one_object in objects %}
+                        <tr>
+                            <td><input type="checkbox" name="select_one" value="{{one_object.number}}"></td>
+                            <td>{{one_object.number}}</td>
+                            <td>{{one_object.name}}</td>
+                            <td>{{one_object.sex}}</td>
+                            <td>{{one_object.faculty}}</td>
+                            <td>{{one_object.class_name}}</td>
+                            <td>{{one_object.exam_area}}</td>
+                            <td>{{one_object.into_date}}</td>
+                            <td>{{one_object.language}}</td>
+                            <td>{{one_object.birthday}}</td>
+                            <td>{{one_object.nationality}}</td>
+                            <td>{{one_object.grade}}</td>
+                            <td>{{one_object.email}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

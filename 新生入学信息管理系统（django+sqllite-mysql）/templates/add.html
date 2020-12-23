@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加信息</title>
+
+    <!-- <link rel="stylesheet" href="bootstrap_3.3.0/css/bootstrap.min.css">
+    <script src="jquery/jquery-2.0.0-.min.js"></script>
+    <script src="bootstrap_3.3.0/js/bootstrap.min.js"></script> -->
+
+    <link rel="stylesheet" href="/static/bootstrap_3.3.0/css/bootstrap.min.css">
+    <script src="/static/jquery/jquery-2.0.0-.min.js"></script>
+    <script src="/static/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+
+    <script>
+        $(function () {
+            $.set_date = function () {
+                // 给input  date设置默认值
+                var now = new Date();
+                //格式化日，如果小于9，前面补0
+                var day = ("0" + now.getDate()).slice(-2);
+                //格式化月，如果小于9，前面补0
+                var month = ("0" + (now.getMonth() + 1)).slice(-2);
+                //拼装完整日期格式
+                var today = now.getFullYear() + "-" + (month) + "-" + (day);
+                //完成赋值
+                $('#into_date').val(today);
+            }
+            $.set_date()
+
+
+            $.check_from = function () {
+                var number = $.trim($('#number').val())
+                var name = $.trim($('#name').val())
+                var sex = $.trim($('#sex').val())
+                var faculty = $.trim($('#faculty').val())
+                var class_name = $.trim($('#class_name').val())
+                var exam_area = $.trim($('#exam_area').val())
+                var into_date = $.trim($('#into_date').val())
+                var language = $.trim($('#language').val())
+                var birthday = $.trim($('#birthday').val())
+                var nationality = $.trim($('#nationality').val())
+                var grade = $.trim($('#grade').val())
+                if (number == "" || name == "" || sex == "" || faculty == "" || class_name == "" || exam_area == "" || into_date == "" || language == "" || birthday == "" || nationality == "" || grade == "") {
+                    alert('请完善*标数据')
+                    return false
+                }
+                $('#number').blur()
+                xuehao_text = $('#xuehao_span').text()
+                if (xuehao_text != '') {
+                    return false
+                }
+                return true
+            }
+
+            $('#number').blur(function () {
+                $.get('/exist_number/', { number: $.trim($(this).val()) }, function (data, status) {
+                    if (data.exist) {
+                        $('#xuehao_span').text('学号已经存在!')
+                        return false
+                    } else {
+                        $('#xuehao_span').text('')
+                        return true
+                    }
+                })
+            })
+
+            $('#return_btn').click(function () {
+                window.location.href = '/select.html/'
+            })
+        })
+    </script>
+</head>
+
+<body>
+
+    <div class="container">
+        <br>
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <h3 class="text-center">新生报到信息录入</h3>
+            </div>
+        </div>
+        <br>
+        <div class="row clearfix">
+            <form role="form" id="add_form" onsubmit="return $.check_from()" action="/add/" method="POST">
+                {% csrf_token %}
+                <div class="col-md-6 column">
+
+                    <div class="form-group">
+                        <label>学号<span style="color: red;">*</span><span class="label label-danger"
+                                id="xuehao_span"></span></label>
+                        <input type="input" class="form-control" id="number" name="number" />
+                    </div>
+                    <div class="form-group">
+                        <label>姓名<span style="color: red;">*</span></label>
+                        <input type="input" class="form-control" id="name" name="name" />
+                    </div>
+                    <div class="form-group">
+                        <label>性别<span style="color: red;">*</span></label>
+                        <select class="form-control" id="sex" name="sex">
+                            <option></option>
+                            {% for name in sex %}
+                            <option>{{name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>学院<span style="color: red;">*</span></label>
+                        <select class="form-control" id="faculty" name="faculty">
+                            <option></option>
+                            {% for name in faculty %}
+                            <option>{{name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>班级<span style="color: red;">*</span></label>
+                        <input type="input" class="form-control" id="class_name" name="class_name" />
+                    </div>
+                    <div class="form-group">
+                        <label>考区<span style="color: red;">*</span></label>
+                        <select class="form-control" id="exam_area" name="exam_area">
+                            <option></option>
+                            {% for name in exam_area %}
+                            <option>{{name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+                <div class="col-md-6 column">
+                    <div class="form-group">
+                        <label>入学时间<span style="color: red;">*</span></label>
+                        <input type="date" class="form-control" id="into_date" name="into_date" />
+                    </div>
+                    <div class="form-group">
+                        <label>语种<span style="color: red;">*</span></label>
+                        <select class="form-control" id="language" name="language">
+                            <option></option>
+                            {% for name in language %}
+                            <option>{{name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>出生年月<span style="color: red;">*</span></label>
+                        <input type="date" class="form-control" id="birthday" name="birthday" />
+                    </div>
+                    <div class="form-group">
+                        <label>名族<span style="color: red;">*</span></label>
+                        <select class="form-control" id="nationality" name="nationality">
+                            <option></option>
+                            {% for name in nationality %}
+                            <option>{{name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>分数<span style="color: red;">*</span></label>
+                        <input type="number" step="0.1" class="form-control" id="grade" name="grade" />
+                    </div>
+                    <div class="form-group">
+                        <label>邮箱</label>
+                        <input type="email" class="form-control" id="email" name="email" />
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div style="text-align: right;">
+                    <button type="button" id="return_btn" class="btn btn-info">返回</button>
+                    <button type="submit" form="add_form" class="btn btn-success">添加</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
