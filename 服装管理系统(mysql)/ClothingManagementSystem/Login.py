@@ -58,7 +58,7 @@ def login():
 
 if __name__ == '__main__':
     win = tkinter.Tk()  # 窗口
-    win.title('南风丶轻语')  # 标题
+    win.title('服装管理系统')  # 标题
     screenwidth = win.winfo_screenwidth()  # 屏幕宽度
     screenheight = win.winfo_screenheight()  # 屏幕高度
     width = 500
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     win.resizable(0, 0)
 
     f0 = Frame(win)
-    Label(text='彩蝶服装管理', font=('', 20)).pack(pady=20)
+    Label(text='服装管理系统', font=('', 20)).pack(pady=20)
     f = Frame(win)
     Label(f, text='用户名', font=('', 20)).grid(row=0, column=0, padx=30, pady=30)
     Label(f, text='密  码', font=('', 20)).grid(row=1, column=0)

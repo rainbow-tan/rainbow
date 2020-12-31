@@ -94,7 +94,7 @@ def fanhui():
 
 if __name__ == '__main__':
     win = tkinter.Tk()  # 窗口
-    win.title('南风丶轻语')  # 标题
+    win.title('服装管理系统')  # 标题
     screenwidth = win.winfo_screenwidth()  # 屏幕宽度
     screenheight = win.winfo_screenheight()  # 屏幕高度
     width = 580
