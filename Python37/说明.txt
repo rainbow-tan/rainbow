@@ -1,0 +1,3 @@
+安装了pymysql
+安装了MySQLdb
+安装了django
