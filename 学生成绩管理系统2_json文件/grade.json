@@ -1,0 +1,47 @@
+[
+    {
+        "student_id": "1001",
+        "student_name": "李白",
+        "class_name": "计算15-4",
+        "course_title": "计算机导论",
+        "usual_score": "80",
+        "test_score": "99",
+        "final_score": "89"
+    },
+    {
+        "student_id": "1001",
+        "student_name": "李白",
+        "class_name": "计算15-4",
+        "course_title": "大物",
+        "usual_score": "99",
+        "test_score": "88",
+        "final_score": "93"
+    },
+    {
+        "student_id": "1002",
+        "student_name": "小红",
+        "class_name": "计算15-1",
+        "course_title": "大物",
+        "usual_score": "85",
+        "test_score": "80",
+        "final_score": "82"
+    },
+    {
+        "student_id": "1008",
+        "student_name": "李白",
+        "class_name": "计算15-4班",
+        "course_title": "大学物理",
+        "usual_score": "80",
+        "test_score": "66",
+        "final_score": "73"
+    },
+    {
+        "student_id": "1005",
+        "student_name": "卫庄",
+        "class_name": "计算15-4",
+        "course_title": "计算机导论",
+        "usual_score": "80",
+        "test_score": "98",
+        "final_score": "89"
+    }
+]
