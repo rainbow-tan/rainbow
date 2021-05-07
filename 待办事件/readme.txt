@@ -1,0 +1,5 @@
+点击添加,添加待办事件到todolist中,界面自动添加一个对应的checkbox
+选中chebox后,点击完成,对应待办事项为完成,颜色为绿色
+选中chebox后,点击删除,,对应待办事项被删除,对应CheckBox被移除
+点击保存,保存现在的todolist到文件中
+点击加载,加载文件中的todolist
