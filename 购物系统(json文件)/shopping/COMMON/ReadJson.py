@@ -7,8 +7,10 @@ class ReadJson:
     def __init__(self, json_name):
         self.json_name = json_name
 
-    def load_data(self):
-        json_data = {}
+    def load_data(self, default=None):
+        if default is None:
+            default = {}
+        json_data = default
         if os.path.isfile(self.json_name):
             try:
                 with open(self.json_name, 'r', encoding='utf-8') as file_handler:

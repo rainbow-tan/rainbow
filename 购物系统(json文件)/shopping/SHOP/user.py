@@ -4,21 +4,10 @@ import os
 import tkinter
 from tkinter import *
 from tkinter import messagebox
-from ReadJson import ReadJson
-from pub import COUNT
-from pub import CURRENT_SHOP
-from pub import FONT_SIZE_16
-from pub import FONT_SIZE_24
-from pub import GOODS_NAME
-from pub import GOODS_PRICE
-from pub import PHONE
-from pub import SHOP_ADDRESS
-from pub import SHOP_GOODS
-from pub import SHOP_INFO
-from pub import SHOP_NAME
-from pub import SHOP_OWNER
-from pub import SHOP_PWD
-from pub import SHOP_USER
+
+sys.path.append('../')
+from COMMON.ReadJson import ReadJson
+from COMMON.pub import *
 
 
 def login():
@@ -27,16 +16,14 @@ def login():
     if user == '' or pwd == '':
         messagebox.showinfo('提示信息', '用户名或密码不能为空')
         return None
-    print('登录用户名:{}'.format(user))
-    print('登录密码:{}'.format(pwd))
-    obj = ReadJson(SHOP_INFO)
+
+    obj = ReadJson(SHOP_INFO_FILE)
     users = list(obj.load_data().values())
-    print("店铺信息:{}".format(users))
 
     current_info = dict()
     for info in users:
         if user == info.get(SHOP_USER, '') and pwd == info.get(SHOP_PWD, ''):
-            print('{}用户可以登录'.format(user))
+
             shop_user = info.get(SHOP_USER, '初始化用户')
             shop_pwd = info.get(SHOP_PWD, '初始化密码')
             shop_name = info.get(SHOP_NAME, '初始化店名')
@@ -47,20 +34,21 @@ def login():
             goods_name = info.get(GOODS_NAME, '')
             goods_price = info.get(GOODS_PRICE, '')
             count = info.get(COUNT, '')
+
             current_info[SHOP_USER] = shop_user
             current_info[SHOP_PWD] = shop_pwd
             current_info[SHOP_NAME] = shop_name
             current_info[SHOP_ADDRESS] = shop_address
             current_info[SHOP_OWNER] = shop_owner
             current_info[PHONE] = phone
-            print('shop goods:{}'.format(shop_goods))
+            current_info[SHOP_GOODS] = info.get(SHOP_GOODS)
+
             current_info[SHOP_GOODS] = shop_goods
 
-            print('当前用户:{}'.format(current_info))
-            with open(CURRENT_SHOP, 'w', encoding='utf-8') as f:
-                json.dump(current_info, f, ensure_ascii=FALSE, )
+            with open(CURRENT_SHOP_FILE, 'w', encoding='utf-8') as f:
+                json.dump(current_info, f, indent=4, ensure_ascii=FALSE, )
             window.destroy()
-            os.system('python shop_choose.py')
+            os.system('python choose.py')
             return None
     messagebox.showinfo('提示信息', '用户名或密码错误')
     return None
@@ -72,28 +60,34 @@ def register():
     if user == '' or pwd == '':
         messagebox.showinfo('提示信息', '用户名或密码不能为空')
         return None
-    print('注册用户名:{}'.format(user))
-    print('注册密码:{}'.format(pwd))
-    obj = ReadJson(SHOP_INFO)
+
+    obj = ReadJson(SHOP_INFO_FILE)
     users = list(obj.load_data().values())
-    print("用户信息:{}".format(users))
+
     for info in users:
         if user == info.get(SHOP_USER, ''):
             msg = '{}用户已经存在'.format(user)
-            print(msg)
+
             messagebox.showinfo('提示信息', msg)
             return None
 
-    add_info = {SHOP_USER: user, SHOP_PWD: pwd}
+    add_info = {
+        SHOP_USER: user,
+        SHOP_PWD: pwd,
+        SHOP_NAME: user,
+        SHOP_ADDRESS: '{}的地址'.format(user),
+        SHOP_OWNER: user,
+        PHONE: '{}的联系方式'.format(user),
+        SHOP_GOODS: {}
+        }
     users.append(add_info)
 
     new_user = dict()
     for index, one_user in enumerate(users):
         new_user[str(index + 1)] = one_user
-    print('添加后的用户组:{}'.format(new_user))
 
-    with open(SHOP_INFO, 'w', encoding='utf-8') as f:
-        json.dump(new_user, f, ensure_ascii=False)
+    with open(SHOP_INFO_FILE, 'w', encoding='utf-8') as f:
+        json.dump(new_user, f, indent=4, ensure_ascii=False)
     msg = '注册成功！！！'
     messagebox.showinfo('提示信息', msg)
     pass
@@ -109,7 +103,9 @@ if __name__ == '__main__':
     login_btn = tkinter.Button(frame, text='登录', font=('', FONT_SIZE_16), command=login)
     register_btn = tkinter.Button(frame, text='注册', font=('', FONT_SIZE_16), command=register)
     user_entry = tkinter.Entry(frame)
-    pwd_entry = tkinter.Entry(frame,show='*')
+    pwd_entry = tkinter.Entry(frame, show='*')
+    pwd_entry.bind('<Return>', lambda x: login())
+    user_entry.focus_set()
 
     welcome_label.pack(side=tkinter.TOP, padx=10, pady=40)
     frame.pack()
@@ -121,13 +117,14 @@ if __name__ == '__main__':
     login_btn.grid(row=2, column=0, padx=10, pady=35)
     register_btn.grid(row=2, column=1, padx=10, pady=35, sticky='e')
 
-    window.title('购物系统')
+    window.title(SHOP_APP_TITLE)
 
-    screenwidth = window.winfo_screenwidth()  # 屏幕宽度
-    screenheight = window.winfo_screenheight()  # 屏幕高度
+    screenwidth = window.winfo_screenwidth()
+    screenheight = window.winfo_screenheight()
     width = 500
     height = 500
     x = int((screenwidth - width) / 2)
     y = int((screenheight - height) / 2)
     window.geometry('{}x{}+{}+{}'.format(width, height, x, y))
+    window.resizable(0, 0)
     window.mainloop()

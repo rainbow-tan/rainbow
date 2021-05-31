@@ -1,68 +1,64 @@
 # -*- coding: utf-8 -*-
 import json
 import os
+import sys
+
+sys.path.append('../')
 import tkinter
 from tkinter import messagebox
 from tkinter import ttk
 
-from ReadJson import ReadJson
-from pub import COUNT
-from pub import CURRENT_SHOP
-from pub import FONT_SIZE_16
-from pub import FONT_SIZE_24
-from pub import GOODS_NAME
-from pub import GOODS_PRICE
-from pub import SHOP_GOODS
-from pub import SHOP_INFO
-from pub import SHOP_USER
+from COMMON.ReadJson import ReadJson
+from COMMON.pub import COUNT
+from COMMON.pub import CURRENT_SHOP_FILE
+from COMMON.pub import FONT_SIZE_16
+from COMMON.pub import FONT_SIZE_24
+from COMMON.pub import GOODS_NAME
+from COMMON.pub import GOODS_PRICE
+from COMMON.pub import SHOP_GOODS
+from COMMON.pub import SHOP_INFO_FILE
+from COMMON.pub import SHOP_USER
 
 
 def insert_data(data_list):
-    for one_data in data_list:  # 插入数据
+    for one_data in data_list:
         tree.insert('', tkinter.END, value=one_data)
 
 
 def clear_item():
-    # 获取item并移除
     choose = messagebox.askyesno('提示', '确认删除已选择记录吗？')
     if choose:
 
-        obj1 = ReadJson(CURRENT_SHOP)
+        obj1 = ReadJson(CURRENT_SHOP_FILE)
         current_data = obj1.load_data()
-        print("当前用户信息")
-        print(current_data)
+
         current_user = current_data.get(SHOP_USER, '')
-        print('当前用户:{}'.format(current_user))
-        obj2 = ReadJson(SHOP_INFO)
+
+        obj2 = ReadJson(SHOP_INFO_FILE)
         info = obj2.load_data()
-        print('总商店信息')
-        print(info)
+
         for i, j in info.items():
             usr = j.get(SHOP_USER, '')
             if current_user == usr:
-                print('找到当前用户')
-                print(j)
+
                 j[SHOP_GOODS] = dict()
-        print('删除所有商品后')
+
         current_data[SHOP_GOODS] = dict()
-        print(current_data)
-        print('===============')
-        print(info)
-        with open(CURRENT_SHOP, 'w', encoding='utf-8') as f:
-            json.dump(current_data, f, ensure_ascii=False)
-        with open(SHOP_INFO, 'w', encoding='utf-8') as f:
-            json.dump(info, f, ensure_ascii=False)
+
+        with open(CURRENT_SHOP_FILE, 'w', encoding='utf-8') as f:
+            json.dump(current_data, f, indent=4, ensure_ascii=False)
+        with open(SHOP_INFO_FILE, 'w', encoding='utf-8') as f:
+            json.dump(info, f, indent=4, ensure_ascii=False)
         for child in tree.get_children():
             tree.delete(child)
         window.destroy()
-        os.system('python shop_goods.py')
+        os.system('python goods.py')
     pass
 
 
 def add():
-    print('添加')
     window.destroy()
-    os.system('python shop_add_goods.py')
+    os.system('python add_goods.py')
     pass
 
 
@@ -72,9 +68,9 @@ def update():
         messagebox.showwarning('提示', '选择一条记录进行修改')
     else:
         data1 = tree.item(selects[0], 'values')
-        print(data1)
+
         window.destroy()
-        os.system('python shop_update_goods.py {} {} {}'.format(data1[0], data1[1], data1[2]))
+        os.system('python update_goods.py {} {} {}'.format(data1[0], data1[1], data1[2]))
 
 
 def delete():
@@ -82,43 +78,35 @@ def delete():
     if len(selects) > 0:
         all_data = []
         for select in selects:
-            all_data.append(tree.item(select, 'values'))  # 获取item的值
+            all_data.append(tree.item(select, 'values'))
         choose = messagebox.askyesno('提示', '确认删除已选择记录吗？')
-        print(choose)
-        print('选中要删除的的数据')
-        print(all_data)
+
         if choose:
             for data1 in all_data:
-                print(data1)
-                obj1 = ReadJson(CURRENT_SHOP)
+
+                obj1 = ReadJson(CURRENT_SHOP_FILE)
                 current_data = obj1.load_data()
-                print("当前用户信息")
-                print(current_data)
+
                 current_user = current_data.get(SHOP_USER, '')
-                print('当前用户:{}'.format(current_user))
+
                 current_goods = current_data.get(SHOP_GOODS, {})
                 for i, j in current_goods.items():
                     if data1[0] == j.get(GOODS_NAME):
-                        print('对应删除商品的key')
-                        print(i)
-                        print(j)
+
                         current_data[SHOP_GOODS].pop(i)
                         break
-                print('删除单个商品后，店铺信息')
-                print(current_data)
-                with open(CURRENT_SHOP, 'w', encoding='utf-8') as f:
-                    json.dump(current_data, f, ensure_ascii=False)
 
-                obj2 = ReadJson(SHOP_INFO)
+                with open(CURRENT_SHOP_FILE, 'w', encoding='utf-8') as f:
+                    json.dump(current_data, f, indent=4, ensure_ascii=False)
+
+                obj2 = ReadJson(SHOP_INFO_FILE)
                 info = obj2.load_data()
-                print('总商店信息')
-                print(info)
+
                 remove_key = None
                 for i, j in info.items():
                     usr = j.get(SHOP_USER, '')
                     if current_user == usr:
-                        print('找到当前用户key')
-                        print(i)
+
                         remove_key = i
                         break
                 info.pop(remove_key)
@@ -129,20 +117,18 @@ def delete():
                 new_data = dict()
                 for i, j in enumerate(new):
                     new_data[str(i + 1)] = j
-                print('新的总店铺信息')
-                print(new_data)
-                with open(SHOP_INFO, 'w', encoding='utf-8') as f:
-                    json.dump(new_data, f, ensure_ascii=False)
+
+                with open(SHOP_INFO_FILE, 'w', encoding='utf-8') as f:
+                    json.dump(new_data, f, indent=4, ensure_ascii=False)
             window.destroy()
-            os.system('python shop_goods.py')
+            os.system('python goods.py')
     else:
         messagebox.showwarning('提示', '至少选择一条记录进行删除')
 
 
 def btn1_event():
-    print('返回')
     window.destroy()
-    os.system('python shop_choose.py')
+    os.system('python choose.py')
 
 
 if __name__ == '__main__':
@@ -152,17 +138,14 @@ if __name__ == '__main__':
     field_names = ['商品名称', '商品价格', '商品数量']
     tree = ttk.Treeview(frame, columns=field_names, show='headings')
     for field_name in field_names:
-        tree.column(field_name, width=100)  # 对列进行定义
+        tree.column(field_name, width=100)
         tree.heading(field_name, text=field_name)
 
-    my_json = ReadJson(CURRENT_SHOP)
+    my_json = ReadJson(CURRENT_SHOP_FILE)
     data = my_json.load_data()
     old_account = data.get(SHOP_USER, '')
 
     all_goods = data.get(SHOP_GOODS, {})
-    print("=====所有有的商品信息======")
-    print(all_goods)
-    print("============")
 
     field_data = list(all_goods.values())
     things = []
@@ -172,7 +155,7 @@ if __name__ == '__main__':
         count = obj.get(COUNT, '')
         things.append((name, price, count))
     insert_data(things)
-    s = tkinter.Scrollbar(frame)  # 滚动条
+    s = tkinter.Scrollbar(frame)
     s.config(command=tree.yview)
     tree.config(yscrollcommand=s.set)
     frame2 = tkinter.Frame(window)
@@ -196,8 +179,8 @@ if __name__ == '__main__':
     btn1.grid(row=0, column=4, padx=padx, pady=pady)
     frame2.pack()
 
-    screenwidth = window.winfo_screenwidth()  # 屏幕宽度
-    screenheight = window.winfo_screenheight()  # 屏幕高度
+    screenwidth = window.winfo_screenwidth()
+    screenheight = window.winfo_screenheight()
     width = 600
     height = 600
     x = int((screenwidth - width) / 2)

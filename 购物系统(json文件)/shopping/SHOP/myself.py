@@ -3,28 +3,28 @@ import os
 import tkinter
 from tkinter import *
 
-from ReadJson import ReadJson
-from pub import CURRENT_SHOP
-from pub import FONT_SIZE_16
-from pub import PHONE
-from pub import SHOP_ADDRESS
-from pub import SHOP_NAME
-from pub import SHOP_OWNER
-from pub import SHOP_PWD
-from pub import SHOP_USER
+sys.path.append('../')
+from COMMON.ReadJson import ReadJson
+from COMMON.pub import CURRENT_SHOP_FILE
+from COMMON.pub import FONT_SIZE_16
+from COMMON.pub import PHONE
+from COMMON.pub import SHOP_ADDRESS
+from COMMON.pub import SHOP_NAME
+from COMMON.pub import SHOP_OWNER
+from COMMON.pub import SHOP_PWD
+from COMMON.pub import SHOP_USER
+from COMMON.pub import SHOP_APP_TITLE
 
 
 def btn1():
-    print('返回信息管理')
     window.destroy()
-    os.system('python shop_choose.py')
+    os.system('python choose.py')
     pass
 
 
 def btn2():
-    print('修改')
     window.destroy()
-    os.system('python shop_myself_update.py')
+    os.system('python myself_update.py')
     pass
 
 
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     shop_user_label = tkinter.Label(frame, text='账号:', fg='blue', font=('', FONT_SIZE_16))
     shop_pwd_label = tkinter.Label(frame, text='密码:', fg='blue', font=('', FONT_SIZE_16))
 
-    obj = ReadJson(CURRENT_SHOP)
+    obj = ReadJson(CURRENT_SHOP_FILE)
     data = obj.load_data()
     shop_user = data.get(SHOP_USER, '初始化用户')
     shop_pwd = data.get(SHOP_PWD, '初始化密码')
@@ -82,11 +82,12 @@ if __name__ == '__main__':
 
     window.title('购物系统')
 
-    screenwidth = window.winfo_screenwidth()  # 屏幕宽度
-    screenheight = window.winfo_screenheight()  # 屏幕高度
+    screenwidth = window.winfo_screenwidth()
+    screenheight = window.winfo_screenheight()
     width = 800
     height = 560
     x = int((screenwidth - width) / 2)
     y = int((screenheight - height) / 2)
+    window.title(SHOP_APP_TITLE)
     window.geometry('{}x{}+{}+{}'.format(width, height, x, y))
     window.mainloop()

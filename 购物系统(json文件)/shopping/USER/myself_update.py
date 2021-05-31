@@ -1,53 +1,41 @@
 # -*- coding: utf-8 -*-
-import json
 import os
 import tkinter
 from tkinter import *
 from tkinter import messagebox
 
-from ReadJson import ReadJson
-from pub import CURRENT_USER
-from pub import FONT_SIZE_16
-from pub import FONT_SIZE_24
-from pub import NAME
-from pub import PWD
-from pub import SEX
-from pub import USER
-from pub import USER_ADDRESS
-from pub import USER_CONTACT
-from pub import USER_INFO
+sys.path.append('../')
+from COMMON.ReadJson import ReadJson
+from COMMON.pub import *
+from COMMON import MyFile
 
 
 def return_btn_event():
-    print('返回个人信息')
     window.destroy()
-    os.system('python shop_myself.py')
+    os.system('python myself.py')
     pass
 
 
 def update_btn_event():
-    print('修改个人信息')
-    current_obj = ReadJson(CURRENT_USER)
+    current_obj = ReadJson(CURRENT_USER_FILE)
     current_user = current_obj.load_data()
-    old_account = current_user.get(USER)
+    old_account = current_user.get(CUSTOMER_USER)
 
     new_name = name_entry.get()
     new_sex = sex_entry.get()
     new_account = account_entry.get()
     new_pwd = pwd_entry.get()
-    my_json2 = ReadJson(USER_INFO)
+    my_json2 = ReadJson(USER_INFO_FILE)
     users = list(my_json2.load_data().values())
-    print("用户信息:{}".format(users))
+
     old_users = []
     for i in users:
-        old_users.append(i.get(USER, ''))
-    print('原有的用户:{}'.format(old_users))
+        old_users.append(i.get(CUSTOMER_USER, ''))
+
     old_users.pop(old_users.index(old_account))
     for i in users:
-        if i.get(USER, '') == old_account:
+        if i.get(CUSTOMER_USER, '') == old_account:
             users.pop(users.index(i))
-    print('剔除当前用户后:{}'.format(old_users))
-    print('剔除当前用户后2:{}'.format(users))
 
     if new_account in old_users:
         messagebox.showinfo('提示', '该账号已存在')
@@ -56,23 +44,19 @@ def update_btn_event():
     new_info = dict()
     new_info[NAME] = new_name
     new_info[SEX] = new_sex
-    new_info[USER] = new_account
+    new_info[CUSTOMER_USER] = new_account
     new_info[PWD] = new_pwd
     new_info[USER_CONTACT] = contact_entry.get()
     new_info[USER_ADDRESS] = address_entry.get()
-    print("修改后的信息:{}".format(new_info))
-    with open(CURRENT_USER, 'w', encoding='utf-8') as f:
-        json.dump(new_info, f, ensure_ascii=False)
+
+    MyFile.write_file(CURRENT_USER_FILE, new_info)
     new_user = dict()
     users.append(new_info)
     for index, one_user in enumerate(users):
         new_user[str(index + 1)] = one_user
-    print('添加后的用户组:{}'.format(new_user))
 
-    with open(USER_INFO, 'w', encoding='utf-8') as f:
-        json.dump(new_user, f, ensure_ascii=False)
-    msg = '修改个人信息成功！！！'
-    messagebox.showinfo('提示信息', msg)
+    MyFile.write_file(USER_INFO_FILE, new_user)
+
     return_btn_event()
     pass
 
@@ -88,10 +72,10 @@ if __name__ == '__main__':
     address_label = tkinter.Label(frame, text='地址', font=('', FONT_SIZE_16), )
     account_label = tkinter.Label(frame, text='账号', font=('', FONT_SIZE_16))
     pwd_label = tkinter.Label(frame, text='密码', font=('', FONT_SIZE_16))
-    my_json = ReadJson(CURRENT_USER)
+    my_json = ReadJson(CURRENT_USER_FILE)
     current_user_info = my_json.load_data()
 
-    current_account = current_user_info.get(USER)
+    current_account = current_user_info.get(CUSTOMER_USER)
     current_name = current_user_info.get(NAME, '未设置姓名')
     current_sex = current_user_info.get(SEX, '未设置性别')
     current_pwd = current_user_info.get(PWD, '未设置密码')
@@ -138,10 +122,10 @@ if __name__ == '__main__':
     update_btn.grid(row=6, column=0, padx=padx, pady=pady)
     return_btn.grid(row=6, column=1, padx=padx, pady=pady)
 
-    window.title('购物系统')
+    window.title(CUSTOMER_APP_TITLE)
 
-    screenwidth = window.winfo_screenwidth()  # 屏幕宽度
-    screenheight = window.winfo_screenheight()  # 屏幕高度
+    screenwidth = window.winfo_screenwidth()
+    screenheight = window.winfo_screenheight()
     width = 700
     height = 700
     x = int((screenwidth - width) / 2)

@@ -5,22 +5,23 @@ import tkinter
 from tkinter import *
 from tkinter import messagebox
 
-from ReadJson import ReadJson
-from pub import COUNT
-from pub import CURRENT_SHOP
-from pub import FONT_SIZE_16
-from pub import FONT_SIZE_24
-from pub import GOODS_NAME
-from pub import GOODS_PRICE
-from pub import SHOP_GOODS
-from pub import SHOP_INFO
-from pub import SHOP_USER
+sys.path.append('../')
+from COMMON.ReadJson import ReadJson
+from COMMON.pub import COUNT
+from COMMON.pub import CURRENT_SHOP_FILE
+from COMMON.pub import FONT_SIZE_16
+from COMMON.pub import FONT_SIZE_24
+from COMMON.pub import GOODS_NAME
+from COMMON.pub import GOODS_PRICE
+from COMMON.pub import SHOP_GOODS
+from COMMON.pub import SHOP_INFO_FILE
+from COMMON.pub import SHOP_USER
+from COMMON.pub import SHOP_APP_TITLE
 
 
 def back():
-    print('返回')
     window.destroy()
-    os.system('python shop_goods.py')
+    os.system('python goods.py')
 
 
 def add():
@@ -31,27 +32,30 @@ def add():
     if add_name == '' or add_price == '' or add_count == '':
         messagebox.showinfo('提示信息', '信息不能为空')
         return None
-
-    obj = ReadJson(CURRENT_SHOP)
+    try:
+        if int(add_count) <= 0:
+            messagebox.showinfo('提示信息', '数量必须大于0')
+            return
+    except:
+        messagebox.showinfo('提示信息', '数量必须为整数')
+        return
+    obj = ReadJson(CURRENT_SHOP_FILE)
     data = obj.load_data()
-    print('当前用户信息')
-    print(data)
+
     current_user = data.get(SHOP_USER, '')
     remove_id = None
     current_goods = data.get(SHOP_GOODS, {})
 
     for i, j in current_goods.items():
         if j.get(GOODS_NAME) == old_name:
-            print('找到修改的单个商品信息')
-            print(j)
+
             remove_id = i
             break
     data[SHOP_GOODS].pop(remove_id)
-    print(data)
 
     for i, j in current_goods.items():
         if j.get(GOODS_NAME) == add_name:
-            print('存在单个商品')
+
             msg = '该商品({})已经存在'.format(add_name)
             messagebox.showinfo('提示信息', msg)
             return None
@@ -63,43 +67,35 @@ def add():
 
     all_goods = list(data[SHOP_GOODS].values())
     all_goods.append(new_one_goods)
-    print('新增后商品信息')
-    print(all_goods)
 
     new = dict()
     for i, j in enumerate(all_goods):
         new[str(i + 1)] = j
-    print('新增后的dict')
-    print(new)
 
     data[SHOP_GOODS] = new
-    print('新增后的店铺信息')
-    print(data)
 
-    with open(CURRENT_SHOP, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False)
+    with open(CURRENT_SHOP_FILE, 'w', encoding='utf-8') as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)
 
-    obj2 = ReadJson(SHOP_INFO)
+    obj2 = ReadJson(SHOP_INFO_FILE)
     info = obj2.load_data()
-    print('总商店信息')
-    print(info)
+
     for i, j in info.items():
         usr = j.get(SHOP_USER, '')
         if current_user == usr:
-            print('找到店铺的key:{}'.format(i))
+
             info[i] = data
-    print('*********更新店铺*********')
-    print(info)
-    with open(SHOP_INFO, 'w', encoding='utf-8') as f:
-        json.dump(info, f, ensure_ascii=False)
-    msg = '修改成功！！！'
-    messagebox.showinfo('提示信息', msg)
+
+    from COMMON import MyFile
+    MyFile.write_file(SHOP_INFO_FILE, info)
+
     window.destroy()
-    os.system('python shop_goods.py')
+    os.system('python goods.py')
 
 
 if __name__ == '__main__':
     window = tkinter.Tk()
+    window.title(SHOP_APP_TITLE)
     frame = tkinter.Frame(window)
     welcome_label = Label(window, text='修改商品', font=('', FONT_SIZE_24))
     label1 = tkinter.Label(frame, text='名称', font=('', FONT_SIZE_16), )
@@ -136,8 +132,8 @@ if __name__ == '__main__':
 
     window.title('购物系统')
 
-    screenwidth = window.winfo_screenwidth()  # 屏幕宽度
-    screenheight = window.winfo_screenheight()  # 屏幕高度
+    screenwidth = window.winfo_screenwidth()
+    screenheight = window.winfo_screenheight()
     width = 500
     height = 600
     x = int((screenwidth - width) / 2)

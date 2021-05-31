@@ -3,35 +3,31 @@ import os
 import tkinter
 from tkinter import *
 
-from pub import FONT_SIZE_16
-from pub import FONT_SIZE_24
+sys.path.append('../')
+from COMMON.pub import *
 
 
 def btn1_event():
-    print('查看个人信息')
     window.destroy()
-    os.system('python shop_myself.py')
+    os.system('python myself.py')
     pass
 
 
 def btn2_event():
-    print('查看店铺信息')
     window.destroy()
-    os.system('python user_see_shop.py')
+    os.system('python see_shop.py')
     pass
 
 
 def btn3_event():
-    print('个人订单管理')
     window.destroy()
-    os.system('python shop_my_orders.py')
+    os.system('python my_orders.py')
     pass
 
 
 def btn4_event():
-    print('返回登录')
     window.destroy()
-    os.system('python shop_user.py')
+    os.system('python user.py')
     pass
 
 
@@ -52,9 +48,9 @@ if __name__ == '__main__':
     login_btn2.grid(row=1, column=1, padx=padx, pady=pady)
     login_btn3.grid(row=2, column=0, padx=padx, pady=pady)
     login_btn4.grid(row=2, column=1, padx=padx, pady=pady)
-    window.title('购物系统')
-    screenwidth = window.winfo_screenwidth()  # 屏幕宽度
-    screenheight = window.winfo_screenheight()  # 屏幕高度
+    window.title(CUSTOMER_APP_TITLE)
+    screenwidth = window.winfo_screenwidth()
+    screenheight = window.winfo_screenheight()
     width = 700
     height = 450
     x = int((screenwidth - width) / 2)
