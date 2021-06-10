@@ -1,2 +1,2 @@
-python Connect-n.py
+python Connect-n_GUI.py
 pause

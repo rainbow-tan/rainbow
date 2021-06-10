@@ -18,8 +18,10 @@ class Airplane(pygame.sprite.Sprite):  # 继承pygame.sprite.Sprite精灵对象
     def update(self, pressed_keys, *args, **kwargs):
         if pressed_keys[K_UP]:  # 如果按下的是方向上键
             self.rect.move_ip(0, -self.speed)  # 更新rect的X,Y
+            move_up_sound.play()
         if pressed_keys[K_DOWN]:  # 如果按下的是方向下键
             self.rect.move_ip(0, self.speed)  # 更新rect的X,Y
+            move_down_sound.play()
         if pressed_keys[K_LEFT]:  # 如果按下的是方向左键
             self.rect.move_ip(-self.speed, 0)  # 更新rect的X,Y
         if pressed_keys[K_RIGHT]:  # 如果按下的是方向右键
@@ -35,6 +37,9 @@ class Airplane(pygame.sprite.Sprite):  # 继承pygame.sprite.Sprite精灵对象
             self.rect.left = 0  # 设置左边界为0
         if self.rect.right > screen.get_width():  # 如果右边界超过窗口宽度
             self.rect.right = screen.get_width()  # 设置右边界为窗口宽度
+
+    def display(self):
+        screen.blit(self.image, self.rect)
 
 
 class Bullet(pygame.sprite.Sprite):  # 继承pygame.sprite.Sprite精灵对象
@@ -91,16 +96,31 @@ class Cloud(pygame.sprite.Sprite):  # 继承pygame.sprite.Sprite精灵对象
             self.rect.right = screen.get_width()  # 设置右边界为窗口宽度
 
 
+pygame.init()  # 初始化pygame
+pygame.mixer.init()  # 初始化mixer
+
+pygame.mixer.music.load('resource/Apoxode_-_Electric_1.mp3')  # 加载背景音乐
+pygame.mixer.music.set_volume(0.5)  # 设置音量
+pygame.mixer.music.play()  # 播放背景音乐
+
+move_up_sound = pygame.mixer.Sound("resource/Rising_putter.ogg")  # 加载音乐
+move_up_sound.set_volume(0.8)  # 设置音量
+move_down_sound = pygame.mixer.Sound("resource/Falling_putter.ogg")  # 加载音乐
+move_down_sound.set_volume(0.8)  # 设置音量
+collision_sound = pygame.mixer.Sound("resource/Collision.ogg")  # 加载音乐
+collision_sound.set_volume(0.8)  # 设置音量
+
 ADDENEMY = USEREVENT + 1  # 自定义事件的值,必须大于USEREVENT,因为在USEREVENT之下的数值都被pygame用完了
 ADDCLOUD = USEREVENT + 2  # 自定义事件的值,必须大于USEREVENT,因为在USEREVENT之下的数值都被pygame用完了
 pygame.time.set_timer(ADDENEMY, 500)  # 定时器,用于生成子弹,负责把事件传入PyGame的事件队列中
 pygame.time.set_timer(ADDCLOUD, 1000)  # 定时器,用于生成云彩,负责把事件传入PyGame的事件队列中
-pygame.init()  # 初始化pygame
+
 screen = pygame.display.set_mode((800, 600))  # 创建窗口
 airplane = Airplane(5)  # 创建Player对象
 running = True
 clock = pygame.time.Clock()  # 创建Clock用于跟踪时间
 bullets = pygame.sprite.Group()  # 定义精灵组
+clouds = pygame.sprite.Group()  # 定义精灵组
 all_sprite = pygame.sprite.Group()  # 定义精灵组,用于存放所有精灵
 all_sprite.add(airplane)  # 添加player到精灵组
 
@@ -117,16 +137,26 @@ while running:
             all_sprite.add(bullet)  # 添加到all_sprite精灵组
         if event.type == ADDCLOUD:  # 监控自定义事件
             cloud = Cloud()  # 创建云彩
-            all_sprite.add(cloud)  # 添加到all_sprite精灵组
+            clouds.add(cloud)  # 添加到all_sprite精灵组
     clock.tick(60)  # 每秒刷新多少帧,不设置按键后移动的飞快
-    pressed_key = pygame.key.get_pressed()  # 获取按键
     screen.fill((135, 206, 250))  # 为窗口填充颜色
-    all_sprite.update(pressed_key)  # 更新组中的精灵位置
-    all_sprite.draw(screen)  # 显示整个精灵组中的精灵
+
+    clouds.update()  # 更新组中的精灵位置
+    clouds.draw(screen)  # 显示整个精灵组中的精灵
+
+    bullets.update()  # 更新组中的精灵位置
+    bullets.draw(screen)  # 显示整个精灵组中的精灵
+
+    pressed_key = pygame.key.get_pressed()  # 获取按键
+    airplane.update(pressed_key)
+    airplane.display()
 
     # 碰撞检测,检测player和enemies精灵组中精灵是否碰撞
     collide_sprite = pygame.sprite.spritecollideany(airplane, bullets)
     if collide_sprite:  # 如果碰撞,返回精灵组中的碰撞精灵
         collide_sprite.kill()  # 从精灵组移除自己
+        collision_sound.play()
     pygame.display.update()  # 刷新整个平面 或者 pygame.display.flip()
+pygame.mixer.music.stop()
+pygame.mixer.quit()
 pygame.quit()  # 退出pygame
