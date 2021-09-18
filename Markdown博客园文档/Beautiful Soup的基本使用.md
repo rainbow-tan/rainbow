@@ -588,7 +588,7 @@ for i in soup.body.p.previous_elements:
 <p class="title"><b>The Dormouse's story</b></p>
 ```
 
-HTML解析器把这段字符串转换成一连串的事件: “打开<html>标签”,”打开一个<head>标签”,”打开一个<title>标签”,”添加一段字符串”,”关闭<title>标签”,”打开<p>标签”,等等.Beautiful Soup提供了重现解析器初始化过程的方法.
+HTML解析器把这段字符串转换成一连串的事件: “打开html标签”,”打开一个head标签”,”打开一个title标签”,”添加一段字符串”,”关闭title标签”,”打开p标签”,等等.Beautiful Soup提供了重现解析器初始化过程的方法.
 
 ⑪`.next_element` 属性指向解析过程中下一个被解析的对象(字符串或tag),结果可能与 `.next_sibling` 相同,但通常是不一样的,因为通常标签之间是顿号和换行符
 
