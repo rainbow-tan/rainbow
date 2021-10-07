@@ -1,19 +1,16 @@
 # -*- encoding=utf-8 -*-
 import json
-import os
 import time
 
-from django.core.paginator import EmptyPage
-from django.core.paginator import InvalidPage
-from django.core.paginator import PageNotAnInteger
-from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
 
 from CRUD import Pub
+from CRUD import database
 from CRUD.settings import BASE_DIR
-from Model import DB, Business
+from Model import Business
+from Model import DB
 from Model.models import DataTable
 from Model.models import Field1Table
 from Model.models import Field24Table
@@ -31,7 +28,7 @@ COLUMN_NAMES = ['auto_id', 'field1', 'field2', 'field3', 'field4', 'field5',
 
 
 def import_html(request):
-    return render(request, 'one/import.html')
+    return render(request, 'Model/import.html')
 
 
 def select_html(request):
@@ -92,47 +89,10 @@ def select_html(request):
                                          select_field27, select_field28, over_limit, COLUMN_NAMES)
     sort_filter_data = Business.sort_data(filter_data)
     remove_sort_filter_data = Business.remove_index_for_data(sort_filter_data)  # 移除四个不显示字段
-    # 分页
-    paginator = Paginator(remove_sort_filter_data, pagesize)
-    if current_page > paginator.num_pages:  # 当前页大于总分页默认最后一页
-        current_page = paginator.num_pages
-    try:
-        show_data = paginator.page(current_page)
-    except PageNotAnInteger:
-        show_data = paginator.page(1)
-    except EmptyPage:
-        show_data = paginator.page(paginator.num_pages)
-    except InvalidPage:
-        show_data = paginator.page(1)
-    except Exception as e:
-        show_data = paginator.page(1)
-        print('分页失败:{}'.format(e))
 
-    # 前一页
-    if current_page - 1 > 0:
-        previous_page = current_page - 1
-    else:
-        previous_page = 1
-    # 后一页
-    if current_page + 1 < paginator.num_pages:
-        next_page = current_page + 1
-    else:
-        next_page = paginator.num_pages
-    data_dict['data'] = show_data
-    data_dict['count'] = len(filter_data)  # 数据总条数
-    data_dict['pagesize'] = str(pagesize)
-    data_dict['previous_page'] = previous_page
-    data_dict['current_page'] = str(current_page)
-    data_dict['next_page'] = next_page
-    data_dict['last_page'] = paginator.num_pages
-
-    folder = '/one/data_{}.xls'.format(Pub.get_time())
-    save_path = Pub.EXPORT_FOLDER + folder
-    data_dict['file'] = Pub.STATIC_EXPORT_FOLDER + folder
-    write_data = Pub.change_auto_id(sort_filter_data)
-    source_file = os.path.join(Pub.EXPORT_TEMPLATE_FOLDER, u'限界导出模板.xls')
-    Pub.append_xls(source_file, save_path, write_data)
-    return render(request, 'one/select.html', data_dict)
+    database.paging(remove_sort_filter_data, pagesize, current_page, data_dict)  # 分页
+    database.export(sort_filter_data, data_dict, u'限界导出模板.xls', '')  # 导出
+    return render(request, 'Model/select.html', data_dict)
 
 
 def add(request):
@@ -166,7 +126,7 @@ def add(request):
                   field27=request.POST['add_field27'],
                   field28=request.POST['add_field28'],
                   field29=request.POST['add_field29'])
-    return redirect("/one/select.html/")
+    return redirect("/Model/select.html/")
 
 
 def update(request):
@@ -200,7 +160,7 @@ def update(request):
                   field27=request.POST['update_field27'],
                   field28=request.POST['update_field28'],
                   field29=request.POST['update_field29'])
-    return redirect("/one/select.html/")
+    return redirect("/Model/select.html/")
 
 
 def delete(request):
@@ -209,7 +169,7 @@ def delete(request):
     ids.pop(len(ids) - 1)  # 去除最后的空串
     for delete_id in ids:
         Pub.delete_db(DataTable, delete_id)
-    return redirect("/one/select.html/")
+    return redirect("/Model/select.html/")
 
 
 def select_for_update(request):  # 为了修改查询数据
@@ -226,7 +186,7 @@ def check_data(request):
     if 'file' in request.FILES:
         file = request.FILES['file']
         filename = BASE_DIR + '/templates/files/import/data_{}.xls'.format(
-            time.strftime("%Y%m%d%H%M%S", time.localtime()))
+                time.strftime("%Y%m%d%H%M%S", time.localtime()))
         Pub.save_file(filename, file)
         try:
             file_data = Pub.read_xls(filename, 5)
@@ -238,7 +198,7 @@ def check_data(request):
             print('查看文件数据失败:{}'.format(e))
             data_dict['success'] = '查看失败->{}'.format(e)
     data_dict['data'] = remove_data
-    return render(request, 'one/import.html', data_dict)
+    return render(request, 'Model/import.html', data_dict)
 
 
 def import_data(request):  # 导入
@@ -247,7 +207,7 @@ def import_data(request):  # 导入
     if 'file' in request.FILES:
         file = request.FILES['file']
         filename = BASE_DIR + '/templates/files/import/data_{}.xls'.format(
-            time.strftime("%Y%m%d%H%M%S", time.localtime()))
+                time.strftime("%Y%m%d%H%M%S", time.localtime()))
         Pub.save_file(filename, file)
         try:
             file_data = Pub.read_xls(filename, 5)
@@ -295,4 +255,4 @@ def import_data(request):  # 导入
             print('导入文件失败:{}'.format(e))
             data_dict['success'] = '导入失败->{}'.format(e)
     data_dict['data'] = remove_data
-    return render(request, 'one/import.html', data_dict)
+    return render(request, 'Model/import.html', data_dict)

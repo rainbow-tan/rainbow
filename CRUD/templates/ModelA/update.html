@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <link href="/static/bootstrap_3.3.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/jquery/jquery-2.0.0-.min.js" type="text/javascript"></script>
+    <script src="/static/jquery/jquery.cookie.js" type="text/javascript"></script>
+    <script src="/static/bootstrap_3.3.0/js/bootstrap.min.js" type="text/javascript"></script>
+
+    <script>
+        $(function () {
+            $.getrenwuliang = function () {
+                let chejian = $.trim($('#chejian').val())
+                let chezhan = $.trim($('#chezhan').val())
+                let xiangmu = $.trim($('#xiangmu').val())
+                let fenlei = $.trim($('#fenlei').val())
+                if (fenlei != '' && xiangmu != '' && chezhan != '' && chejian != '') {
+                    $.get('/Model5/search_renwuliang_danwei/', {
+                        chejian: chejian,
+                        chezhan: chezhan,
+                        xiangmu: xiangmu,
+                        fenlei: fenlei
+                    }, function (data, status) {
+                        let renwuliang = data['renwuliang']
+                        $('#renwuliang').val(renwuliang)
+                    })
+                }
+            }
+            $('#chejian').change(function () {
+                $.getrenwuliang()
+            })
+            $('#chezhan').change(function () {
+                $.getrenwuliang()
+            })
+            $('#xiangmu').change(function () {
+                $.getrenwuliang()
+            })
+            $('#fenlei').change(function () {
+                $.getrenwuliang()
+            })
+            // 检查表单
+            $.check_form = function () {
+                let can_submit = true
+                let all_id = ['chejian', 'chezhan', 'xiangmu', 'fenlei', 'renwuliang']
+                $.each(all_id, function (index, item) {
+                    let data_value = $.trim($('#' + item).val())
+                    if (data_value == '') {
+                        alert('请完善必填项')
+                        can_submit = false
+                        return can_submit
+                    }
+                })
+                return can_submit
+            }
+
+
+
+            $.getrenwuliang6 = function () {
+                let chejian = $.trim($('#chejian6').val())
+                let chezhan = $.trim($('#chezhan6').val())
+                let xiangmu = $.trim($('#xiangmu6').val())
+                let fenlei = $.trim($('#fenlei6').val())
+                if (fenlei != '' && xiangmu != '' && chezhan != '' && chejian != '') {
+                    $.get('/Model6/search_renwuliang_danwei/', {
+                        chejian: chejian,
+                        chezhan: chezhan,
+                        xiangmu: xiangmu,
+                        fenlei: fenlei
+                    }, function (data, status) {
+                        let renwuliang = data['renwuliang']
+                        $('#renwuliang6').val(renwuliang)
+                    })
+                }
+            }
+            $('#chejian6').change(function () {
+                $.getrenwuliang6()
+            })
+            $('#chezhan6').change(function () {
+                $.getrenwuliang6()
+            })
+            $('#xiangmu6').change(function () {
+                $.getrenwuliang6()
+            })
+            $('#fenlei6').change(function () {
+                $.getrenwuliang6()
+            })
+            // 检查表单
+            $.check_form6 = function () {
+                let can_submit = true
+                let all_id = ['chejian6', 'chezhan6', 'xiangmu6', 'fenlei6', 'renwuliang6']
+                $.each(all_id, function (index, item) {
+                    let data_value = $.trim($('#' + item).val())
+                    if (data_value == '') {
+                        alert('请完善必填项')
+                        can_submit = false
+                        return can_submit
+                    }
+                })
+                return can_submit
+            }
+
+
+
+        })
+    </script>
+</head>
+
+<body>
+    <br>
+    <div class="container">
+        <div class="row clearfix" style="margin-top: 5%;">
+            <div class="col-md-6 column">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <h3 class="panel-title text-center">
+                            年度测试工作修改任务量
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <!-- 表单 -->
+                        <div class="row clearfix">
+                            <form id="my_form" onsubmit="return $.check_form()" action="/ModelA/update/" method="post">
+                                <div class="col-md-6 column">
+
+                                    <div class="form-group">
+                                        <label>车间<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="chejian" name="chejian">
+                                            {% if chejian %}
+                                            <option>{{chejian}}</option>
+                                            {% endif %}
+                                            <option></option>
+                                            {% for i in chejians %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>车站<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="chezhan" name="chezhan">
+                                            {% if chezhan %}
+                                            <option>{{chezhan}}</option>
+                                            {% endif %}
+                                            <option></option>
+                                            {% for i in chezhans %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>项目<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="xiangmu" name="xiangmu">
+                                            {% if xiangmu %}
+                                            <option>{{xiangmu}}</option>
+                                            {% endif %}
+                                            <option></option>
+                                            {% for i in xiangmus %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6 column">
+                                    <div class="form-group">
+                                        <label>分类<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="fenlei" name="fenlei">
+                                            {% if fenlei %}
+                                            <option>{{fenlei}}</option>
+                                            {% endif %}
+                                            <option></option>
+                                            {% for i in fenleis %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>任务量<span style="color: red;">(必填项)</span></label>
+                                        <input type="number" class="form-control" id="renwuliang" name="renwuliang"
+                                            value="{{renwuliang}}">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-6 column">
+                                <a href="/index.html/?index=5" class="btn btn-block btn-info">返回</a>
+                            </div>
+                            <div class="col-md-6 column">
+                                <button type="submit" form="my_form" class="btn btn-block btn-info">确认</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 column">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <h3 class="panel-title text-center">
+                            年度维修工作修改任务量
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <!-- 表单 -->
+                        <div class="row clearfix">
+                            <form id="my_form6" onsubmit="return $.check_form6()" action="/ModelA/update6/"
+                                method="post">
+                                <div class="col-md-6 column">
+
+                                    <div class="form-group">
+                                        <label>车间<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="chejian6" name="chejian6">
+                                            {% if chejian6 %}
+                                            <option>{{chejian6}}</option>
+                                            {% endif %}
+                                            <option></option>
+                                            {% for i in chejians6 %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>车站<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="chezhan6" name="chezhan6">
+                                            {% if chezhan6 %}
+                                            <option>{{chezhan6}}</option>
+                                            {% endif %}
+                                            <option></option>
+                                            {% for i in chezhans6 %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>项目<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="xiangmu6" name="xiangmu6">
+                                            {% if xiangmu6 %}
+                                            <option>{{xiangmu6}}</option>
+                                            {% endif %}
+                                            <option></option>
+                                            {% for i in xiangmus6 %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6 column">
+                                    <div class="form-group">
+                                        <label>分类<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="fenlei6" name="fenlei6">
+                                            {% if fenlei6 %}
+                                            <option>{{fenlei6}}</option>
+                                            {% endif %}
+                                            <option></option>
+                                            {% for i in fenleis6 %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>任务量<span style="color: red;">(必填项)</span></label>
+                                        <input type="number" class="form-control" id="renwuliang6" name="renwuliang6"
+                                            value="{{renwuliang6}}">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-6 column">
+                                <a href="/index.html/?index=6" class="btn btn-block btn-success">返回</a>
+                            </div>
+                            <div class="col-md-6 column">
+                                <button type="submit" form="my_form6" class="btn btn-block btn-success">确认</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -39,7 +39,13 @@ INSTALLED_APPS = [
     'Model2',
     'Model3',
     'Model4',
-]
+    'Model5',
+    'Model6',
+    'Model7',
+    'Model8',
+    'Model9',
+    'ModelA',
+    ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -49,7 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',  # IFrame内嵌
-]
+    ]
 
 ROOT_URLCONF = 'CRUD.urls'
 
@@ -64,10 +70,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-            ],
+                ],
+            },
         },
-    },
-]
+    ]
 
 WSGI_APPLICATION = 'CRUD.wsgi.application'
 
@@ -75,20 +81,20 @@ WSGI_APPLICATION = 'CRUD.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    # 'default':
-    #     {
-    #         'ENGINE': 'django.db.backends.mysql',
-    #         'NAME': 'mydatabase',
-    #         'HOST': 'localhost',
-    #         'PORT': 3306,
-    #         'USER': 'admin',
-    #         'PASSWORD': 'admin',
-    #     },
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    'default':
+        {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'mydatabase',
+            'HOST': 'localhost',
+            'PORT': 3306,
+            'USER': 'admin',
+            'PASSWORD': 'admin',
+            },
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    #     }
     }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -96,24 +102,24 @@ DATABASES = {
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
+        },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
+        },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
+        },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+        },
+    ]
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 

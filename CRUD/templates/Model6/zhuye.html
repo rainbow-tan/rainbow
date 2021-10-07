@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+
+    <link href="/static/bootstrap_3.3.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/jquery/jquery-2.0.0-.min.js" type="text/javascript"></script>
+    <script src="/static/jquery/jquery.cookie.js" type="text/javascript"></script>
+    <script src="/static/bootstrap_3.3.0/js/bootstrap.min.js" type="text/javascript"></script>
+</head>
+
+<style>
+    th,
+    td {
+        text-align: center;
+        vertical-align: middle !important;
+    }
+
+    .table {
+        margin-bottom: 0px;
+    }
+
+    table {
+        word-break: keep-all;
+
+        font-size: xx-small;
+    }
+</style>
+<script>
+    $(function () {
+        var filepath = ''
+
+        // 查询
+        $('#select_btn').click(function () {
+            var month_choose = ''
+            $('#month input:checkbox:checked').each(function (index, data) {
+                month_choose += $(data).val() + '-'
+            })
+
+            choose = $('input[name="choose"]:checked')
+            len = choose.length
+
+            if (len == 0) {
+                alert('请选择一个或多个车间!!!')
+            } else {
+                var all_xiangmu = new Array()
+
+                ids = ''
+                $('input[name="choose"]:checked').each(function () {
+                    ids += $(this).val() + '-'
+                });
+                let xiangmu_value = $.trim($('#xiangmu').val())
+                let fenlei_value = $.trim($('#fenlei').val())
+
+                $.get('/Model6/zhuye/', {
+                    chejians: ids,
+                    yuefen: month_choose,
+                    xiangmu: xiangmu_value,
+                    fenlei: fenlei_value
+                }, function (data_dict, status) {
+                    // 表头
+                    head = data_dict.head
+                    head_html =
+                        '<tr><th rowspan="2">序号</th><th rowspan="2">项目</th><th rowspan="2">工作内容分类</th><th rowspan="2">工作月份</th><th rowspan="2">工作周期</th><th rowspan="2">工作要求说明</th><th rowspan="2">单位</th><th rowspan="2"></th><th rowspan="2">数量</th>'
+                    for (let index = 0; index < head.length; index++) {
+                        one = head[index]
+                        head_html += '<td colspan=' + one.chezhan.length + '>' + one.chejian +
+                            '</td>'
+                    }
+                    head_html += '</tr>'
+
+                    two_row = '<tr>'
+                    for (let index = 0; index < head.length; index++) {
+                        chezhan = head[index].chezhan
+
+                        for (let index = 0; index < chezhan.length; index++) {
+                            two_row += '<td>' + chezhan[index] + '</td>'
+                        }
+
+                    }
+                    two_row += '</tr>'
+                    thead_html = head_html + two_row
+                    $('#for_thread').html(thead_html)
+
+                    // 表身体
+                    var body_html = ''
+
+                    var one_group_html = ''
+                    $.each(data_dict.body, function (index, one_row) {
+                        var auto_id = one_row['auto_id']
+                        var xiangmu = one_row['xiangmu']
+                        var fenlei = one_row['fenlei']
+                        var yuefen = one_row['yuefen']
+                        var zhouqi = one_row['zhouqi']
+                        var neirongshuoming = one_row['neirongshuoming']
+
+                        var danwei = one_row['danwei']
+                        var renwuliang = one_row['renwuliang']
+                        var benyuewancheng = one_row['benyuewancheng']
+                        var leijiwancheng = one_row['leijiwancheng']
+                        var benyue_history = one_row['benyue_history']
+                        var leiji_history = one_row['leiji_history']
+                        var row_html = ''
+                        row_html += '<td  rowspan=3>' + auto_id + '</td>'
+                        row_html += '<td  rowspan=3 name=' + xiangmu + '>' + xiangmu +
+                            '</td>'
+                        row_html += '<td  rowspan=3>' + fenlei + '</td>'
+                        row_html += '<td  rowspan=3>' + yuefen + '</td>'
+                        row_html += '<td  rowspan=3>' + zhouqi + '</td>'
+                        row_html += '<td  rowspan=3>' + neirongshuoming + '</td>'
+                        row_html += '<td  rowspan=3>' + danwei + '</td>'
+                        // 任务量行，其实就是第一行
+                        row_html += '<td  rowspan=1>' + '任务量' + '</td>'
+                        $.each(renwuliang, function (index, info) {
+                            row_html += '<td>' + info + '</td>'
+                        })
+                        // 本月完成行
+                        var benyuewancheng_html = ''
+                        $.each(benyuewancheng, function (index, info) {
+
+                            benyuewancheng_html += '<td rowspan=1>' +
+                                '<a style="color:green;" href="' +
+                                benyue_history[index] + '">' +
+                                info +
+                                '</td>'
+                        })
+                        benyuewancheng_html = '<tr>' +
+                            '<td  rowspan=1 style="color:green;">' + '本月完成' +
+                            '</td>' + benyuewancheng_html + '</tr>'
+                        // 累计完成行
+                        var leijiwancheng_html = ''
+                        $.each(leijiwancheng, function (index, info) {
+
+                            leijiwancheng_html += '<td rowspan=1 >' +
+                                '<a style="color:red;" href="' + leiji_history[
+                                    index] + '">' +
+                                info +
+                                '</a>' + '</td>'
+                        })
+                        leijiwancheng_html = '<tr>' +
+                            '<td  rowspan=1 style="color:red;">' + '累计完成' +
+                            '</td>' + leijiwancheng_html + '</tr>'
+
+
+                        one_group_html = '<tr>' + row_html + '</tr>' +
+                            benyuewancheng_html +
+                            leijiwancheng_html
+                        body_html += one_group_html
+                    })
+
+                    $('#for_body').html(body_html)
+                    filepath = data_dict['file']
+
+                    // 合并项目
+                    all_xiangmu = data_dict['xiangmu']
+                    $.hebing(all_xiangmu)
+
+                })
+            }
+        })
+
+        // 导出按钮
+        $('#export_btn').click(function () {
+            window.open(filepath)
+        })
+
+        // 合并项目
+        $.hebing = function (xiangmu_array) {
+            for (let index = 0; index < xiangmu_array.length; index++) {
+                const class_name = xiangmu_array[index];
+                var choose_xiangmu_by_classname = $('td[name="' + class_name + '"]')
+                var len = $(choose_xiangmu_by_classname).length
+                for (let index = 0; index < choose_xiangmu_by_classname.length; index++) {
+                    const element = choose_xiangmu_by_classname[index];
+                    if (index == 0) {
+                        $(element).attr('rowspan', len * 3)
+                    } else {
+                        $(element).remove()
+                    }
+                }
+            }
+        }
+
+        // 全选
+        var select_all_flag = true
+        $('#select_all').click(function () {
+            if (select_all_flag) {
+                $("input[name='choose']:checkbox").prop("checked", true);
+                select_all_flag = false
+            } else {
+                $("input[name='choose']:checkbox").prop("checked", false);
+                select_all_flag = true
+            }
+        })
+        $('#select_all').click()
+
+        $('#select_btn').click()
+
+
+        // 全年
+        $("#quannian").click(function () {
+            if (this.checked) {
+                $(".month").prop("checked", true);
+            } else {
+                $(".month").prop("checked", false);
+            }
+        });
+
+        // 上半年
+        $("#shangbannian").click(function () {
+            if (this.checked) {
+                $(".shangbannian").prop("checked", true);
+                if ($('#xiabannian').prop("checked")) {
+                    $('#quannian').prop("checked", true)
+                }
+            } else {
+                $(".shangbannian").prop("checked", false);
+                $('#quannian').prop("checked", false)
+            }
+        });
+
+        // 下半年
+        $("#xiabannian").click(function () {
+            if (this.checked) {
+                $(".xiabannian").prop("checked", true);
+                if ($('#shangbannian').prop("checked")) {
+                    $('#quannian').prop("checked", true)
+                }
+            } else {
+                $(".xiabannian").prop("checked", false);
+                $('#quannian').prop("checked", false)
+            }
+        });
+
+        // 季度1
+        $("#jidu1").click(function () {
+            if (this.checked) {
+                $(".jidu1").prop("checked", true);
+                if ($('#jidu2').prop("checked")) {
+                    $('#shangbannian').prop("checked", true)
+                }
+            } else {
+                $(".jidu1").prop("checked", false);
+                $('#shangbannian').prop("checked", false)
+            }
+        });
+
+        // 季度2
+        $("#jidu2").click(function () {
+            if (this.checked) {
+                $(".jidu2").prop("checked", true);
+                if ($('#jidu1').prop("checked")) {
+                    $('#shangbannian').prop("checked", true)
+                }
+            } else {
+                $(".jidu2").prop("checked", false);
+                $('#shangbannian').prop("checked", false)
+            }
+        });
+
+        // 季度3
+        $("#jidu3").click(function () {
+            if (this.checked) {
+                $(".jidu3").prop("checked", true);
+                if ($('#jidu4').prop("checked")) {
+                    $('#xiabannian').prop("checked", true)
+                }
+            } else {
+                $(".jidu3").prop("checked", false);
+                $('#xiabannian').prop("checked", false)
+            }
+        });
+
+        // 季度4
+        $("#jidu4").click(function () {
+            if (this.checked) {
+                $(".jidu4").prop("checked", true);
+                if ($('#jidu3').prop("checked")) {
+                    $('#xiabannian').prop("checked", true)
+                }
+            } else {
+                $(".jidu4").prop("checked", false);
+                $('#xiabannian').prop("checked", false)
+            }
+        });
+
+        // 添加按钮可点击
+        $.set_authority = function () {
+            if ($.cookie("show_add") === "True") {
+                $("#add_btn").attr('disabled', false)
+            }
+        };
+        $.set_authority()
+
+        // 清空
+        $('#clear_select').click(function () {
+            $("select").val("");
+            $("input").val("");
+        })
+    })
+</script>
+
+<body>
+    <div class="container-fluid">
+
+
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <h3 class="text-center">
+                    年度维修工作任务表
+                </h3>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="panel panel-info">
+                    <div class="panel-body">
+                        {% for name in chejians %}
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="choose" value="{{name}}"> {{name}}
+                        </label>
+                        {% endfor %}
+                        <button type="button" id="select_all" style="margin-left: 20px;"
+                            class="btn btn-success">全选</button>
+                        <button type="button" id="select_btn" style="margin-left: 20px;"
+                            class="btn btn-info">查询</button>
+
+                        <div>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="quannian" class="month quannian" {{select_quannian}}> 全年
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="shangbannian" class="month shangbannian"
+                                    {{select_shangbannian}}> 上半年
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="xiabannian" class="month xiabannian" {{select_xiabannian}}>
+                                下半年
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="jidu1" class="month shangbannian jidu1" {{select_jidu1}}>
+                                第一季度
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="jidu2" class="month shangbannian jidu2" {{select_jidu2}}>
+                                第二季度
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="jidu3" class="month xiabannian jidu3" {{select_jidu3}}>
+                                第三季度
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="jidu4" class="month xiabannian jidu4" {{select_jidu4}}>
+                                第四季度
+                            </label>
+                        </div>
+
+                        <div id="month">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month shangbannian jidu1" value="1" name="month1"
+                                    {{select_month1}}> 1 月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month shangbannian jidu1" value="2" name="month2"
+                                    {{select_month2}}> 2 月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month shangbannian jidu1" value="3" name="month3"
+                                    {{select_month3}}> 3 月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month shangbannian jidu2" value="4" name="month4"
+                                    {{select_month4}}> 4 月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month shangbannian jidu2" value="5" name="month5"
+                                    {{select_month5}}> 5 月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month shangbannian jidu2" value="6" name="month6"
+                                    {{select_month6}}> 6 月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month xiabannian jidu3" value="7" name="month7"
+                                    {{select_month7}}> 7 月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month xiabannian jidu3" value="8" name="month8"
+                                    {{select_month8}}> 8 月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month xiabannian jidu3" value="9" name="month9"
+                                    {{select_month9}}> 9 月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month xiabannian jidu4" value="10" name="month10"
+                                    {{select_month10}}> 10 月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month xiabannian jidu4" value="11" name="month11"
+                                    {{select_month11}}> 11 月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month xiabannian jidu4" value="12" name="month12"
+                                    {{select_month12}}> 12 月
+                            </label>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 column">
+                <div class="panel panel-info">
+                    <div class="panel-body">
+                        <form class="form-inline" role="form">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">项目</div>
+                                    <select class="form-control" id="xiangmu" name="xiangmu">
+                                        {% if xiangmu %}
+                                        <option>{{xiangmu}}</option>
+                                        {% endif %}
+                                        <option></option>
+                                        {% for i in xiangmus %}
+                                        <option>{{i}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">分类</div>
+                                    <select class="form-control" id="fenlei" name="fenlei">
+                                        {% if fenlei %}
+                                        <option>{{fenlei}}</option>
+                                        {% endif %}
+                                        <option></option>
+                                        {% for i in fenleis %}
+                                        <option>{{i}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="btn-group">
+                                    <button class="btn btn-info" id="clear_select" type="button">清空</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="btn-toolbar" role="toolbar">
+                <div class="btn-group">
+                    <!-- <button disabled  class="btn btn-info" id="add_btn" onclick="window.location='/Model6/add.html/'"
+                        type="button" ><span class="glyphicon glyphicon-plus"></span> 添加
+                    </button> -->
+                    <button class="btn btn-warning" onclick="window.location='/Model6/select.html/'" type="button">
+                        <span class="glyphicon glyphicon-pencil"></span> 录入页
+                    </button>
+                    <button class="btn btn-default" id="export_btn" type="button">
+                        <span class="glyphicon glyphicon-export">导出</span>
+                    </button>
+                    <button class="btn btn-info" onclick="window.open('/Model6/zhuye.html/','_blank');" type="button">
+                        <span class="glyphicon glyphicon-gift"></span> 详情
+                    </button>
+                    <button  class="btn btn-primary" onclick="window.location='/index.html/?index=6'" type="button">
+                        <span class="glyphicon glyphicon-home"></span> 首页
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <table role="table" class="table table-bordered">
+                <thead id="for_thread"></thead>
+                <tbody id="for_body"></tbody>
+            </table>
+
+        </div>
+    </div>
+    </div>
+</body>
+
+</html>

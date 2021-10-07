@@ -31,7 +31,7 @@ $(function () {
 
   //设置权限
   $.set_authority = function () {
-    if ($.cookie("is_admin") === "True") {
+    if ($.cookie("can_delete") === "True") {
       $("#delete").attr("disabled", false);
     }
   };

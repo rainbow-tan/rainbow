@@ -4,69 +4,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- <link href="/static/bootstrap_3.3.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-  <link href="/static/css/pub_css.css" rel="stylesheet" type="text/css" />
-  <script src="/static/jquery/jquery-1.11.1-min.js" type="text/javascript"></script>
+  <title>新增某某信息</title>
+  
+  <link href="/static/bootstrap_3.3.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <script src="/static/jquery/jquery-2.0.0-.min.js" type="text/javascript"></script>
+  <script src="/static/jquery/jquery.cookie.js" type="text/javascript"></script>
   <script src="/static/bootstrap_3.3.0/js/bootstrap.min.js" type="text/javascript"></script>
-  <script src="/static/js/pub_js.js" type="text/javascript"></script> -->
-
-  <link rel="stylesheet" href="bootstrap_3.3.0/css/bootstrap.min.css">
-  <script src="jquery/jquery-1.11.1-min.js"></script>
-  <script src="jquery/jQuery.print.js"></script>
-  <script src="bootstrap_3.3.0/js/bootstrap.min.js"></script>
-
-  <title>Document</title>
-  <script>
-    $(function () {
-      $('#print').click(function () {
-        alert('打印')
-        $('#table_for_print').print({
-          globalStyles: true,//是否包含父文档的样式，默认为true
-          mediaPrint: false,//是否包含media='print'的链接标签。会被globalStyles选项覆盖，默认为false
-          stylesheet: null,//外部样式表的URL地址，默认为null
-
-          noPrintSelector: ".no-print",//不想打印的元素的jQuery选择器，默认为".no-print"
-          iframe: true,//是否使用一个iframe来替代打印表单的弹出窗口，true为在本页面进行打印，false就是说新开一个页面打印，默认为true
-          append: null,//将内容添加到打印内容的后面
-          prepend: null,//将内容添加到打印内容的前面，可以用来作为要打印内容
-          deferred:
-            $.Deferred()//回调函数
-        })
-      })
-    })
-  </script>
+  
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
+<style>
+
+</style>
+
+<script>
+  $(function () {
+  })
+</script>
 
 <body>
-  <table class="table table-bordered" id="table_for_print">
-    <caption>边框表格布局</caption>
-    <thead>
-      <tr>
-        <th>名称</th>
-        <th>城市</th>
-        <th>邮编</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Tanmay</td>
-        <td>Bangalore</td>
-        <td>560001</td>
-      </tr>
-      <tr>
-        <td>Sachin</td>
-        <td>Mumbai</td>
-        <td>400003</td>
-      </tr>
-      <tr>
-        <td>Uma</td>
-        <td>Pune</td>
-        <td>411027</td>
-      </tr>
-    </tbody>
-  </table>
-  <button id="print">点击打印</button>
+    
+  <div class="container-fluid">
+        
+    <!-- 标题 -->
+    <div class="row">
+      <div class="col-md-12">
+        <h3 class="text-center">新增某某信息</h3>
+      </div>
+    </div>
+    <br>
+  
+    <!-- 按钮 -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="pull-right">
+          <a class="btn btn-info" href="/Model7/select.html/">返回</a>
+          <button type="submit" form="my_form" class="btn btn-success">新增</button>
+        </div>
+      </div>
+    </div>
+    <br>
+
+  </div>
+    
 </body>
 
 </html>
+
+

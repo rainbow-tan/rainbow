@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+
+    <link href="/static/bootstrap_3.3.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/static/css/pub_css.css" rel="stylesheet" type="text/css" />
+    <script src="/static/jquery/jquery-2.0.0-.min.js" type="text/javascript"></script>
+    <script src="/static/jquery/jquery.cookie.js" type="text/javascript"></script>
+    <script src="/static/bootstrap_3.3.0/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/static/js/pub_js.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            // 查区段信息
+            $.get_quanduan_info = function () {
+                let xianbie = $.trim($('#add_field1').val())
+                let chezhan = $.trim($('#add_field3').val())
+                let quduan = $.trim($('#add_field63').val())
+                if (xianbie != '' && chezhan != '' && quduan != '') {
+                    $.get('/Model8/search_fileds_by_quduan/', {
+                        xianbie: xianbie,
+                        chezhan: chezhan,
+                        quduan: quduan
+                    }, function (data, status) {
+                        $.tianchong('add_field37', data['zaiping'])
+                        $.tianchong('add_field50', data['quduanchangdu'])
+                        $.tianchong('add_field54', data['dianrongshuliang'])
+                        $.tianchong('add_field23', data['hangbie'])
+                    })
+                }
+            }
+            // 填充数据，空串则可输入，不空则只读
+            $.tianchong = function (id_name, data) {
+                $('#' + id_name).val(data)
+            }
+            //   区段名称的失焦事件
+            $('#add_field63').blur(function () {
+                $.get_quanduan_info()
+            })
+            // 线别的失焦事件
+            $('#add_field1').blur(function () {
+                $.get_quanduan_info()
+            })
+            $('#add_field1').change(function () {
+                $.get_quanduan_info()
+            })
+            // 车站的失焦事件
+            $('#add_field3').blur(function () {
+                $.get_quanduan_info()
+            })
+            $('#add_field3').change(function () {
+                $.get_quanduan_info()
+            })
+            // 查区段信息
+            $.get_quanduan_info_update = function () {
+                let xianbie = $.trim($('#update_field1').val())
+                let chezhan = $.trim($('#update_field3').val())
+                let quduan = $.trim($('#update_field63').val())
+                if (xianbie != '' && chezhan != '' && quduan != '') {
+                    $.get('/Model8/search_fileds_by_quduan/', {
+                        xianbie: xianbie,
+                        chezhan: chezhan,
+                        quduan: quduan
+                    }, function (data, status) {
+                        $.tianchong('update_field37', data['zaiping'])
+                        $.tianchong('update_field50', data['quduanchangdu'])
+                        $.tianchong('update_field54', data['dianrongshuliang'])
+                        $.tianchong('update_field23', data['hangbie'])
+                    })
+                }
+            }
+            // 填充数据，空串则可输入，不空则只读
+            $.tianchong = function (id_name, data) {
+                $('#' + id_name).val(data)
+            }
+            //   区段名称的失焦事件
+            $('#update_field63').blur(function () {
+                $.get_quanduan_info_update()
+            })
+            // 线别的失焦事件
+            $('#update_field1').blur(function () {
+                $.get_quanduan_info_update()
+            })
+            $('#update_field1').change(function () {
+                $.get_quanduan_info_update()
+            })
+            // 车站的失焦事件
+            $('#update_field3').blur(function () {
+                $.get_quanduan_info_update()
+            })
+            $('#update_field3').change(function () {
+                $.get_quanduan_info_update()
+            })
+            // 自定义函数
+            $.func = {
+
+                //第几页url
+                currentPageHref: function (current_page) {
+                    let select_items = [1, 71, 72, 55, 57, 59, 61, 54, 2, 3, 24, 23, 37, 48, 49, 50, 52]
+                    let herf_head = "/Model3/select.html?current_page=" + current_page + "&pagesize=" +
+                        $.trim($("#pagesize").text());
+                    let herf_body = "";
+                    for (let i = 0; i < select_items.length; i++) {
+                        let parameter = "&select_field" + select_items[i] + "=" + $("#select_field" +
+                            select_items[i]).val();
+                        herf_body += parameter;
+                    }
+                    let herf = herf_head + herf_body;
+                    $(window).attr("location", herf);
+                },
+
+                // 每页显示多少条记录url
+                pagesizeHref: function (page_size) {
+                    let select_items = [1, 71, 72, 55, 57, 59, 61, 54, 2, 3, 24, 23, 37, 48, 49, 50, 52]
+                    let herf_head = "/Model3/select.html?current_page=1" + "&pagesize=" + page_size;
+                    let herf_body = "";
+                    for (i = 0; i < select_items.length; i++) {
+                        let parameter = "&select_field" + select_items[i] + "=" + $("#select_field" +
+                            select_items[i]).val();
+                        herf_body += parameter;
+                    }
+                    let herf = herf_head + herf_body;
+                    $(window).attr("location", herf);
+                },
+
+                //检查添加表单
+                check_add_form: function () {
+                    $('#add_calculate').click()
+                    let required_items = [1, 2, 3, 23, 24, 37, 71]
+                    for (i = 0; i < required_items.length; i++) {
+                        let value = $.trim($('#add_field' + required_items[i]).val())
+                        if (value == '') {
+                            alert('请完善必填项')
+                            return false
+                        }
+                    }
+                    return true
+                },
+
+                //检查修改表单
+                check_update_form: function () {
+                    $('#update_calculate').click()
+                    let required_items = [1, 2, 3, 23, 24, 37, 71]
+                    for (i = 0; i < required_items.length; i++) {
+                        let value = $.trim($('#update_field' + required_items[i]).val())
+                        if (value == '') {
+                            alert('请完善必填项')
+                            return false
+                        }
+                    }
+                    return true
+                },
+            }
+
+            // 添加页轨道类型change事件
+            $('#add_field71').change(function () {
+                let value = $(this).val()
+                if (value != '') {
+                    $.get('/Model3/select_changdu_by_guidao/', {
+                        guidaoleixing: value
+                    }, function (data, status) {
+                        let changdu = data['value']
+                        $('#add_field72').val(changdu)
+                    })
+                }
+            })
+
+            // 修改页轨道类型change事件
+            $('#update_field71').change(function () {
+                let value = $(this).val()
+                if (value != '') {
+                    $.get('/Model3/select_changdu_by_guidao/', {
+                        guidaoleixing: value
+                    }, function (data, status) {
+                        let changdu = data['value']
+                        $('#update_field72').val(changdu)
+                    })
+                }
+            })
+
+            // 设置滚动条
+            $.set_scroll()
+
+            //设置权限
+            $.set_authority()
+
+            $('#add_field55').blur(function () {
+                let value = $.trim($(this).val())
+                $.get('/Model3/gcdpldfx/', {
+                    value: value
+                }, function (statu, data) {
+                    let ret = statu['ret']
+                    $('#add_field56').val(ret)
+                })
+            })
+            $('#add_field57').blur(function () {
+                let value = $.trim($(this).val())
+                $.get('/Model3/gcdpldfx/', {
+                    value: value
+                }, function (statu, data) {
+                    let ret = statu['ret']
+                    $('#add_field58').val(ret)
+                })
+            })
+
+            $('#update_field55').blur(function () {
+                let value = $.trim($(this).val())
+                $.get('/Model3/gcdpldfx/', {
+                    value: value
+                }, function (statu, data) {
+                    let ret = statu['ret']
+                    $('#update_field56').val(ret)
+                })
+            })
+            $('#update_field57').blur(function () {
+                let value = $.trim($(this).val())
+                $.get('/Model3/gcdpldfx/', {
+                    value: value
+                }, function (statu, data) {
+                    let ret = statu['ret']
+                    $('#update_field58').val(ret)
+                })
+            })
+
+            $('#add_field56').blur(function () {
+                let value = $.trim($(this).val())
+                $.get('/Model3/gcdpfxld/', {
+                    value: value
+                }, function (statu, data) {
+                    let ret = statu['ret']
+                    $('#add_field55').val(ret)
+                    $('#add_field56').val(statu['value'])
+                })
+            })
+            $('#add_field58').blur(function () {
+                let value = $.trim($(this).val())
+                $.get('/Model3/gcdpfxld/', {
+                    value: value
+                }, function (statu, data) {
+                    let ret = statu['ret']
+                    $('#add_field57').val(ret)
+                    $('#add_field58').val(statu['value'])
+                })
+            })
+            $('#update_field56').blur(function () {
+                let value = $.trim($(this).val())
+                $.get('/Model3/gcdpfxld/', {
+                    value: value
+                }, function (statu, data) {
+                    let ret = statu['ret']
+                    $('#update_field55').val(ret)
+                    $('#update_field56').val(statu['value'])
+                })
+            })
+            $('#update_field58').blur(function () {
+                let value = $.trim($(this).val())
+                $.get('/Model3/gcdpfxld/', {
+                    value: value
+                }, function (statu, data) {
+                    let ret = statu['ret']
+                    $('#update_field57').val(ret)
+                    $('#update_field58').val(statu['value'])
+                })
+            })
+
+            $('#add_field59').blur(function () {
+                let value = $.trim($(this).val())
+                $.get('/Model3/jsdpldfx/', {
+                    value: value
+                }, function (statu, data) {
+                    let ret = statu['ret']
+                    $('#add_field60').val(ret)
+                })
+            })
+            $('#add_field61').blur(function () {
+                let value = $.trim($(this).val())
+                $.get('/Model3/jsdpldfx/', {
+                    value: value
+                }, function (statu, data) {
+                    let ret = statu['ret']
+                    $('#add_field62').val(ret)
+                })
+            })
+
+            $('#update_field59').blur(function () {
+                let value = $.trim($(this).val())
+                $.get('/Model3/jsdpldfx/', {
+                    value: value
+                }, function (statu, data) {
+                    let ret = statu['ret']
+                    $('#update_field60').val(ret)
+                })
+            })
+            $('#update_field61').blur(function () {
+                let value = $.trim($(this).val())
+                $.get('/Model3/jsdpldfx/', {
+                    value: value
+                }, function (statu, data) {
+                    let ret = statu['ret']
+                    $('#update_field62').val(ret)
+                })
+            })
+
+            $('#add_field60').blur(function () {
+                let value = $.trim($(this).val())
+                $.get('/Model3/jsdpfxld/', {
+                    value: value
+                }, function (statu, data) {
+                    let ret = statu['ret']
+                    $('#add_field59').val(ret)
+                    $('#add_field60').val(statu['value'])
+                })
+            })
+            $('#add_field62').blur(function () {
+                let value = $.trim($(this).val())
+                $.get('/Model3/jsdpfxld/', {
+                    value: value
+                }, function (statu, data) {
+                    let ret = statu['ret']
+                    $('#add_field61').val(ret)
+                    $('#add_field62').val(statu['value'])
+                })
+            })
+            $('#update_field60').blur(function () {
+                let value = $.trim($(this).val())
+                $.get('/Model3/jsdpfxld/', {
+                    value: value
+                }, function (statu, data) {
+                    let ret = statu['ret']
+                    $('#update_field59').val(ret)
+                    $('#update_field60').val(statu['value'])
+                })
+            })
+            $('#update_field62').blur(function () {
+                let value = $.trim($(this).val())
+                $.get('/Model3/jsdpfxld/', {
+                    value: value
+                }, function (statu, data) {
+                    let ret = statu['ret']
+                    $('#update_field61').val(ret)
+                    $('#update_field62').val(statu['value'])
+                })
+            })
+
+            //计算添加
+            $('#add_calculate').click(function () {
+                $('#add_field74').blur() //发送模拟电缆电缆长度=>发送模拟电缆模拟固定长度
+                $('#add_field80').blur() //接收模拟电缆电缆长度=>接收模拟电缆模拟固定长度
+
+                // 发送模拟电缆电缆长度
+                data_73 = $('#add_field73').val()
+                if (data_73 != '') {
+                    $('#add_field74').val(Math.round(data_73 / 45 * 1000))
+                }
+
+                var changdu = $('#add_field72').val()
+
+                if (changdu == '7.5' && $('#add_field74').val() != '') {
+                    $('#add_field76').val(7500 - parseInt($('#add_field74').val()))
+                } else if (changdu == '10' && $('#add_field74').val() != '') {
+                    $('#add_field76').val(10000 - parseInt($('#add_field74').val()))
+                } else {
+                    $('#add_field76').val('')
+                }
+
+                data_79 = $('#add_field79').val()
+                if (data_79 != '') {
+                    $('#add_field80').val(Math.round(data_79 / 45 * 1000))
+                }
+
+                var changdu = $('#add_field72').val()
+
+                if (changdu == '7.5' && $('#add_field80').val() != '') {
+                    $('#add_field82').val(7500 - parseInt($('#add_field80').val()))
+                } else if (changdu == '10' && $('#add_field80').val() != '') {
+                    $('#add_field82').val(10000 - parseInt($('#add_field80').val()))
+                } else {
+                    $('#add_field82').val('')
+                }
+
+            })
+
+            //计算修改
+            $('#update_calculate').click(function () {
+                $('#update_field74').blur() //发送模拟电缆电缆长度=>发送模拟电缆模拟固定长度
+                $('#update_field80').blur() //接收模拟电缆电缆长度=>接收模拟电缆模拟固定长度
+
+                // 发送模拟电缆电缆长度
+                data_73 = $('#update_field73').val()
+                if (data_73 != '') {
+                    $('#update_field74').val(Math.round(data_73 / 45 * 1000))
+                }
+
+                var changdu = $('#update_field72').val()
+
+                if (changdu == '7.5' && $('#update_field74').val() != '') {
+                    $('#update_field76').val(7500 - parseInt($('#update_field74').val()))
+                } else if (changdu == '10' && $('#update_field74').val() != '') {
+                    $('#update_field76').val(10000 - parseInt($('#update_field74').val()))
+                } else {
+                    $('#update_field76').val('')
+                }
+
+                data_79 = $('#update_field79').val()
+                if (data_79 != '') {
+                    $('#update_field80').val(Math.round(data_79 / 45 * 1000))
+                }
+
+                var changdu = $('#update_field72').val()
+
+                if (changdu == '7.5' && $('#update_field80').val() != '') {
+                    $('#update_field82').val(7500 - parseInt($('#update_field80').val()))
+                } else if (changdu == '10' && $('#update_field80').val() != '') {
+                    $('#update_field82').val(10000 - parseInt($('#update_field80').val()))
+                } else {
+                    $('#update_field82').val('')
+                }
+
+            })
+
+            //修改按钮
+            $('#updateModalBtn').click(function () {
+                var checked_boxs = $("#tbody :checked")
+                var update_id = ''
+                if (checked_boxs.length != 1) {
+                    alert('请选择一条数据')
+                } else {
+                    checked_boxs.each(function () {
+                        update_id += $(this).val()
+                    })
+                    $.get('/Model3/select_for_update/', {
+                        update_id: update_id,
+                    }, function (data, status) {
+                        $('#update_id').val(data['src_update_auto_id'])
+                        $('#update_field1').val(data['src_update_field1'])
+                        $('#update_field2').val(data['src_update_field2'])
+                        $('#update_field3').val(data['src_update_field3'])
+                        $('#update_field24').val(data['src_update_field24'])
+                        $('#update_field23').val(data['src_update_field23'])
+                        $('#update_field46').val(data['src_update_field46'])
+                        $('#update_field47').val(data['src_update_field47'])
+                        $('#update_field48').val(data['src_update_field48'])
+                        $('#update_field49').val(data['src_update_field49'])
+                        $('#update_field37').val(data['src_update_field37'])
+                        $('#update_field50').val(data['src_update_field50'])
+                        $('#update_field51').val(data['src_update_field51'])
+                        $('#update_field52').val(data['src_update_field52'])
+                        $('#update_field53').val(data['src_update_field53'])
+                        $('#update_field54').val(data['src_update_field54'])
+                        $('#update_field55').val(data['src_update_field55'])
+                        $('#update_field56').val(data['src_update_field56'])
+                        $('#update_field57').val(data['src_update_field57'])
+                        $('#update_field58').val(data['src_update_field58'])
+                        $('#update_field59').val(data['src_update_field59'])
+                        $('#update_field60').val(data['src_update_field60'])
+                        $('#update_field61').val(data['src_update_field61'])
+                        $('#update_field62').val(data['src_update_field62'])
+                        $('#update_field63').val(data['src_update_field63'])
+                        $('#update_field64').val(data['src_update_field64'])
+                        $('#update_field65').val(data['src_update_field65'])
+                        $('#update_field66').val(data['src_update_field66'])
+                        $('#update_field67').val(data['src_update_field67'])
+                        $('#update_field68').val(data['src_update_field68'])
+                        $('#update_field69').val(data['src_update_field69'])
+                        $('#update_field71').val(data['src_update_field71'])
+                        $('#update_field72').val(data['src_update_field72'])
+                        $('#update_field73').val(data['src_update_field73'])
+                        $('#update_field74').val(data['src_update_field74'])
+                        $('#update_field75').val(data['src_update_field75'])
+                        $('#update_field76').val(data['src_update_field76'])
+                        $('#update_field77').val(data['src_update_field77'])
+                        $('#update_field78').val(data['src_update_field78'])
+                        $('#update_field79').val(data['src_update_field79'])
+                        $('#update_field80').val(data['src_update_field80'])
+                        $('#update_field81').val(data['src_update_field81'])
+                        $('#update_field82').val(data['src_update_field82'])
+                        $('#update_field83').val(data['src_update_field83'])
+                        $('#update_field84').val(data['src_update_field84'])
+                        $('#updateModal').modal('show')
+                    })
+                }
+            })
+
+
+            // 添加页面的JavaScript开始===============================================================
+
+            $('#add_field74').blur(function () {
+                //发送模拟电缆电缆长度=>发送模拟电缆模拟固定长度
+                let changdu = $.trim($('#add_field72').val())
+                let dianlanchangdu = $.trim($(this).val())
+                if (changdu == '7.5') {
+                    $.get('/Model3/network_length_7/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        let gudingchangdu = data['gudingchangdu']
+                        $('#add_field77').val(gudingchangdu)
+                    })
+                    $.get('/Model3/reality_length_7/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        let dangwei = data['dangwei']
+                        $('#add_field75').val(dangwei)
+                    })
+                    $.get('/Model3/compensation_7/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        $('#add_field78').val(data['buchang'])
+                    })
+                }
+                if (changdu == '10') {
+                    $.get('/Model3/network_length_10/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        let gudingchangdu = data['gudingchangdu']
+                        $('#add_field77').val(gudingchangdu)
+                    })
+                    $.get('/Model3/reality_length_10/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        let dangwei = data['dangwei']
+                        $('#add_field75').val(dangwei)
+                    })
+                    $.get('/Model3/compensation_10/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        $('#add_field78').val(data['buchang'])
+                    })
+                }
+            })
+
+            $('#add_field80').blur(function () {
+                //接收模拟电缆电缆长度=>接收模拟电缆模拟固定长度
+                let changdu = $.trim($('#add_field72').val())
+                let dianlanchangdu = $.trim($(this).val())
+                if (changdu == '7.5') {
+                    $.get('/Model3/network_length_7/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        let gudingchangdu = data['gudingchangdu']
+                        $('#add_field83').val(gudingchangdu)
+                    })
+                    $.get('/Model3/reality_length_7/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        let dangwei = data['dangwei']
+                        $('#add_field81').val(dangwei)
+                    })
+                    $.get('/Model3/compensation_7/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        $('#add_field84').val(data['buchang'])
+                    })
+                }
+                if (changdu == '10') {
+                    $.get('/Model3/network_length_10/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        let gudingchangdu = data['gudingchangdu']
+                        $('#add_field83').val(gudingchangdu)
+                    })
+                    $.get('/Model3/reality_length_10/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        let dangwei = data['dangwei']
+                        $('#add_field81').val(dangwei)
+                    })
+                    $.get('/Model3/compensation_10/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        $('#add_field84').val(data['buchang'])
+                    })
+                }
+            })
+            // 添加页面的JavaScript结束===============================================================
+
+            // 修改页面的JavaScript开始****************************************************************
+            $('#update_field74').blur(function () {
+                //发送模拟电缆电缆长度=>发送模拟电缆模拟固定长度
+                let changdu = $.trim($('#update_field72').val())
+                let dianlanchangdu = $.trim($(this).val())
+                if (changdu == '7.5') {
+                    $.get('/Model3/network_length_7/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        let gudingchangdu = data['gudingchangdu']
+                        $('#update_field77').val(gudingchangdu)
+                    })
+                    $.get('/Model3/reality_length_7/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        let dangwei = data['dangwei']
+                        $('#update_field75').val(dangwei)
+                    })
+                    $.get('/Model3/compensation_7/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        $('#update_field78').val(data['buchang'])
+                    })
+
+                }
+                if (changdu == '10') {
+                    $.get('/Model3/network_length_10/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        let gudingchangdu = data['gudingchangdu']
+                        $('#update_field77').val(gudingchangdu)
+                    })
+                    $.get('/Model3/reality_length_10/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        let gudingchangdu = data['gudingchangdu']
+                        $('#update_field75').val(gudingchangdu)
+                    })
+                    $.get('/Model3/compensation_10/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        $('#update_field78').val(data['buchang'])
+                    })
+                }
+            })
+
+            $('#update_field80').blur(function () {
+                //接收模拟电缆电缆长度=>接收模拟电缆模拟固定长度
+                let changdu = $.trim($('#update_field72').val())
+                let dianlanchangdu = $.trim($(this).val())
+                if (changdu == '7.5') {
+                    $.get('/Model3/network_length_7/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        let gudingchangdu = data['gudingchangdu']
+                        $('#update_field83').val(gudingchangdu)
+                    })
+                    $.get('/Model3/reality_length_7/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        let dangwei = data['dangwei']
+                        $('#update_field81').val(dangwei)
+                    })
+                    $.get('/Model3/compensation_7/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        $('#update_field84').val(data['buchang'])
+                    })
+                }
+                if (changdu == '10') {
+                    $.get('/Model3/network_length_10/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        let gudingchangdu = data['gudingchangdu']
+                        $('#update_field83').val(gudingchangdu)
+                    })
+                    $.get('/Model3/reality_length_10/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        let gudingchangdu = data['gudingchangdu']
+                        $('#update_field81').val(gudingchangdu)
+                    })
+                    $.get('/Model3/compensation_10/', {
+                        dianlanchangdu: dianlanchangdu
+                    }, function (data, status) {
+                        $('#update_field84').val(data['buchang'])
+                    })
+                }
+            })
+            // 修改页面的JavaScript结束****************************************************************
+
+        });
+    </script>
+
+
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <!-- 标题 -->
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="text-center">ZPW-2000无绝缘轨道移频自动闭塞技术参数表</h3>
+            </div>
+        </div>
+
+        <br>
+
+        <!-- 查询 -->
+        <div class="row clearfix">
+            <div class="col-md-12">
+                <form class="form-inline" role="form">
+
+                    <div class="input-group ">
+                        <span class="input-group-addon">线别</span>
+                        <select class="form-control" id="select_field1" name="select_field1">
+                            {% if current_field1 %}
+                            <option>{{current_field1}}</option>
+                            {% endif %}
+                            <option></option>
+                            {% for i in field1 %}
+                            <option>{{i}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="input-group ">
+                        <span class="input-group-addon">车间</span>
+                        <select class="form-control" id="select_field2" name="select_field2">
+                            {% if current_field2 %}
+                            <option>{{current_field2}}</option>
+                            {% endif %}
+                            <option></option>
+                            {% for i in field2 %}
+                            <option>{{i}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="input-group ">
+                        <span class="input-group-addon">站名</span>
+                        <select class="form-control" id="select_field3" name="select_field3">
+                            {% if current_field3 %}
+                            <option>{{current_field3}}</option>
+                            {% endif %}
+                            <option></option>
+                            {% for i in field3 %}
+                            <option>{{i}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="input-group ">
+                        <span class="input-group-addon">站内区间</span>
+                        <select class="form-control" id="select_field24" name="select_field24">
+                            {% if current_field24 %}
+                            <option>{{current_field24}}</option>
+                            {% endif %}
+                            <option></option>
+                            {% for i in field24 %}
+                            <option>{{i}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="input-group ">
+                        <span class="input-group-addon">行别</span>
+                        <select class="form-control" id="select_field23" name="select_field23">
+                            {% if current_field23 %}
+                            <option>{{current_field23}}</option>
+                            {% endif %}
+                            <option></option>
+                            {% for i in field23 %}
+                            <option>{{i}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="input-group ">
+                        <span class="input-group-addon">载频频率</span>
+                        <select class="form-control" id="select_field37" name="select_field37">
+                            {% if current_field37 %}
+                            <option>{{current_field37}}</option>
+                            {% endif %}
+                            <option></option>
+                            {% for i in field37 %}
+                            <option>{{i}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="width: 200px;">
+                        <div class="input-group">
+                            <div class="input-group-addon">运营区段名</div>
+                            <input class="form-control" id="select_field48" name="select_field48" type="text"
+                                value="{{current_field48}}">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="width: 200px;">
+                        <div class="input-group">
+                            <div class="input-group-addon">设计区段名</div>
+                            <input class="form-control" id="select_field49" name="select_field49" type="text"
+                                value="{{current_field49}}">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="width: 200px;">
+                        <div class="input-group">
+                            <div class="input-group-addon">区段长度</div>
+                            <input class="form-control" id="select_field50" name="select_field50" type="number"
+                                value="{{current_field50}}">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="width: 200px;">
+                        <div class="input-group">
+                            <div class="input-group-addon">备注1</div>
+                            <input class="form-control" id="select_field52" name="select_field52" type="text"
+                                value="{{current_field52}}">
+                        </div>
+                    </div>
+
+                    <div class="input-group ">
+                        <span class="input-group-addon">轨道类型</span>
+                        <select class="form-control" id="select_field71" name="select_field71">
+                            {% if current_field71 %}
+                            <option>{{current_field71}}</option>
+                            {% endif %}
+                            <option></option>
+                            {% for i in field71 %}
+                            <option>{{i}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">电缆规定总长度</div>
+                            <input class="form-control" id="select_field72" name="select_field72" type="text"
+                                value="{{current_field72}}" placeholder="搜空数据时输入无数据">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">功出电平理论等级</div>
+                            <input class="form-control" id="select_field55" name="select_field55" type="text"
+                                value="{{current_field55}}" placeholder="搜空数据时输入无数据">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">功出电平变更等级</div>
+                            <input class="form-control" id="select_field57" name="select_field57" type="text"
+                                value="{{current_field57}}" placeholder="搜空数据时输入无数据">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">接收电平理论等级</div>
+                            <input class="form-control" id="select_field59" name="select_field59" type="text"
+                                value="{{current_field59}}" placeholder="搜空数据时输入无数据">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">接收电平变更等级</div>
+                            <input class="form-control" id="select_field61" name="select_field61" type="text"
+                                value="{{current_field61}}" placeholder="搜空数据时输入无数据">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">电容数量</div>
+                            <input class="form-control" id="select_field54" name="select_field54" type="text"
+                                value="{{current_field54}}" placeholder="搜空数据时输入无数据">
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-info" id="clear_select" type="button">清空</button>
+                        <button class="btn btn-primary" type="submit">查询</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        <br>
+
+        <!-- 增删改查按钮组 -->
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" data-target="#addModal" data-toggle="modal" type="button">
+                        <span class="glyphicon glyphicon-plus"></span> 添加
+                    </button>
+                    <button class="btn btn-default" id="updateModalBtn" type="button">
+                        <span class="glyphicon glyphicon-pencil"></span> 修改
+                    </button>
+                    <button class="btn btn-danger" disabled="disabled" id="delete" type="button"
+                        onclick="$.delete('Model3')">
+                        <span class="glyphicon glyphicon-minus"></span> 删除
+                    </button>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-default" onclick="window.location='/Model3/import.html/'" type="button">
+                        <span class="glyphicon glyphicon-import"></span> 导入
+                    </button>
+                    <button class="btn btn-default" onclick="window.open('{{file}}')" type="button">
+                        <span class="glyphicon glyphicon-export"></span> 导出
+                    </button>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-info" onclick="window.open('/Model3/select.html','_blank');" type="button">
+                        <span class="glyphicon glyphicon-gift"></span> 详情
+                    </button>
+                    <button class="btn btn-primary" onclick="window.location='/index.html/?index=3'" type="button">
+                        <span class="glyphicon glyphicon-home"></span> 首页
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- 表格 -->
+        <div class="row clearfix">
+            <div class="col-md-12">
+                <!-- 表头 -->
+                <div id="thead_div">
+                    <table class="table table-bordered table-hover table-condensed">
+                        <thead>
+                            <tr>
+                                <th rowspan="3"><input id="checkboxs" type="checkbox" value="all"></th>
+                                <th rowspan="3" style="vertical-align: middle;">顺号</th>
+                                <th rowspan="3">线别</th>
+                                <th rowspan="3">车间</th>
+                                <th rowspan="3">站名</th>
+                                <th rowspan="3">站内区间</th>
+                                <th rowspan="3">行别</th>
+                                <th rowspan="2" colspan="2">信号机位置</th>
+                                <th rowspan="2" colspan="5">轨道区段</th>
+                                <th rowspan="3">备注1</th>
+                                <th rowspan="2" colspan="2">电容</th>
+                                <th rowspan="2" colspan="4">功出电平理论</th>
+                                <th rowspan="2" colspan="4">接收电平理论</th>
+                                <th rowspan="3">轨道类型</th>
+                                <th rowspan="3">电缆规定总长度km</th>
+                                <th rowspan="2" colspan="6">发送模拟电缆</th>
+                                <th rowspan="2" colspan="6">接收模拟电缆</th>
+                                <th rowspan="3" style="display: none;">调整表固定区段</th>
+                                <th rowspan="3" style="display: none;">有无小轨</th>
+                                <th colspan="4" style="display: none;">小轨调整</th>
+                                <th rowspan="3" style="display: none;">备注2</th>
+                            </tr>
+                            <tr>
+                                <th colspan="2" style="display: none;">正向</th>
+                                <th colspan="2" style="display: none;">反向</th>
+                            </tr>
+                            <tr>
+                                <th>名称</th>
+                                <th>里程</th>
+                                <th>运营区段名</th>
+                                <th>设计区段名</th>
+                                <th>载频频率</th>
+                                <th>区段长度</th>
+                                <th>段属</th>
+                                <th>规格</th>
+                                <th>数量</th>
+                                <th>理论等级</th>
+                                <th>理论封线</th>
+                                <th>变更等级</th>
+                                <th>变更封线</th>
+                                <th>理论等级</th>
+                                <th>理论封线</th>
+                                <th>变更等级</th>
+                                <th>变更封线</th>
+                                <th>环阻</th>
+                                <th>电缆长度</th>
+                                <th>实际电缆长度档位</th>
+                                <th>模拟长度</th>
+                                <th>模拟固定长度</th>
+                                <th>补偿连接线</th>
+                                <th>环阻</th>
+                                <th>电缆长度</th>
+                                <th>实际电缆长度档位</th>
+                                <th>模拟长度</th>
+                                <th>模拟固定长度</th>
+                                <th>补偿连接线</th>
+                                <th style="display: none;">等级</th>
+                                <th style="display: none;">封线</th>
+                                <th style="display: none;">等级</th>
+                                <th style="display: none;">封线</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+                <!-- 表身体 -->
+                <div id="tbody_div" class="tbody_div">
+                    <table class="table table-bordered table-hover table-condensed ">
+                        <tbody id="tbody">
+                            {% for i in data %}
+                            <tr>
+                                <td><input type="checkbox" value="{{i.0}}"></td>
+                                <td>{{forloop.counter}}</td>
+                                {% for j in i %}
+                                {% if forloop.first %}
+                                {% else %}
+                                <td>{{j}}</td>
+                                {% endif %}
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 分页 -->
+        <div class="row">
+            <div class="col-md-5">
+                <div class=" pagination">
+
+                    <div class="btn-group">
+                        <button class="btn btn-default" type="button">共<b>{{count}}</b>条记录
+                        </button>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-default" type="button">显示</button>
+                        <div class="btn-group">
+                            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="pagesize"
+                                type="button">
+                                {{pagesize}}
+                            </button>
+                            <ul class="dropdown-menu" id="pagesizechoose" role="menu">
+                                <li><a href="javascript:$.func.pagesizeHref(100)">100</a></li>
+                                <li><a href="javascript:$.func.pagesizeHref(50)">50</a></li>
+                                <li><a href="javascript:$.func.pagesizeHref(20)">20</a></li>
+                                <!-- <li><a href="javascript:$.func.pagesizeHref(3)">3</a></li> -->
+                                <!-- <li><a href="javascript:$.func.pagesizeHref(2)">2</a></li> -->
+                                <!-- <li><a href="javascript:$.func.pagesizeHref(1)">1</a></li> -->
+                            </ul>
+                        </div>
+                        <button class="btn btn-default" type="button">条/页</button>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-default" type="button">当前</button>
+                        <button class="btn btn-default" type="button">{{current_page}}</button>
+                        <button class="btn btn-default" type="button">页</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-7">
+                <nav>
+                    <ul class="pagination">
+                        <li>
+                            <a href="javascript:$.func.currentPageHref(1)">首页</a>
+                        </li>
+
+                        <li>
+                            <a href="javascript:$.func.currentPageHref({{previous_page}})">上一页</a>
+                        </li>
+
+                        <li {% if current_page == "1" %}class="active" {% endif %}>
+                            <a href="javascript:$.func.currentPageHref(1)">1</a>
+                        </li>
+
+                        <li {% if current_page == "2" %}class="active" {% endif %}>
+                            <a href="javascript:$.func.currentPageHref(2)">2</a>
+                        </li>
+
+                        <li {% if current_page == "3" %}class="active" {% endif %}>
+                            <a href="javascript:$.func.currentPageHref(3)">3</a>
+                        </li>
+
+                        <li {% if current_page == "4" %}class="active" {% endif %}>
+                            <a href="javascript:$.func.currentPageHref(4)">4</a>
+                        </li>
+
+                        <li {% if current_page == "5" %}class="active" {% endif %}>
+                            <a href="javascript:$.func.currentPageHref(5)">5</a>
+                        </li>
+
+                        <li {% if current_page == "6" %}class="active" {% endif %}>
+                            <a href="javascript:$.func.currentPageHref(6)">6</a>
+                        </li>
+
+                        <li {% if current_page == "7" %}class="active" {% endif %}>
+                            <a href="javascript:$.func.currentPageHref(7)">7</a>
+                        </li>
+
+                        <li {% if current_page == "8" %}class="active" {% endif %}>
+                            <a href="javascript:$.func.currentPageHref(8)">8</a>
+                        </li>
+
+                        <li {% if current_page == "9" %}class="active" {% endif %}>
+                            <a href="javascript:$.func.currentPageHref(9)">9</a>
+                        </li>
+
+                        <li>
+                            <a href="javascript:$.func.currentPageHref({{next_page}})">下一页
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:$.func.currentPageHref({{last_page}})">末页
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 创建模态窗口 -->
+    <div class="modal fade" id="addModal" role="dialog">
+        <div class="modal-dialog" role="document" style="width: 90%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">添加信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row clearfix">
+                            <form action="/Model3/add/" id="addForm" method="POST"
+                                onsubmit="return $.func.check_add_form()" role="form">
+                                <div class="col-md-4 column">
+                                    <div class="form-group">
+                                        <label>顺号</label>
+                                        <input type="text" class="form-control" name="add_id" id="add_id"
+                                            placeholder="自动生成" readonly>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>线别<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" name="add_field1" id="add_field1">
+                                            <option></option>
+                                            {% for i in field1 %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>车间<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="add_field2" name="add_field2">
+                                            <option></option>
+                                            {% for i in field2 %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>站名<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="add_field3" name="add_field3">
+                                            <option></option>
+                                            {% for i in field3 %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>站内区间<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="add_field24" name="add_field24">
+                                            <option></option>
+                                            {% for i in field24 %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>行别<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="add_field23" name="add_field23">
+                                            <option></option>
+                                            {% for i in field23 %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>信号机名称</label>
+                                        <input type="text" class="form-control" name="add_field46" id="add_field46">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>信号机里程</label>
+                                        <input type="text" class="form-control" name="add_field47" id="add_field47">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>运营区段名</label>
+                                        <input type="text" class="form-control" name="add_field48" id="add_field48">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>设计区段名</label>
+                                        <input type="text" class="form-control" name="add_field49" id="add_field49">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>载频频率<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="add_field37" name="add_field37">
+                                            <option></option>
+                                            {% for i in field37 %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>区段长度</label>
+                                        <input type="text" class="form-control" name="add_field50" id="add_field50">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>段属</label>
+                                        <input type="text" class="form-control" name="add_field51" id="add_field51">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>备注1</label>
+                                        <input type="text" class="form-control" name="add_field52" id="add_field52">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>电容规格</label>
+                                        <input type="number" class="form-control" name="add_field53" id="add_field53">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 column">
+                                    <div class="form-group">
+                                        <label>电容数量</label>
+                                        <input type="number" class="form-control" name="add_field54" id="add_field54">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>功出电平理论等级</label>
+                                        <input type="number" class="form-control" name="add_field55" id="add_field55">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>功出电平理论封线</label>
+                                        <input type="text" class="form-control" name="add_field56" id="add_field56">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>功出电平变更等级</label>
+                                        <input type="number" class="form-control" name="add_field57" id="add_field57">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>功出电平变更封线</label>
+                                        <input type="text" class="form-control" name="add_field58" id="add_field58">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收电平理论等级</label>
+                                        <input type="number" class="form-control" name="add_field59" id="add_field59">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收电平理论封线</label>
+                                        <input type="text" class="form-control" name="add_field60" id="add_field60">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收电平变更等级</label>
+                                        <input type="number" class="form-control" name="add_field61" id="add_field61">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收电平变更封线</label>
+                                        <input type="text" class="form-control" name="add_field62" id="add_field62">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>轨道类型<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="add_field71" name="add_field71">
+                                            <option></option>
+                                            {% for i in field71 %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>电缆规定总长度km</label>
+                                        <input readonly type="text" class="form-control" name="add_field72"
+                                            id="add_field72">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>发送模拟电缆环阻</label>
+                                        <input type="number" step="0.0000000001" class="form-control" name="add_field73"
+                                            id="add_field73">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>发送模拟电缆电缆长度</label>
+                                        <input type="number" class="form-control" name="add_field74" id="add_field74">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>发送模拟电缆实际电缆长度档位</label>
+                                        <input readonly type="text" class="form-control" name="add_field75"
+                                            id="add_field75">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>发送模拟电缆模拟长度</label>
+                                        <input readonly type="text" class="form-control" name="add_field76"
+                                            id="add_field76">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 column">
+                                    <div class="form-group">
+                                        <label>发送模拟电缆模拟固定长度</label>
+                                        <input readonly type="text" class="form-control" name="add_field77"
+                                            id="add_field77">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>发送模拟电缆补偿连接线</label>
+                                        <input readonly type="text" class="form-control" name="add_field78"
+                                            id="add_field78">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收模拟电缆环阻</label>
+                                        <input type="number" step="0.0000000001" class="form-control" name="add_field79"
+                                            id="add_field79">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收模拟电缆电缆长度</label>
+                                        <input type="text" class="form-control" name="add_field80" id="add_field80">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收模拟电缆实际电缆长度档位</label>
+                                        <input readonly type="text" class="form-control" name="add_field81"
+                                            id="add_field81">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收模拟电缆模拟长度</label>
+                                        <input readonly type="text" class="form-control" name="add_field82"
+                                            id="add_field82">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收模拟电缆模拟固定长度</label>
+                                        <input readonly type="text" class="form-control" name="add_field83"
+                                            id="add_field83">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收模拟电缆补偿连接线</label>
+                                        <input readonly type="text" class="form-control" name="add_field84"
+                                            id="add_field84">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>调整表固定区段</label>
+                                        <input type="text" class="form-control" name="add_field63" id="add_field63">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>有无小轨</label>
+                                        <input type="text" class="form-control" name="add_field64" id="add_field64">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>小轨调整正向等级</label>
+                                        <input type="number" class="form-control" name="add_field65" id="add_field65">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>小轨调整正向封线</label>
+                                        <input type="text" class="form-control" name="add_field66" id="add_field66">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>小轨调整反向等级</label>
+                                        <input type="number" class="form-control" name="add_field67" id="add_field67">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>小轨调整反向封线</label>
+                                        <input type="text" class="form-control" name="add_field68" id="add_field68">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>备注2</label>
+                                        <input type="text" class="form-control" name="add_field69" id="add_field69">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" data-dismiss="modal" type="button">关闭
+                    </button>
+                    <button class="btn btn-primary" id="add_calculate" type="button">计算
+                    </button>
+                    <button class="btn btn-success" form="addForm" type="submit">添加
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 修改模态窗口 -->
+    <div class="modal fade" id="updateModal" role="dialog">
+        <div class="modal-dialog" role="document" style="width: 90%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">修改信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row clearfix">
+                            <form action="/Model3/update/" id="updateForm" method="POST"
+                                onsubmit="return $.func.check_update_form()" role="form">
+                                <div class="col-md-4 column">
+                                    <div class="form-group">
+                                        <label>顺号</label>
+                                        <input type="text" class="form-control" name="update_id" id="update_id"
+                                            placeholder="自动生成" readonly>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>线别<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" name="update_field1" id="update_field1">
+                                            <option></option>
+                                            {% for i in field1 %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>车间<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="update_field2" name="update_field2">
+                                            <option></option>
+                                            {% for i in field2 %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>站名<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="update_field3" name="update_field3">
+                                            <option></option>
+                                            {% for i in field3 %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>站内区间<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="update_field24" name="update_field24">
+                                            <option></option>
+                                            {% for i in field24 %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>行别<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="update_field23" name="update_field23">
+                                            <option></option>
+                                            {% for i in field23 %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>信号机名称</label>
+                                        <input type="text" class="form-control" name="update_field46"
+                                            id="update_field46">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>信号机里程</label>
+                                        <input type="text" class="form-control" name="update_field47"
+                                            id="update_field47">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>运营区段名</label>
+                                        <input type="text" class="form-control" name="update_field48"
+                                            id="update_field48">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>设计区段名</label>
+                                        <input type="text" class="form-control" name="update_field49"
+                                            id="update_field49">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>载频频率<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="update_field37" name="update_field37">
+                                            <option></option>
+                                            {% for i in field37 %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>区段长度</label>
+                                        <input type="text" class="form-control" name="update_field50"
+                                            id="update_field50">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>段属</label>
+                                        <input type="text" class="form-control" name="update_field51"
+                                            id="update_field51">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>备注1</label>
+                                        <input type="text" class="form-control" name="update_field52"
+                                            id="update_field52">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>电容规格</label>
+                                        <input type="number" class="form-control" name="update_field53"
+                                            id="update_field53">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 column">
+                                    <div class="form-group">
+                                        <label>电容数量</label>
+                                        <input type="number" class="form-control" name="update_field54"
+                                            id="update_field54">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>功出电平理论等级</label>
+                                        <input type="number" class="form-control" name="update_field55"
+                                            id="update_field55">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>功出电平理论封线</label>
+                                        <input type="text" class="form-control" name="update_field56"
+                                            id="update_field56">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>功出电平变更等级</label>
+                                        <input type="number" class="form-control" name="update_field57"
+                                            id="update_field57">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>功出电平变更封线</label>
+                                        <input type="text" class="form-control" name="update_field58"
+                                            id="update_field58">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收电平理论等级</label>
+                                        <input type="number" class="form-control" name="update_field59"
+                                            id="update_field59">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收电平理论封线</label>
+                                        <input type="text" class="form-control" name="update_field60"
+                                            id="update_field60">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收电平变更等级</label>
+                                        <input type="number" class="form-control" name="update_field61"
+                                            id="update_field61">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收电平变更封线</label>
+                                        <input type="text" class="form-control" name="update_field62"
+                                            id="update_field62">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>轨道类型<span style="color: red;">(必填项)</span></label>
+                                        <select class="form-control" id="update_field71" name="update_field71">
+                                            <option></option>
+                                            {% for i in field71 %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>电缆规定总长度km</label>
+                                        <input readonly type="text" class="form-control" name="update_field72"
+                                            id="update_field72">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>发送模拟电缆环阻</label>
+                                        <input type="number" step="0.0000000001" class="form-control"
+                                            name="update_field73" id="update_field73">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>发送模拟电缆电缆长度</label>
+                                        <input type="number" class="form-control" name="update_field74"
+                                            id="update_field74">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>发送模拟电缆实际电缆长度档位</label>
+                                        <input readonly type="text" class="form-control" name="update_field75"
+                                            id="update_field75">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>发送模拟电缆模拟长度</label>
+                                        <input readonly type="text" class="form-control" name="update_field76"
+                                            id="update_field76">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 column">
+                                    <div class="form-group">
+                                        <label>发送模拟电缆模拟固定长度</label>
+                                        <input readonly type="text" class="form-control" name="update_field77"
+                                            id="update_field77">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>发送模拟电缆补偿连接线</label>
+                                        <input readonly type="text" class="form-control" name="update_field78"
+                                            id="update_field78">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收模拟电缆环阻</label>
+                                        <input type="number" step="0.0000000001" class="form-control"
+                                            name="update_field79" id="update_field79">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收模拟电缆电缆长度</label>
+                                        <input type="text" class="form-control" name="update_field80"
+                                            id="update_field80">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收模拟电缆实际电缆长度档位</label>
+                                        <input readonly type="text" class="form-control" name="update_field81"
+                                            id="update_field81">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收模拟电缆模拟长度</label>
+                                        <input readonly type="text" class="form-control" name="update_field82"
+                                            id="update_field82">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收模拟电缆模拟固定长度</label>
+                                        <input readonly type="text" class="form-control" name="update_field83"
+                                            id="update_field83">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>接收模拟电缆补偿连接线</label>
+                                        <input readonly type="text" class="form-control" name="update_field84"
+                                            id="update_field84">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>调整表固定区段</label>
+                                        <input type="text" class="form-control" name="update_field63"
+                                            id="update_field63">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>有无小轨</label>
+                                        <input type="text" class="form-control" name="update_field64"
+                                            id="update_field64">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>小轨调整正向等级</label>
+                                        <input type="number" class="form-control" name="update_field65"
+                                            id="update_field65">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>小轨调整正向封线</label>
+                                        <input type="text" class="form-control" name="update_field66"
+                                            id="update_field66">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>小轨调整反向等级</label>
+                                        <input type="number" class="form-control" name="update_field67"
+                                            id="update_field67">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>小轨调整反向封线</label>
+                                        <input type="text" class="form-control" name="update_field68"
+                                            id="update_field68">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>备注2</label>
+                                        <input type="text" class="form-control" name="update_field69"
+                                            id="update_field69">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" data-dismiss="modal" type="button">关闭
+                    </button>
+                    <button class="btn btn-primary" id="update_calculate" type="button">计算
+                    </button>
+                    <button class="btn btn-success" form="updateForm" type="submit">修改
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

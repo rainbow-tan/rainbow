@@ -2,13 +2,15 @@
 
 
 # 移除不显示字段
-def remove_index_for_data(data_list, remove_index=[11, 12, 13, 14, 15, 16]):
+def remove_index_for_data(data_list, remove_index=None):
     """
     移除不显示字段
     :param data_list:
     :param remove_index:
     :return:
     """
+    if remove_index is None:
+        remove_index = [11, 12, 13, 14, 15, 16]
     new_data = []
     for one_data in data_list:
         new_one_data = []
@@ -27,8 +29,10 @@ def sort_data(data):
 
 # 判断*标数据
 def can_import(data):
-    index = {1: '线别', 2: '综合车间', 3: '车站及区间名称', 4: '设备名称',
-             24: '站内或区间', 25: '参考标准', 26: '有无防撞墙', 27: '建筑设备类型', }
+    index = {
+        1: '线别', 2: '综合车间', 3: '车站及区间名称', 4: '设备名称',
+        24: '站内或区间', 25: '参考标准', 26: '有无防撞墙', 27: '建筑设备类型',
+        }
     msg = ''
     for one_data in data:
         for need_index in index:

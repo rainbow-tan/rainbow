@@ -3,15 +3,13 @@ import json
 import os
 import time
 
-from django.core.paginator import EmptyPage
-from django.core.paginator import InvalidPage
-from django.core.paginator import PageNotAnInteger
-from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
 
 from CRUD import Pub
+from CRUD import Tool
+from CRUD import database
 from CRUD.settings import BASE_DIR
 from Model.models import Field1Table
 from Model.models import Field23Table
@@ -19,8 +17,10 @@ from Model.models import Field24Table
 from Model.models import Field2Table
 from Model.models import Field3Table
 from Model2.models import Field37Table
-from Model3 import Business, DB
-from Model3.models import DataTable, Field71Table
+from Model3 import Business
+from Model3 import DB
+from Model3.models import DataTable
+from Model3.models import Field71Table
 
 COLUMN_NAMES = ['auto_id', 'field1', 'field2', 'field3',
                 'field24',
@@ -107,46 +107,10 @@ def select_html(request):
     sort_data = Business.sort_data(filter_data)
     remove_sort_data = Business.sort_data(remove_data)
 
-    # 分页
-    paginator = Paginator(remove_sort_data, pagesize)
-    if current_page > paginator.num_pages:
-        current_page = paginator.num_pages
-    try:
-        show_data = paginator.page(current_page)
-    except PageNotAnInteger:
-        show_data = paginator.page(1)
-    except EmptyPage:
-        show_data = paginator.page(paginator.num_pages)
-    except InvalidPage:
-        show_data = paginator.page(1)
-    except Exception as e:
-        show_data = paginator.page(1)
-        print('分页失败:{}'.format(e))
+    database.paging(remove_sort_data, pagesize, current_page, data_dict)  # 分页
+    database.export(sort_data, data_dict, u'ZPW导出模板.xls', '3')  # 导出
 
-    if current_page - 1 > 0:
-        previous_page = current_page - 1
-    else:
-        previous_page = 1
-    if current_page + 1 < paginator.num_pages:
-        next_page = current_page + 1
-    else:
-        next_page = paginator.num_pages
-    data_dict['data'] = show_data
-    data_dict['count'] = len(filter_data)
-    data_dict['pagesize'] = str(pagesize)
-    data_dict['previous_page'] = previous_page
-    data_dict['current_page'] = str(current_page)
-    data_dict['next_page'] = next_page
-    data_dict['last_page'] = paginator.num_pages
-
-    folder = '/three/data_{}.xls'.format(Pub.get_time())
-    save_path = Pub.EXPORT_FOLDER + folder
-    data_dict['file'] = Pub.STATIC_EXPORT_FOLDER + folder
-    write_data = Pub.change_auto_id(sort_data)
-    source_file = os.path.join(Pub.EXPORT_TEMPLATE_FOLDER, u'ZPW导出模板.xls')
-    Pub.append_xls(source_file, save_path, write_data)
-
-    return render(request, 'three/select.html', data_dict)
+    return render(request, 'Model3/select.html', data_dict)
 
 
 def add(request):
@@ -196,7 +160,7 @@ def add(request):
                   field83=request.POST['add_field83'],
                   field84=request.POST['add_field84'],
                   )
-    return redirect("/three/select.html/")
+    return redirect("/Model3/select.html/")
 
 
 def select_for_update(request):  # 为了修改查询数据
@@ -254,7 +218,7 @@ def update(request):
                   field83=request.POST['update_field83'],
                   field84=request.POST['update_field84'],
                   )
-    return redirect("/three/select.html/")
+    return redirect("/Model3/select.html/")
 
 
 def delete(request):
@@ -263,28 +227,32 @@ def delete(request):
     ids.pop(len(ids) - 1)  # 去除最后的空串
     for delete_id in ids:
         Pub.delete_db(DataTable, delete_id)
-    return redirect("/three/select.html/")
+    return redirect("/Model3/select.html/")
 
 
 def import_html(request):
-    return render(request, 'three/import.html')
+    return render(request, 'Model3/import.html')
 
 
 def import_data(request):  # 导入
     data_dict = dict()
-    calculate_data = []
-    if 'file' in request.FILES:
-        file = request.FILES['file']
-        filename = BASE_DIR + '/templates/files/import/data_two_{}.xls'.format(
-            time.strftime("%Y%m%d%H%M%S", time.localtime()))
+    sorted_data = []
+    file_string = 'file'
+    if file_string in request.FILES:
+        file = request.FILES[file_string]
+        # filename = BASE_DIR + '/templates/files/import/data_three_{}.xls'.format(
+        #     time.strftime("%Y%m%d%H%M%S", time.localtime()))
+        now = Tool.now()
+        # filename = os.path.join(BASE_DIR, 'templates/files/import/data_three_{}.xls'.format(now))
+        filename = os.path.join(Pub.IMPORT_FOLDER, 'Model3', 'import_{}.xls'.format(now))
         Pub.save_file(filename, file)
         try:
-            file_data = Pub.read_xls(filename, 5)
-            sorted_data = Business.sort_data(file_data)
-            calculate_data = Business.all_row(sorted_data)
+            file_data = Business.read_xls(filename, 5)
+            calculate_data = Business.all_row(file_data)
             ret, msg = Business.can_import(calculate_data)
             if ret is True:
-                pop_data = Pub.pop_first(calculate_data)
+                sorted_data = Business.sort_data(calculate_data)
+                pop_data = Pub.pop_first(sorted_data)
                 for one_data in pop_data:
                     Pub.insert_db(DataTable,
                                   field1=one_data[0],
@@ -323,21 +291,22 @@ def import_data(request):  # 导入
                                   field81=one_data[33],
                                   field82=one_data[34],
                                   field83=one_data[35],
-                                  field63=one_data[36],
-                                  field64=one_data[37],
-                                  field65=one_data[38],
-                                  field66=one_data[39],
-                                  field67=one_data[40],
-                                  field68=one_data[41],
-                                  field69=one_data[42], )
+                                  field84=one_data[36],  # 补偿连接线
+                                  field63=one_data[37],
+                                  field64=one_data[38],
+                                  field65=one_data[39],
+                                  field66=one_data[40],
+                                  field67=one_data[41],
+                                  field68=one_data[42],
+                                  field69=one_data[43],
+                                  )
                 data_dict['success'] = '导入成功'
             else:
-                data_dict['success'] = '导入失败->{}'.format(msg)
+                data_dict['success'] = '导入结果:导入失败\n原因:{}'.format(msg)
         except Exception as e:
             data_dict['success'] = '导入失败->{}'.format(e)
-            print('导入文件失败:{}'.format(e))
-    data_dict['data'] = calculate_data
-    return render(request, 'three/import.html', data_dict)
+    data_dict['data'] = sorted_data
+    return render(request, 'Model3/import.html', data_dict)
 
 
 def check_data(request):
@@ -349,12 +318,139 @@ def check_data(request):
             time.strftime("%Y%m%d%H%M%S", time.localtime()))
         Pub.save_file(filename, file)
         try:
-            file_data = Pub.read_xls(filename, 5)
+            file_data = Business.read_xls(filename, 5)
             sorted_data = Business.sort_data(file_data)
             calculate_data = Business.all_row(sorted_data)
             data_dict['success'] = '查看成功'
         except Exception as e:
             data_dict['success'] = '查看失败'
-            print('查看文件数据失败:{}'.format(e))
     data_dict['data'] = calculate_data
-    return render(request, 'three/import.html', data_dict)
+    return render(request, 'Model3/import.html', data_dict)
+
+
+def select_changdu_by_guidao(request):
+    data_dict = dict()
+    guidaoleixing = request.GET['guidaoleixing']
+    data_dict['value'] = DB.select_changdu_by_guidao(guidaoleixing)
+    return HttpResponse(json.dumps(data_dict), content_type="application/json")
+
+
+def gcdpldfx(request):
+    """
+    功出电平等级求封线
+    :param request:
+    :return:
+    """
+    value = request.GET['value']
+    ret = Business.gongchu_lilundengji_fengxian.get(value, '')
+    data = dict(ret=ret)
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+def gcdpfxld(request):
+    """
+    功出电平封线求等级
+    :param request:
+    :return:
+    """
+    value = request.GET['value']
+    value = value.replace('，', ',')
+    ret = Business.get_key_by_value(Business.gongchu_lilundengji_fengxian, value)
+    data = dict(value=value, ret=ret)
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+def jsdpldfx(request):
+    """
+    接收电平等级求封线
+    :param request:
+    :return:
+    """
+    value = request.GET['value']
+    ret = Business.jieshou_lilundengji_fengxian.get(value, '')
+    ret = Business.jieshou_lilundengji_fengxian.get(value, '')
+    data = dict(ret=ret)
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+def jsdpfxld(request):
+    """
+    接收电平封线求等级
+    :param request:
+    :return:
+    """
+    value = request.GET['value']
+    value = value.replace('，', ',')
+    ret = Business.get_key_by_value(Business.jieshou_lilundengji_fengxian, value)
+    data = dict(value=value, ret=ret)
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+def network_length_7(request):
+    """
+    当电缆规定总长度为7.5时
+    发送模拟电缆电缆长度=>发送模拟电缆模拟固定长度
+    接收模拟电缆电缆长度=>接收模拟电缆模拟固定长度
+    """
+    dianlanchangdu = request.GET['dianlanchangdu']
+    data = {}
+    ret = Business.network_length_7(dianlanchangdu)
+    data['gudingchangdu'] = ret
+    return HttpResponse(json.dumps(data), content_type="application/json")
+def reality_length_7(request):
+    """
+    当电缆规定总长度为7.5时
+    发送模拟电缆电缆长度=>发送模拟电缆实际电缆长度档位
+    接收模拟电缆电缆长度=>接收模拟电缆实际电缆长度档位
+    """
+    data = {}
+    dianlanchangdu = request.GET['dianlanchangdu']
+    dangwei = Business.reality_length_7(dianlanchangdu)
+    data['dangwei'] = dangwei
+    return HttpResponse(json.dumps(data), content_type="application/json")
+def compensation_7(request):
+    """
+    当电缆规定总长度为7.5时
+    发送模拟电缆电缆长度=>发送模拟电缆补偿连接线
+    接收模拟电缆电缆长度=>接收模拟电缆补偿连接线
+    """
+    data = {}
+    dianlanchangdu = request.GET['dianlanchangdu']
+    dangwei = Business.compensation_7(dianlanchangdu)
+    data['buchang'] = dangwei
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+def network_length_10(request):
+    """
+    当电缆规定总长度为10时
+    发送模拟电缆电缆长度=>发送模拟电缆模拟固定长度
+    接收模拟电缆电缆长度=>接收模拟电缆模拟固定长度
+    """
+    dianlanchangdu = request.GET['dianlanchangdu']
+    data = {}
+    ret = Business.network_length_10(dianlanchangdu)
+    data['gudingchangdu'] = ret
+    return HttpResponse(json.dumps(data), content_type="application/json")
+def reality_length_10(request):
+    """
+    当电缆规定总长度为10时
+    发送模拟电缆电缆长度=>发送模拟电缆实际电缆长度档位
+    接收模拟电缆电缆长度=>接收模拟电缆实际电缆长度档位
+    """
+    data = {}
+    dianlanchangdu = request.GET['dianlanchangdu']
+    dangwei = Business.reality_length_10(dianlanchangdu)
+    data['dangwei'] = dangwei
+    return HttpResponse(json.dumps(data), content_type="application/json")
+def compensation_10(request):
+    """
+    当电缆规定总长度为10时
+    发送模拟电缆电缆长度=>发送模拟电缆补偿连接线
+    接收模拟电缆电缆长度=>接收模拟电缆补偿连接线
+    """
+    data = {}
+    dianlanchangdu = request.GET['dianlanchangdu']
+    dangwei = Business.compensation_10(dianlanchangdu)
+    data['buchang'] = dangwei
+    return HttpResponse(json.dumps(data), content_type="application/json")

@@ -11,4 +11,4 @@ urlpatterns = [
     path('delete/', views.delete),
     path('check_data/', views.check_data),
     path('import_data/', views.import_data),
-]
+    ]

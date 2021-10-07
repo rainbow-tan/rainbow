@@ -12,11 +12,11 @@ from CRUD.settings import BASE_DIR
 
 PAGESIZE = 100  # 默认每页显示记录条数
 CURRENT_PAGE = 1  # 默认显示第一页
-IMPORT_FOLDER = BASE_DIR + '/templates/files/import'  # 导入文件保存位置
-EXPORT_FOLDER = BASE_DIR + '/templates/files/export'  # 导出文件保存位置
+IMPORT_FOLDER = os.path.join(BASE_DIR, 'templates/files/import')  # 导入文件保存位置
+EXPORT_FOLDER = os.path.join(BASE_DIR, 'templates/files/export')  # 导出文件保存位置
 STATIC_EXPORT_FOLDER = '/static/files/export'  # 前端接受导出文件url
-EXPORT_TEMPLATE_FOLDER = BASE_DIR + '/templates/ExportTemplate'  # 导出模板文件保存位置
-SAVE_FOLDER_SIZE = 1024 * 1024 * 100  # 默认保存大小
+EXPORT_TEMPLATE_FOLDER = os.path.join(BASE_DIR, 'templates/ExportTemplate')  # 导出模板文件保存位置
+SAVE_FOLDER_SIZE = 1024 * 1024 * 3  # 默认保存大小
 
 
 def get_time():
@@ -35,6 +35,15 @@ def request_data(request, mode, key, default):
     return getattr(request, mode).get(key, default)
 
 
+def create_folder(folder):
+    folder = os.path.abspath(folder)
+    if not os.path.exists(folder):
+        try:
+            os.makedirs(folder)
+        except Exception as e:
+            print('创建文件夹失败:{}'.format(e))
+
+
 def save_file(filename, file_handler):
     """
     保存前端传来的文件
@@ -42,9 +51,9 @@ def save_file(filename, file_handler):
     :param file_handler: 前端handler
     :return:
     """
-    path = os.path.dirname(filename)
-    if path != '' and not os.path.exists(path):
-        os.makedirs(path)
+    filename = os.path.abspath(filename)
+    folder = os.path.dirname(filename)
+    create_folder(folder)
     with open(filename, 'wb+') as f:
         for chunk in file_handler.chunks():
             f.write(chunk)
@@ -75,7 +84,10 @@ def delete_folder(folder, max_size):
         size += os.path.getsize(file)
     if size > max_size:
         for file in all_files:
-            os.remove(file)
+            try:
+                os.remove(file)
+            except Exception as e:
+                print('删除文件失败:{}'.format(e))
 
 
 # 其他
@@ -141,32 +153,10 @@ def read_xls(filename, read_begin_row=1):
     return all_data
 
 
-def write_xls(filename, head, data):
-    """
-    写入xls文件
-    :param filename: 文件路径
-    :param head: 头 list
-    :param data: [[],[],[]]
-    :return: None
-    """
-    path = os.path.dirname(filename)
-    if path != '' and not os.path.exists(path):
-        os.makedirs(path)
-    workbook = xlwt.Workbook()
-    sheet1 = workbook.add_sheet('Sheet1')
-    for index, info in enumerate(head):
-        sheet1.write(0, index, info)
-    for index, row_data in enumerate(data):
-        for line, line_data in enumerate(row_data):
-            sheet1.write(index + 1, line, line_data)
-    workbook.save(filename)
-
-
 def append_xls(source_file, filename, write_data):
     if os.path.isfile(source_file):
         path = os.path.dirname(filename)
-        if path != '' and not os.path.exists(path):
-            os.makedirs(path)
+        create_folder(path)
         f = xlrd.open_workbook(source_file, formatting_info=True)  # 打开Excel为xlrd对象
         old_sheet = f.sheet_by_index(0)  # 取到第一个旧表
         old_sheet_rows = old_sheet.nrows  # 第一个旧表的行数，下面追加就得在这个后面写入数据
@@ -183,10 +173,10 @@ def append_xls(source_file, filename, write_data):
         font.height = 160  # 字体大小
 
         borders = xlwt.Borders()  # Create borders
-        borders.left = xlwt.Borders.MEDIUM  # 添加边框-虚线边框
-        borders.right = xlwt.Borders.MEDIUM  # 添加边框-虚线边框
-        borders.top = xlwt.Borders.MEDIUM  # 添加边框-虚线边框
-        borders.bottom = xlwt.Borders.MEDIUM  # 添加边框-虚线边框
+        borders.left = xlwt.Borders.THIN  # 添加边框
+        borders.right = xlwt.Borders.THIN
+        borders.top = xlwt.Borders.THIN
+        borders.bottom = xlwt.Borders.THIN
 
         style = xlwt.XFStyle()
         style.font = font
@@ -199,39 +189,11 @@ def append_xls(source_file, filename, write_data):
         copy_read.save(filename)
     else:
         print('未找到导出模板文件:{}'.format(source_file))
-    return None
 
 
-# 数据库
 def select_column(table_name, column_name):
-    """
-    查数据库表中的一列
-    :param table_name: 表名
-    :param column_name: 列名
-    :return: [[],[],[]]
-    """
-    column_data = table_name.objects.all().values(column_name)
-    all_data = []
-    for data in column_data:
-        all_data.append(data[column_name])
-    return all_data
-
-
-def select_db_all(table_name, column_names):
-    """
-    查询某个表所有的数据
-    :param table_name: 表名
-    :param column_names: 列名 []
-    :return: [[],[],[]]
-    """
-    all_data = []
-    select_data = table_name.objects.all()
-    for data in select_data:
-        one_data = list()
-        for arg in column_names:
-            one_data.append(data.__dict__[arg])
-        all_data.append(one_data)
-    return all_data
+    data = table_name.objects.values_list(column_name, flat=True).distinct()
+    return data
 
 
 def select_db_one(table_name, auto_id, column_names):
@@ -249,7 +211,7 @@ def select_db_one(table_name, auto_id, column_names):
     return data
 
 
-def select_filter_and_or(table_name, connector, select_conditions, column_names):
+def select_filter_and_or(table_name, connector, select_conditions, column_names, order_by_names=[]):
     """
     与或条件查询
     :param table_name: 表名
@@ -264,6 +226,8 @@ def select_filter_and_or(table_name, connector, select_conditions, column_names)
         if select_value != '':
             q.children.append((select_key, select_value))
     select_data = table_name.objects.filter(q)
+    for order_by_name in order_by_names:
+        select_data = select_data.order_by(order_by_name)
     all_data = []
     for data in select_data:
         one_data = list()

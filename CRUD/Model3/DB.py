@@ -1,5 +1,7 @@
 from django.db.models import Q
 
+from Model3.models import Field71Table
+
 
 def select_business(table_name, field1, field2, field3, field23, field24, field37, field48, field49,
                     field50, field52, field71, field72, field55, field57, field59, field61, field54,
@@ -72,3 +74,20 @@ def select_business(table_name, field1, field2, field3, field23, field24, field3
             one_data.append(data.__dict__[column_name])
         all_data_list.append(one_data)
     return all_data_list
+
+
+def select_duidao_changdu(number):
+    """轨道类型对应电缆规定总长度"""
+    names = []
+    objs = Field71Table.objects.all()
+    for obj in objs:
+        if obj.changdu == number:
+            names.append(obj.field1)
+    return names
+
+
+def select_changdu_by_guidao(guidao):
+    """根据轨道类型查询电缆规定总长度"""
+    obj = Field71Table.objects.filter(field1=guidao).first()
+    changdu = obj.changdu
+    return changdu

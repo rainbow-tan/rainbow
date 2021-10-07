@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加信息</title>
+
+    <link href="/static/bootstrap_3.3.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/jquery/jquery-2.0.0-.min.js" type="text/javascript"></script>
+    <script src="/static/jquery/jquery.cookie.js" type="text/javascript"></script>
+    <script src="/static/bootstrap_3.3.0/js/bootstrap.min.js" type="text/javascript"></script>
+</head>
+
+<script>
+    $(function () {
+
+       // 线别的change事件
+       $('#xianbie').change(function () {
+            var xianbie = $.trim($(this).val())
+            if (xianbie != '') {
+                $.get('/Model6/search_chejian/', {
+                    xianbie: xianbie
+                }, function (data, status) {
+                    var info = '<option></option>'
+                    $.each(data.chejian, function (index, item) {
+                        one_option = "<option>" + item + "</option>"
+                        info += one_option
+                    })
+                    $('#chejian').val('')
+                    $('#chezhan').val('')
+
+                    $('#chejian').html('')
+                    $('#chejian').html(info)
+                })
+            }
+        })
+
+        // 车间的change事件
+        $('#chejian').change(function () {
+            let xianbie = $.trim($('#xianbie').val())
+            var chejian = $.trim($(this).val())
+            if (chejian != '') {
+                $.get('/Model6/search_chezhan/', {
+                    xianbie: xianbie,
+                    chejian: chejian
+                }, function (data, status) {
+                    var info = '<option></option>'
+                    $.each(data.chezhan, function (index, item) {
+                        one_option = "<option>" + item + "</option>"
+                        info += one_option
+                    })
+                    $('#chezhan').val('')
+
+                    $('#chezhan').html('')
+                    $('#chezhan').html(info)
+                })
+            }
+        })
+
+        // 项目的change事件
+        $('#xiangmu').change(function () {
+            var xiangmu = $.trim($(this).val())
+            if (xiangmu != '') {
+                $.get('/Model6/search_fenlei/', {
+                    xiangmu: xiangmu
+                }, function (data, status) {
+                    var info = '<option></option>'
+                    $.each(data.fenlei, function (index, item) {
+                        one_option = "<option>" + item + "</option>"
+                        info += one_option
+                    })
+                    $('#fenlei_datalist').html('')
+                    $('#fenlei_datalist').html(info)
+                    $('#fenlei').val('')
+                })
+            }
+        })
+
+        // 获取任务量等信息
+        $.getinfo = function () {
+            var chejian = $.trim($('#chejian').val())
+            var chezhan = $.trim($('#chezhan').val())
+            var xiangmu = $.trim($('#xiangmu').val())
+            var fenlei = $.trim($('#fenlei').val())
+            if (fenlei != '' && xiangmu != '') {
+                $.get('/Model6/search_renwuliang_danwei/', {
+                    chejian: chejian,
+                    chezhan: chezhan,
+                    xiangmu: xiangmu,
+                    fenlei: fenlei
+                }, function (data, status) {
+                    let renwuliang = data.renwuliang
+                    let danwei = data.danwei
+                    let zhouqi = data.zhouqi
+                    let neirongshuoming = data.neirongshuoming
+                    let yuefen = data.yuefen
+                    $.tianchong('renwuliang', renwuliang)
+                    $.tianchong('danwei', danwei)
+                    $.tianchong('zhouqi', zhouqi)
+                    $.tianchong('neirongshuoming', neirongshuoming)
+
+                    // 设置月份为未选
+                    var names = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                    $.each(names, function (index, info) {
+                        $('#month' + info).prop("checked", false)
+                        $('#month' + info).click(function () {
+                            return true;
+                        })
+                    })
+                    //设置季度中的月份为勾选
+                    $.each(yuefen, function (index, info) {
+                        $('#month' + info).prop("checked", true)
+                    })
+                    // 如果勾选月份，则不可点击，否则可点击
+                    // let length_yuefen = $(yuefen).length
+                    // if (length_yuefen > 0) {
+                    //     $.each(names, function (index, info) {
+                    //         $('#month'+info).click(function(){return false;})
+                    //     })
+                    // } else {
+                    //     $.each(names, function (index, info) {
+                    //         $('#month'+info).click(function(){return true;})
+                    //     })
+                    // }
+                })
+            }
+        }
+        $.getinfo()
+
+        // 分类的change事件
+        $('#chejian').change(function () {
+            $.getinfo()
+        })
+        $('#chejian').blur(function () {
+            $.getinfo()
+        })
+        $('#chezhan').change(function () {
+            $.getinfo()
+        })
+        $('#chezhan').blur(function () {
+            $.getinfo()
+        })
+        $('#xiangmu').change(function () {
+            $.getinfo()
+        })
+        $('#xiangmu').blur(function () {
+            $.getinfo()
+        })
+        $('#fenlei').change(function () {
+            $.getinfo()
+        })
+        $('#fenlei').blur(function () {
+            $.getinfo()
+        })
+
+        // 填充数据，空串则可输入，不空则只读
+        $.tianchong = function (id_name, data) {
+            $('#' + id_name).val(data)
+            if (data == '') {
+                $('#' + id_name).attr('readonly', false)
+            } else {
+                $('#' + id_name).attr('readonly', true)
+            }
+        }
+
+        // 设置日期
+        $.set_date = function () {
+            var time = new Date();
+            var day = ("0" + time.getDate()).slice(-2);
+            var month = ("0" + (time.getMonth() + 1)).slice(-2);
+            var today = time.getFullYear() + "-" + (month) + "-" + (day);
+            $('#wanchengriqi').val(today);
+        }
+        $.set_date()
+
+        // 检查表单
+        $.check_form = function () {
+            let xianbie = $.trim($("#xianbie").val())
+            let chejian = $.trim($("#chejian").val())
+            let chezhan = $.trim($("#chezhan").val())
+            let renwuliang = $.trim($("#renwuliang").val())
+            let wanchengshuliang = $.trim($("#wanchengshuliang").val())
+            let fenlei = $.trim($("#fenlei").val())
+            let danwei = $.trim($("#danwei").val())
+            let wanchengriqi = $.trim($("#wanchengriqi").val())
+            let xiangmu = $.trim($("#xiangmu").val())
+            if (xianbie == '' || chejian == '' || chezhan == '' || renwuliang == '' ||
+                wanchengshuliang == '' || fenlei == '' || danwei == '' || wanchengriqi == '' || xiangmu ==
+                '') {
+                alert('请完善必填项')
+                return false
+            }
+
+            // 检查季度
+            var yuefen = ''
+            $('input:checkbox:checked').each(function (index, data) {
+                yuefen += $(data).val()
+            })
+            if (yuefen == '') {
+                alert('请选择季度')
+                return false;
+            }
+            return true
+        }
+
+    })
+</script>
+
+<body>
+
+    <div class="container-fluid">
+
+        <!-- 标题 -->
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="text-center">新增年度维修工作任务表-历史</h3>
+            </div>
+        </div>
+        <br>
+
+        <!-- 添加表单 -->
+        <div class="row">
+            <form id="myform" onsubmit="return $.check_form()" action="/Model6/add/" method="post">
+                <div class="col-md-6 column">
+
+                    <div class="form-group">
+                        <label>段别</label>
+                        <input type="text" class="form-control" id="duanbie" name="duanbie" value="沈阳高铁基础设施段" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>线别<span style="color: red;">(必填项)</span></label>
+                        <select class="form-control" id="xianbie" name="xianbie" {% if xianbie %}readonly{% endif %}>
+                            {% if xianbie %}
+                            <option>{{xianbie}}</option>
+                            {% else %}
+                            <option></option>
+                            {% for i in xianbies %}
+                            <option>{{i}}</option>
+                            {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>车间<span style="color: red;">(必填项)</span></label>
+                        <select class="form-control" id="chejian" name="chejian" {% if chejian %}readonly{% endif %}>
+                            {% if chejian %}
+                            <option>{{chejian}}</option>
+                            {% else %}
+                            <option></option>
+                            {% for i in chejian %}
+                            <option>{{i}}</option>
+                            {% endfor %}
+                            {% endif %}
+
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>车站<span style="color: red;">(必填项)</span></label>
+                        <select class="form-control" id="chezhan" name="chezhan" {% if chezhan %}readonly{% endif %}>
+                            {% if chezhan %}
+                            <option>{{chezhan}}</option>
+                            {% else %}
+                            <option></option>
+                            {% for i in chezhans %}
+                            <option>{{i}}</option>
+                            {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>项目<span style="color: red;">(必填项)</span></label>
+                        <input type="text" id="xiangmu" name="xiangmu" value="{{xiangmu}}" class="form-control" readonly
+                            list="xiangmu_datalist">
+                        <datalist id="xiangmu_datalist">
+                            <option></option>
+                            {% for i in xiangmu %}
+                            <option>{{i}}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+
+                    <div class="form-group">
+                        <label>工作内容分类<span style="color: red;">(必填项)</span></label>
+                        <input type="text" id="fenlei" name="fenlei" value="{{fenlei}}" class="form-control" readonly
+                            list="fenlei_datalist">
+                        <datalist id="fenlei_datalist">
+                            <option></option>
+                            {% for i in fenlei %}
+                            <option>{{i}}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+
+                    <div class="form-group">
+                        <label>工作任务量(计划数)<span style="color: red;">(必填项)</span></label>
+                        <input type="number" class="form-control" id="renwuliang" name="renwuliang"
+                            value="{{renwuliang}}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>工作月份<span style="color: red;">(必填项)</span></label>
+                        <div>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month shangbannian jidu1" value="on" name="month1"
+                                    id="month1" onclick="return false;" {{month1}}>1月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month shangbannian jidu1" value="on" name="month2"
+                                    id="month2" onclick="return false;" {{month2}}>2月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month shangbannian jidu1" value="on" name="month3"
+                                    id="month3" onclick="return false;" {{month3}}>3月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month shangbannian jidu2" value="on" name="month4"
+                                    id="month4" onclick="return false;" {{month4}}>4月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month shangbannian jidu2" value="on" name="month5"
+                                    id="month5" onclick="return false;" {{month5}}>5月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month shangbannian jidu2" value="on" name="month6"
+                                    id="month6" onclick="return false;" {{month6}}>6月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month xiabannian jidu3" value="on" name="month7"
+                                    id="month7" onclick="return false;" {{month7}}>7月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month xiabannian jidu3" value="on" name="month8"
+                                    id="month8" onclick="return false;" {{month8}}>8月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month xiabannian jidu3" value="on" name="month9"
+                                    id="month9" onclick="return false;" {{month9}}>9月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month xiabannian jidu4" value="on" name="month10"
+                                    id="month10" onclick="return false;" {{month10}}>10月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month xiabannian jidu4" value="on" name="month11"
+                                    id="month11" onclick="return false;" {{month11}}>11月
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" class="month xiabannian jidu4" value="on" name="month12"
+                                    id="month12" onclick="return false;" {{month12}}>12月
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>单位</label><span style="color: red;">(必填项)</span></label>
+                        <input type="text" class="form-control" id="danwei" name="danwei" value="{{danwei}}" readonly>
+                    </div>
+
+                </div>
+                <div class="col-md-6 column">
+                    <div class="form-group">
+                        <label>车间跟班人</label>
+                        <input type="text" class="form-control" id="genbanren" name="genbanren">
+                    </div>
+
+                    <div class="form-group">
+                        <label>工区</label>
+                        <input type="text" class="form-control" id="gongqu" name="gongqu">
+                    </div>
+
+                    <div class="form-group">
+                        <label>工区作业人</label>
+                        <input type="text" class="form-control" id="zuoyeren" name="zuoyeren">
+                    </div>
+
+                    <div class="form-group">
+                        <label>工作内容</label>
+                        <textarea class="form-control" name="gongzuoneirong" id="gongzuoneirong" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>工作周期</label>
+                        <input type="text" class="form-control" id="zhouqi" name="zhouqi" value="{{zhouqi}}"
+                            {% if zhouqi %}readonly{% endif %}>
+                    </div>
+
+                    <div class="form-group">
+                        <label>工作要求说明</label>
+                        <input type="text" class="form-control" id="neirongshuoming" name="neirongshuoming"
+                            value="{{neirongshuoming}}" {% if neirongshuoming %}readonly{% endif %}>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>完成数量<span style="color: red;">(必填项)</span></label>
+                        <input type="number" class="form-control" id="wanchengshuliang" name="wanchengshuliang">
+                    </div>
+
+                    <div class="form-group">
+                        <label>完成日期<span style="color: red;">(必填项)</span></label>
+                        <input type="date" class="form-control" id="wanchengriqi" name="wanchengriqi">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <br>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-toolbar" role="toolbar" style="float: right;">
+                    <div class="btn-group">
+                        <button type="button" onclick=" window.location.href = '/Model6/zhuye.html/'"
+                            class="btn btn-info">返回</button>
+                        <button type="submit" form="myform" class="btn btn-success">添加</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+
+</body>
+
+</html>

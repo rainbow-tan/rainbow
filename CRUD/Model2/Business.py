@@ -26,14 +26,6 @@ def can_import(data):
     return True, msg
 
 
-# def float_to_int(data):
-#     for one_data in data:
-#         one_data[13] = int(one_data[13])
-#         one_data[14] = int(one_data[14])
-#         one_data[20] = int(one_data[20])
-#     return data
-
-
 # 排序
 def sort_data(data):
     data.sort(key=lambda x: (x[2], x[3]))

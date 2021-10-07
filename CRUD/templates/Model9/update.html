@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+
+    <link href="/static/bootstrap_3.3.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/jquery/jquery-2.0.0-.min.js" type="text/javascript"></script>
+    <script src="/static/jquery/jquery.cookie.js" type="text/javascript"></script>
+    <script src="/static/bootstrap_3.3.0/js/bootstrap.min.js" type="text/javascript"></script>
+</head>
+
+<script>
+    $(function () {
+
+        // 检查表单
+        $.check_form = function () {
+            var can_submit = true
+            var all_id = ['xianbie', 'chezhan', 'hangbie', 'zaiping', 'quduan', 'dianrongshuliang',
+                'quduanchangdu'
+            ]
+            $.each(all_id, function (index, item) {
+                var data_value = $.trim($('#' + item).val())
+                if (data_value == '') {
+                    alert('请完善必填项')
+                    can_submit = false
+                    return can_submit
+                }
+            })
+            return can_submit
+        }
+
+
+
+
+
+
+    })
+</script>
+
+<body>
+
+    <div class="container-fluid">
+
+        <!-- 标题 -->
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="text-center">修改区段名称</h3>
+            </div>
+        </div>
+        <br>
+
+        <!-- 表单 -->
+        <div class="row">
+            <form id="my_form" onsubmit="return $.check_form()" action="/Model9/update/" method="post">
+                <div class="col-md-6 column">
+
+                    <div class="form-group hidden">
+                        <label>序号</label>
+                        <input  type="text" class="form-control" id="auto_id" name="auto_id" value="{{auto_id}}">
+                    </div>
+
+                    <div class="form-group" >
+                        <label>线别<span style="color: red;">(必填项)</span></label>
+                        <input type="text" class="form-control" name="xianbie" id="xianbie" value="{{xianbie}}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>车站<span style="color: red;">(必填项)</span></label>
+                        <input type="text" class="form-control" name="chezhan" id="chezhan" value="{{chezhan}}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>载频<span style="color: red;">(必填项)</span></label>
+                        <select class="form-control" id="zaiping" name="zaiping">
+                            {% if zaiping %}
+                            <option>{{zaiping}}</option>
+                            {% endif %}
+                            <option></option>
+                            {% for i in zaipings %}
+                            <option>{{i}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>区段<span style="color: red;">(必填项)</span></label>
+                        <input readonly type="text" class="form-control" id="quduan" name="quduan" value="{{quduan}}">
+                    </div>
+
+
+                </div>
+                <div class="col-md-6 column">
+                    <div class="form-group">
+                        <label>行别<span style="color: red;">(必填项)</span></label>
+                        <select class="form-control" id="hangbie" name="hangbie">
+                            {% if hangbie %}
+                            <option>{{hangbie}}</option>
+                            {% endif %}
+                            <option></option>
+                            {% for i in hangbies %}
+                            <option>{{i}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>电容数量<span style="color: red;">(必填项)</span></label>
+                        <input type="text" class="form-control" id="dianrongshuliang" name="dianrongshuliang"
+                            value="{{dianrongshuliang}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>区段长度<span style="color: red;">(必填项)</span></label>
+                        <input type="text" class="form-control" id="quduanchangdu" name="quduanchangdu"
+                            value="{{quduanchangdu}}">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <br>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-toolbar" role="toolbar" style="float: right;">
+                    <div class="btn-group">
+                        <button type="button" onclick="window.location.href = '/Model9/select.html/'"
+                            class="btn btn-info">返回</button>
+                        <button type="submit" form="my_form" class="btn btn-success">修改</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+
+</body>
+
+</html>

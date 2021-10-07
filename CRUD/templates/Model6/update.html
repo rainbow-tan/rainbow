@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>修改信息</title>
+
+    <link href="/static/bootstrap_3.3.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/jquery/jquery-2.0.0-.min.js" type="text/javascript"></script>
+    <script src="/static/jquery/jquery.cookie.js" type="text/javascript"></script>
+    <script src="/static/bootstrap_3.3.0/js/bootstrap.min.js" type="text/javascript"></script>
+</head>
+
+<script>
+    $(function () {
+
+        // 检查表单
+        $.check_form = function () {
+            var can_submit = true
+            var all_id = ['xianbie', 'chejian', 'chezhan', 'xiangmu', 'fenlei', 'yuefen', 'danwei', 'wanchengshuliang', 'wanchengriqi']
+            $.each(all_id, function (index, item) {
+                var data_value = $.trim($('#' + item).val())
+                if (data_value == '') {
+                    alert('请完善必填项')
+                    can_submit = false
+                    return can_submit
+                }
+            })
+            return can_submit
+        }
+    })
+</script>
+
+<body>
+
+    <div class="container-fluid">
+
+        <!-- 标题 -->
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="text-center">修改年度维修工作任务表</h3>
+            </div>
+        </div>
+        <br>
+
+        <!-- 表单 -->
+        <div class="row">
+            <form id="myform" onsubmit="return $.check_form()" action="/Model6/update/" method="post">
+                <div class="col-md-6 column">
+
+                    <div class="form-group hidden">
+                        <label>序号</label>
+                        <input type="text" class="form-control" id="auto_id" name="auto_id" value="{{auto_id}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>段别</label>
+                        <input type="text" class="form-control" id="duanbie" name="duanbie" value="沈阳高铁基础设施段" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>线别<span style="color: red;">(必填项)</span></label>
+                        <input type="text" id="xianbie" name="xianbie" value="{{xianbie}}" class="form-control"
+                            readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>车间<span style="color: red;">(必填项)</span></label>
+                        <input type="text" id="chejian" name="chejian" value="{{chejian}}" class="form-control"
+                            readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>车站<span style="color: red;">(必填项)</span></label>
+                        <input type="text" id="chezhan" name="chezhan" value="{{chezhan}}" class="form-control"
+                            readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>车间跟班人</label>
+                        <input type="text" class="form-control" id="genbanren" name="genbanren" value="{{genbanren}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>工区</label>
+                        <input type="text" class="form-control" id="gongqu" name="gongqu" value="{{gongqu}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>工区作业人</label>
+                        <input type="text" class="form-control" id="zuoyeren" name="zuoyeren" value="{{zuoyeren}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>项目<span style="color: red;">(必填项)</span></label>
+                        <input type="text" id="xiangmu" name="xiangmu" value="{{xiangmu}}" class="form-control"
+                            readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>工作内容分类<span style="color: red;">(必填项)</span></label>
+                        <input type="text" id="fenlei" name="fenlei" value="{{fenlei}}" class="form-control"
+                            readonly>
+                    </div>
+
+                </div>
+                <div class="col-md-6 column">
+
+                    <div class="form-group">
+                        <label>工作任务量(计划数)<span style="color: red;">(必填项)</span></label>
+                        <input type="number" class="form-control" id="renwuliang" name="renwuliang" value="{{renwuliang}}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>工作月份<span style="color: red;">(必填项)</span></label>
+                        <input type="text" class="form-control" id="yuefen" name="yuefen" value="{{yuefen}}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>工作内容</label>
+                        <textarea class="form-control" name="gongzuoneirong" id="gongzuoneirong" rows="3" >{{gongzuoneirong}}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>工作周期</label>
+                        <input type="text" class="form-control" id="zhouqi" name="zhouqi" value="{{zhouqi}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>工作要求说明</label>
+                        <input type="text" class="form-control" id="neirongshuoming" name="neirongshuoming" value="{{neirongshuoming}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>单位</label><span style="color: red;">(必填项)</span></label>
+                        <input type="text" class="form-control" id="danwei" name="danwei" value="{{danwei}}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>完成数量<span style="color: red;">(必填项)</span></label>
+                        <input type="number" class="form-control" id="wanchengshuliang" name="wanchengshuliang" value="{{wanchengshuliang}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>完成日期<span style="color: red;">(必填项)</span></label>
+                        <input type="date" class="form-control" id="wanchengriqi" name="wanchengriqi" value="{{wanchengriqi}}">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <br>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-toolbar" role="toolbar" style="float: right;">
+                    <div class="btn-group">
+                        <button  type="button" onclick=" window.location.href = '/Model6/zhuye.html/'"
+                            class="btn btn-info">返回</button>
+                        <button type="submit" form="myform" class="btn btn-success">修改</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+
+</body>
+
+</html>
